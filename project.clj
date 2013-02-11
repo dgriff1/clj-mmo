@@ -9,6 +9,7 @@
 		[org.clojure/data.json "0.1.2"]
 		[com.novemberain/monger "1.0.0-beta4"]
 		[ring/ring-jetty-adapter "1.0.1"]
+		[aleph "0.3.0-beta7"]
 		[lein-ring "0.5.4"]
 		[clj-http "0.1.1"]
   ])
