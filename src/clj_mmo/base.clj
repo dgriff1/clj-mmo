@@ -1,7 +1,10 @@
 (ns clj-mmo.base) 
 
+(defmacro base_type [ target ]  
+	(merge {:actions [] :behaviors []} target))
+
 (defn player-rec [id items attributes techtree] 
-	{ :id id :attributes attributes :techtree techtree } ) 
+	(base_type { :id id :attributes attributes :techtree techtree }) ) 
 
 (defprotocol weapon 
 	(attack  [from target] "Attack a target" ) )

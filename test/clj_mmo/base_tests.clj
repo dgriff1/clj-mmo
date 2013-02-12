@@ -8,4 +8,6 @@
 		(is [:sword]  (:items p-one))
 		(is {:strength 1}  (:attributes p-one))
 		(is {:building 0}  (:techtree p-one))
+		(is []  (:actions p-one))
+		(is []  (:behaviors p-one))
   )) 
