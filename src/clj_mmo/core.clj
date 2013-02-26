@@ -3,25 +3,29 @@
  	compojure.core 
 	aleph.http
 	lamina.core
+	clojure.data.json
 	[ring.adapter.jetty :only [run-jetty]] 
 	[clojure.walk :only [keywordize-keys]] 
  )
  (:require [compojure.route :as route]
 	[monger core util]
+	[clj-mmo.base :as mmo]
 	[ring.util.response :as resp]
 	[compojure.handler :as handler])
 )
+
+(def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
 
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) ]
 		(do 
 			(prn "Got a message " ch " -- "  params )
-			(enqueue ch "helllllooooo" ) 
+			(enqueue ch (json-str p-one))
 			(receive ch 
 				(fn [ msg ] 
 					(prn "Got New Message  " msg) 
-					(enqueue ch "Thanks for the message")))
-				)))
+					(enqueue ch (json-str p-one))
+				)))))
 
 (defroutes main-routes
   	; what's going on
