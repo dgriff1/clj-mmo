@@ -1,17 +1,40 @@
-(ns clj-mmo.base) 
+(ns clj-mmo.base
+	)
 
-(defmacro base_type [ target ]  
-	(merge {:actions [] :behaviors []} target))
+(defn base_type [ target ]  
+	(merge  {:actions [] :behaviors []} target))
+
+(defn entity [ ename edef ] 
+	(assoc (base_type edef) :name ename))
+
+(defn action [ body ] 
+	(base_type {:action (fn [t] body)}  ))
+
+(defn behavior [ guard body ] 
+	(fn [source target action] guard body))
+
+(defn tech [ body ] 
+	(fn [source target activity] (base_type body)))
 
 (defn player-rec [id items attributes techtree] 
-	(base_type { :id id :attributes attributes :techtree techtree }) ) 
+	(entity "player" { :id id :attributes attributes :techtree techtree :location [0 0] :health 100 }) ) 
 
-(defprotocol weapon 
-	(attack  [from target] "Attack a target" ) )
+(defn move? [player] 
+	true)
 
-(defprotocol skill 
-	(useit [source components] "Use the skill on a set of components"))
+(defn move [player] 
+	(assoc player :location [1 1]))
+	
+(defn  take_damage? [player] 
+	true) 
 
+(defn take_damage [ player ] 
+	(assoc player :health 90))
+	
 
-(defprotocol food 
-	(eat [source food] "Eat some food"))
+(defn on_move [ player  ] 
+	(cond-> player
+		move?  move
+		take_damage? take_damage
+	))
+		
