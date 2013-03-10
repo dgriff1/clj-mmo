@@ -1,5 +1,5 @@
 (ns clj-mmo.base
-	)
+	(:use clj-mmo.actions))
 
 (defn base_type [ target ]  
 	(merge  {:actions [] :behaviors []} target))
@@ -16,25 +16,14 @@
 (defn tech [ body ] 
 	(fn [source target activity] (base_type body)))
 
+(defn player-attributes [ ]
+	{ :might 3 :meat 3 :mental 3 :asphyxiation 100 :thirst  100 :hunger 100 :exposure 100 })
+
 (defn player-rec [id items attributes techtree] 
-	(entity "player" { :id id :attributes attributes :techtree techtree :location [0 0] :health 100 }) ) 
+	(entity "player" { :id id :attributes attributes :techtree techtree :conditions [] :health 100 :location { :x 0 :y 0} }) ) 
 
-(defn move? [player] 
-	true)
-
-(defn move [player] 
-	(assoc player :location [1 1]))
-	
-(defn  take_damage? [player] 
-	true) 
-
-(defn take_damage [ player ] 
-	(assoc player :health 90))
-	
-
-(defn on_move [ player  ] 
+(defn on_move [ player evt ctx ] 
 	(cond-> player
-		move?  move
-		take_damage? take_damage
+		(move? player evt ctx)  (move evt ctx)
+		(take_damage? player evt ctx) (take_damage evt ctx)
 	))
-		
