@@ -4,7 +4,7 @@
 <title>WebSocket Test</title>  
 
 <script language="javascript" type="text/javascript">  
-	var wsUri = "ws://localhost:5000/object/123456"; 
+	var wsUri = "ws://192.168.1.101:5000/object/123456/"; 
 	var output;  
 	function init() { 
 		output = document.getElementById("output"); 
@@ -40,11 +40,11 @@
 		}  
 		
 		function onMessage(evt) { 
-			writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>'); 
+			writeToScreen('RESPONSE: ' + evt.data); 
 		}  
 		
 		function onError(evt) { 
-			writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data); 
+			writeToScreen('ERROR: ' + evt.data); 
 		}  
 		
 		function doSend(message) { 

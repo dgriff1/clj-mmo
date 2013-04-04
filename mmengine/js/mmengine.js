@@ -1,4 +1,4 @@
-var		wsUri = "ws://localhost:5000/object/123456"; 
+var		wsUri = "ws://192.168.1.101:5000/object/123456"; 
  		HERO_IMAGE = 'assets/hero.png',
 		ROCKS_IMAGE = 'assets/rocks.png',
 		TREE_IMAGE = 'assets/tree.png',
@@ -66,11 +66,8 @@ function _game()
 		}
 	}
 
-        self.socketInit = function() {
-		self.MMWebSocket();	
-	}
-
 	self.MMWebSocket = function() { 
+ 
 		self.websocket = new WebSocket(wsUri); 
 		self.websocket.onopen = function(evt) { 
 			self.onOpen(evt) ;
@@ -88,9 +85,11 @@ function _game()
 			self.onError(evt);
 		}; 
 
+	}
+
 		self.onOpen = function(evt) { 
-			writeToScreen("CONNECTED"); 
-			doSend("WebSocket rocks"); 
+			self.writeToScreen("CONNECTED"); 
+			self.doSend("WebSocket rocks"); 
 		}  
 
 		self.onClose = function(evt) { 
@@ -98,14 +97,14 @@ function _game()
 		}  
 
 		self.onMessage = function(evt) { 
-			self.writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>'); 
+			self.writeToScreen('RESPONSE: ' + evt.data); 
 		}  
 
 		self.onError = function(evt) { 
-			self.writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data); 
+			self.writeToScreen('ERRPR: ' + evt.data); 
 		}  
 
-		self.doSend = function(message) { 
+		self.doSend = function(message) {
 			self.writeToScreen("SENT: " + message);  
 			self.websocket.send(message); 
 		}  
@@ -113,8 +112,6 @@ function _game()
 		self.writeToScreen = function(message) { 
 			console.log(message);
 		} 
-	}  
-
 
 	self.initializeGame = function() {
 		assets[HERO_IMAGE] = nearestNeighborScale(assets[HERO_IMAGE], scale);
@@ -148,7 +145,7 @@ function _game()
 				self.handleKeyUp();
 			}, false);
 		} else {
-                        canvas.addEventListener("load", self.socketInit(), false); 
+                        canvas.addEventListener("load", self.MMWebSocket, false); 
 
 			document.onkeydown = self.handleKeyDown;
 			document.onkeyup = self.handleKeyUp;
@@ -203,6 +200,9 @@ function _game()
 		self.addWidget(300 * scale, h-550, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
 		self.addWidget(400 * scale, h-450, new Bitmap(assets[TREE_IMAGE], SCENERY));
 
+		console.log(self.MMWebSocket());
+		self.doSend('fwef');
+
 	}
 
 	self.doAnimation = function(spriteSheet)
@@ -216,7 +216,6 @@ function _game()
 
         self.direction = function() 
         {
-		console.log(self.MMWebSocket.websocket);
 		if(self.clientMouseY > h/2 && self.clientMouseY < h/2 + HERO_HEIGHT
 			&& self.clientMouseX < w/2)
                 {
