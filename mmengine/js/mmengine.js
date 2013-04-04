@@ -68,7 +68,6 @@ function _game()
 
 	self.MMWebSocket = function() { 
  
-		self.websocket = new WebSocket(wsUri); 
 		self.websocket.onopen = function(evt) { 
 			self.onOpen(evt) ;
 		}; 
@@ -84,36 +83,33 @@ function _game()
 		self.websocket.onerror = function(evt) { 
 			self.onError(evt);
 		}; 
-
 	}
 
-		self.onOpen = function(evt) { 
-			self.writeToScreen("CONNECTED"); 
-			self.doSend("WebSocket rocks"); 
-		}  
+	self.onOpen = function(evt) { 
+		console.log("CONNECTED"); 
+		self.doSend("WebSocket rocks"); 
+	} 
 
-		self.onClose = function(evt) { 
-			self.writeToScreen("DISCONNECTED"); 
-		}  
+	self.onClose = function(evt) { 
+		console.log("DISCONNECTED"); 
+	}  
 
-		self.onMessage = function(evt) { 
-			self.writeToScreen('RESPONSE: ' + evt.data); 
-		}  
+	self.onMessage = function(evt) { 
+		console.log('RESPONSE: ' + evt.data); 
+	}  
 
-		self.onError = function(evt) { 
-			self.writeToScreen('ERRPR: ' + evt.data); 
-		}  
+	self.onError = function(evt) { 
+		console.log('ERROR: ' + evt.data); 
+	}  
 
-		self.doSend = function(message) {
-			self.writeToScreen("SENT: " + message);  
-			self.websocket.send(message); 
-		}  
-
-		self.writeToScreen = function(message) { 
-			console.log(message);
-		} 
+	self.doSend = function(message) {
+		console.log("SENT: " + message);  
+		self.websocket.send(message); 
+	}  
 
 	self.initializeGame = function() {
+		self.websocket = new WebSocket(wsUri); 
+
 		assets[HERO_IMAGE] = nearestNeighborScale(assets[HERO_IMAGE], scale);
 		assets[ROCKS_IMAGE] = nearestNeighborScale(assets[ROCKS_IMAGE], scale);
 		assets[TREE_BASE_IMAGE] = nearestNeighborScale(assets[TREE_BASE_IMAGE], scale);
@@ -145,7 +141,7 @@ function _game()
 				self.handleKeyUp();
 			}, false);
 		} else {
-                        canvas.addEventListener("load", self.MMWebSocket, false); 
+                        window.addEventListener("loadSockets", self.MMWebSocket, false); 
 
 			document.onkeydown = self.handleKeyDown;
 			document.onkeyup = self.handleKeyUp;
@@ -200,8 +196,6 @@ function _game()
 		self.addWidget(300 * scale, h-550, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
 		self.addWidget(400 * scale, h-450, new Bitmap(assets[TREE_IMAGE], SCENERY));
 
-		console.log(self.MMWebSocket());
-		self.doSend('fwef');
 
 	}
 
@@ -288,8 +282,12 @@ function _game()
 		}
 		if(!mouseDown)
 		{
-			self.wasMoving = false;
-			self.stopHeroAnimations();
+			if(self.wasMoving)
+			{
+				self.doSend('fewf');
+				self.wasMoving = false;
+				self.stopHeroAnimations();
+			}
 		}
 		var c,p,l;
 
