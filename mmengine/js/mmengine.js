@@ -275,6 +275,7 @@ function _game()
 				obj = world.children[i];
 				if(obj.name != 'Hero')
 				{
+					self.wasMoving = true;
 					obj.x = obj.x + self.direction()[0];
 					obj.y = obj.y + self.direction()[1];
 				}
