@@ -67,20 +67,21 @@ function _game()
 	}
 
 	self.MMWebSocket = function() { 
+		websocket = new WebSocket(wsUri);
  
-		self.websocket.onopen = function(evt) { 
+		websocket.onopen = function(evt) { 
 			self.onOpen(evt) ;
 		}; 
 
-		self.websocket.onclose = function(evt) { 
+		websocket.onclose = function(evt) { 
 			self.onClose(evt) ;
 		}; 
 
-		self.websocket.onmessage = function(evt) { 
+		websocket.onmessage = function(evt) { 
 			self.onMessage(evt) ;
 		}; 
 
-		self.websocket.onerror = function(evt) { 
+		websocket.onerror = function(evt) { 
 			self.onError(evt);
 		}; 
 	}
@@ -103,9 +104,9 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
-		console.log("SENT: " + message);  
 		self.websocket.send(message); 
 	}  
+
 
 	self.initializeGame = function() {
 		self.websocket = new WebSocket(wsUri); 
@@ -141,7 +142,7 @@ function _game()
 				self.handleKeyUp();
 			}, false);
 		} else {
-                        window.addEventListener("loadSockets", self.MMWebSocket, false); 
+                        canvas.addEventListener("loadSockets", self.MMWebSocket(), false); 
 
 			document.onkeydown = self.handleKeyDown;
 			document.onkeyup = self.handleKeyUp;
@@ -285,7 +286,7 @@ function _game()
 			self.stopHeroAnimations();
 			if(self.wasMoving)
 			{
-				self.doSend('fewf');
+				self.doSend(new Date());
 			}
 			self.wasMoving = false;
 
