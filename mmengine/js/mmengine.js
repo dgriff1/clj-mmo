@@ -13,6 +13,7 @@ var		wsUri = "ws://192.168.1.101:5000/object/123456";
 		SCENERY = 1
 		SCENERY_BASE = 2
 
+var 		websocket = new WebSocket(wsUri);
 function _game()
 {
 	window.Game = this;
@@ -65,9 +66,9 @@ function _game()
 			self.initializeGame();
 		}
 	}
+	
 
-	self.MMWebSocket = function() { 
-		websocket = new WebSocket(wsUri);
+	self.MMWebSocket = function(e) { 
  
 		websocket.onopen = function(evt) { 
 			self.onOpen(evt) ;
@@ -104,12 +105,11 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
-		self.websocket.send(message); 
+		websocket.send(message); 
 	}  
 
 
 	self.initializeGame = function() {
-		self.websocket = new WebSocket(wsUri); 
 
 		assets[HERO_IMAGE] = nearestNeighborScale(assets[HERO_IMAGE], scale);
 		assets[ROCKS_IMAGE] = nearestNeighborScale(assets[ROCKS_IMAGE], scale);
@@ -142,7 +142,6 @@ function _game()
 				self.handleKeyUp();
 			}, false);
 		} else {
-                        canvas.addEventListener("loadSockets", self.MMWebSocket(), false); 
 
 			document.onkeydown = self.handleKeyDown;
 			document.onkeyup = self.handleKeyUp;
@@ -151,6 +150,7 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
+                window.addEventListener("load", self.MMWebSocket, false);  ; 
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
 		Ticker.setFPS(60);
@@ -300,6 +300,7 @@ function _game()
 			p = parallaxObjects[c];
 			p.x = ((world.x * p.speedFactor - p.offsetX) % p.range) + p.range;
 		}
+
 
 		stage.update();
 	}
