@@ -23,8 +23,9 @@
 			(enqueue ch (json-str p-one))
 			(receive ch 
 				(fn [ msg ] 
-					(prn "Got New Message  " msg) 
-					(enqueue ch (json-str p-one))
+					(do 
+					  (prn "Got New Message  " msg) 
+					  (enqueue ch msg))
 				)))))
 
 (defroutes main-routes
