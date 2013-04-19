@@ -1,4 +1,4 @@
-var		wsUri = "ws://192.168.1.101:5000/object/123456"; 
+var		wsUri = "ws://echo.websocket.org"; 
  		HERO_IMAGE = 'assets/hero.png',
 		ROCKS_IMAGE = 'assets/rocks.png',
 		TREE_IMAGE = 'assets/tree.png',
