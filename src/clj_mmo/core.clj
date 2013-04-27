@@ -16,17 +16,19 @@
 
 (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
 
+(def output (channel))
+
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) ]
 		(do 
 			(prn "Got a message " ch " -- "  params )
 			(enqueue ch (json-str p-one))
-			(receive ch 
+			(receive-all ch 
 				(fn [ msg ] 
 					(do 
 					  (prn "Got New Message  " msg) 
-					  (enqueue ch msg))
-				)))))
+					  (enqueue ch (str msg "-1") ))
+				))))    )
 
 (defroutes main-routes
   	; what's going on

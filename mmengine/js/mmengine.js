@@ -1,4 +1,4 @@
-var		wsUri = "ws://echo.websocket.org"; 
+var		wsUri = "ws://localhost:5000/object/10"; 
  		HERO_IMAGE = 'assets/hero.png',
 		ROCKS_IMAGE = 'assets/rocks.png',
 		TREE_IMAGE = 'assets/tree.png',
@@ -71,6 +71,7 @@ function _game()
 	self.MMWebSocket = function(e) { 
  
 		websocket.onopen = function(evt) { 
+			console.log("Opened websocket");
 			self.onOpen(evt) ;
 		}; 
 
@@ -105,6 +106,7 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
+		console.log("Sending " + message + " to " + websocket.url) ;
 		websocket.send(message); 
 	}  
 
