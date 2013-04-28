@@ -11,7 +11,7 @@
 		(is (= false (move? player evt ctx )))))
 
 (deftest good-move-test
-	(let [ player (player-factory) evt { :action "on_move" :target_x 8 :target_y 2 } ctx {} ]
+	(let [ player (player-factory) evt { :action "move" :target_x 8 :target_y 2 } ctx {} ]
 		(is (= true (move? player evt ctx)))
 		(let [new-player (move player evt ctx)]
 			(is (= 8 (:x (:location new-player))))
@@ -24,3 +24,11 @@
 		(prn p-one)	
 ))
 
+
+(deftest determine-action-test
+	(let [ player (player-factory) evt { :action "move" :target_x 15 :target_y 10 } ctx {} ]
+		(let [ moved_p (determine-action player evt ctx)]  
+			(is (= (:y (:location moved_p)) 10 ))
+			(is (= (:x (:location moved_p)) 15 ))
+		)))
+	

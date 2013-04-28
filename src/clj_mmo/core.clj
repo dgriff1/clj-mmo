@@ -10,6 +10,7 @@
  (:require [compojure.route :as route]
 	[monger core util]
 	[clj-mmo.base :as mmo]
+	[clj-mmo.actions :as actions]
 	[ring.util.response :as resp]
 	[compojure.handler :as handler])
 )
@@ -26,8 +27,8 @@
 			(receive-all ch 
 				(fn [ msg ] 
 					(do 
-					  (prn "Got New Message  " msg) 
-					  (enqueue ch (str msg "-1") ))
+					  (enqueue ch 
+					  	(json-str (actions/determine-action p-one (read-json msg) {}))))
 				))))    )
 
 (defroutes main-routes
