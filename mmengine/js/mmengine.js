@@ -1,4 +1,4 @@
-var		wsUri = "ws://localhost:5000/object/10"; 
+var		wsUri = "ws://192.168.1.109:5000/object/10"; 
  		HERO_IMAGE = 'assets/hero.png',
 		ROCKS_IMAGE = 'assets/rocks.png',
 		TREE_IMAGE = 'assets/tree.png',
@@ -13,7 +13,6 @@ var		wsUri = "ws://localhost:5000/object/10";
 		SCENERY = 1
 		SCENERY_BASE = 2
 
-var 		websocket = new WebSocket(wsUri);
 function _game()
 {
 	window.Game = this;
@@ -66,7 +65,6 @@ function _game()
 			self.initializeGame();
 		}
 	}
-	
 
 	self.MMWebSocket = function(e) { 
  
@@ -110,6 +108,9 @@ function _game()
 		websocket.send(message); 
 	}  
 
+	self.formatMessage = function(message) {
+		return {}
+        }
 
 	self.initializeGame = function() {
 
@@ -152,7 +153,9 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
-                window.addEventListener("load", self.MMWebSocket, false);  ; 
+ 		websocket = new WebSocket(wsUri);
+
+                window.addEventListener("load", self.MMWebSocket, false);   
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
 		Ticker.setFPS(60);
@@ -288,7 +291,7 @@ function _game()
 			self.stopHeroAnimations();
 			if(self.wasMoving)
 			{
-				self.doSend(new Date());
+				self.doSend(JSON.stringify({"name" : "player"}));
 			}
 			self.wasMoving = false;
 
