@@ -8,29 +8,36 @@
 	[clojure.walk :only [keywordize-keys]] 
  )
  (:require [compojure.route :as route]
-	[monger core util]
+ 	[clj-mmo.db :as db ] 
 	[clj-mmo.base :as mmo]
 	[clj-mmo.actions :as actions]
 	[ring.util.response :as resp]
 	[compojure.handler :as handler])
 )
 
-(def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
 
-(def output (channel))
+;; this will create a user
+;; (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
+;; (db/persist_player p-one nil )
 
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) ]
 		(do 
-			(prn "Got a message " ch " -- "  params )
-			(enqueue ch (json-str p-one))
+			(enqueue ch (json-str (db/get_player (:id params))))
 			(receive-all ch 
 				(fn [ msg ] 
-					(do 
-					  (prn "secondary message " msg )
-					  (enqueue ch 
-					  	(json-str (actions/determine-action p-one (read-json msg) {}))))
-				))))    )
+					(let [ player (db/get_player (:id params))]
+						(do 
+					  		(prn "secondary message " msg )
+					  		(enqueue ch 
+					  			(json-str (actions/determine-action player (read-json msg) {})))
+						)
+					)
+				)
+			)    
+		)
+	)
+)
 
 (defroutes main-routes
   	; what's going on
@@ -40,8 +47,6 @@
 	(route/not-found "Page not found")   
 )
 
-;(prn "Connecting to " (System/getenv "MONGOLAB_URI"))
-;(prn (monger.core/connect-via-uri! (System/getenv "MONGOLAB_URI" ) ))
 
 (def app
   (handler/api main-routes))

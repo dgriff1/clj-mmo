@@ -7,7 +7,7 @@
   		[org.clojure/clojure "1.5.0-RC17"]
         [compojure "1.0.1"]
 		[org.clojure/data.json "0.1.2"]
-		[com.novemberain/monger "1.0.0-beta4"]
+		[com.novemberain/monger "1.5.0"]
 		[ring/ring-jetty-adapter "1.0.1"]
 		[org.clojure/core.logic "0.7.5"]
 		[aleph "0.3.0-beta7"]
