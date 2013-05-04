@@ -14,6 +14,7 @@
 6. Uncomment:  This will create a user when you start the server (only do it once) 
 
     (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
+
     (db/persist_player p-one nil )
 6. Start the server with foreman start, don't actually connect or anything. 
 7. Kill it and comment those lines of code out. 
