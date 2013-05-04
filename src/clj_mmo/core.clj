@@ -27,6 +27,7 @@
 			(receive-all ch 
 				(fn [ msg ] 
 					(do 
+					  (prn "secondary message " msg )
 					  (enqueue ch 
 					  	(json-str (actions/determine-action p-one (read-json msg) {}))))
 				))))    )
