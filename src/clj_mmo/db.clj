@@ -3,11 +3,11 @@
 
 (prn "Connecting to Mongo " (mg/connect-via-uri! (System/getenv "MONGOLAB_URI" ) ))
 
+(defn get_player [ all_players id ] 
+	(get @all_players id))
 
-(defn get_player [ id ] 
-	(mc/find-one-as-map "mkusers" { :_id id }) ) 
 
-(defn persist_player [ new_p old_p ] 
+(defn persist_player [ k r old_p new_p ] 
 	(if 
 		(not= new_p old_p) 
 			(do 
@@ -18,6 +18,5 @@
 				(prn "player did not change" )
 					new_p)))
 
-
-
-
+(defn get_all_players [ ] 
+	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent x) :persist persist_player)  }  )) )

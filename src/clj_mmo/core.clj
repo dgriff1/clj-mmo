@@ -15,6 +15,9 @@
 	[compojure.handler :as handler])
 )
 
+(def all_players (agent (db/get_all_players)))
+
+(prn "All Players " @all_players)
 
 ;; this will create a user
 ;; (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
@@ -23,14 +26,14 @@
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) ]
 		(do 
-			(enqueue ch (json-str (db/get_player (:id params))))
+			(enqueue ch (json-str @(db/get_player all_players (:id params))))
 			(receive-all ch 
 				(fn [ msg ] 
-					(let [ player (db/get_player (:id params))]
+					(let [ player (db/get_player all_players (:id params))]
 						(do 
 					  		(prn "secondary message " msg )
 					  		(enqueue ch 
-					  			(json-str (actions/determine-action player (read-json msg) {})))
+					  			(json-str @(send player actions/determine-action (read-json msg) {})))
 						)
 					)
 				)

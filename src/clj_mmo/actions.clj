@@ -1,5 +1,4 @@
-(ns clj-mmo.actions
-	(:require  [clj-mmo.db :as db ] ) ) 
+(ns clj-mmo.actions) 
 
 ; All must be run with "evt" and "ctx" in context
 ; 
@@ -41,11 +40,10 @@
 		))
 
 (defn determine-action [ player evt ctx ] 
-	(db/persist_player 
-		(case 
-			(:action evt) 
+	(case 
+		(:action evt) 
 			"move" (do_move player evt ctx)
 			(do 
 				(prn "Invalid event " evt ) 
-				player)  )  player ))
+				player)  )  player )
 		
