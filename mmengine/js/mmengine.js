@@ -1,4 +1,4 @@
-var		wsUri = "ws://localhost:5000/object/10"; 
+var		wsUri = "ws://192.168.1.109:5000/object/10"; 
  		HERO_IMAGE = 'assets/hero.png',
 		ROCKS_IMAGE = 'assets/rocks.png',
 		TREE_IMAGE = 'assets/tree.png',
@@ -291,7 +291,10 @@ function _game()
 			self.stopHeroAnimations();
 			if(self.wasMoving)
 			{
-				self.doSend(JSON.stringify({"name" : "player", "action" : "move", "target_x" : 10, "target_y" : 15 }));
+				self.doSend(JSON.stringify({"name" : "player", 
+								"action" : "move", 
+								"target_x" : 10, 
+								"target_y" : 15 }));
 			}
 			self.wasMoving = false;
 
