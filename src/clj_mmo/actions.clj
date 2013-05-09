@@ -39,9 +39,11 @@
 		(if_then evt ctx move? move)
 		))
 
-
 (defn determine-action [ player evt ctx ] 
 	(case 
 		(:action evt) 
-		"move" (do_move player evt ctx)))
+			"move" (do_move player evt ctx)
+			(do 
+				(prn "Invalid event " evt ) 
+				player)  )  player )
 		

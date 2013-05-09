@@ -20,7 +20,7 @@
 	{ :might 3 :meat 3 :mental 3 :asphyxiation 100 :thirst  100 :hunger 100 :exposure 100 })
 
 (defn player-rec [id items attributes techtree] 
-	(entity "player" { :id id :attributes attributes :techtree techtree :conditions [] :health 100 :location { :x 0 :y 0} }) ) 
+	(entity "player" { :_id id :attributes attributes :techtree techtree :conditions [] :health 100 :location { :x 0 :y 0} }) ) 
 
 (defn on_move [ player evt ctx ] 
 	(cond-> player

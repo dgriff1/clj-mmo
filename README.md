@@ -1,15 +1,21 @@
 # clj-mmo
 
-I'm an app. Or maybe I'm a library? I haven't decided yet. 
+# setup 
 
-The choice is up to you!
+1. get mongo running
+2. update your bashrc/profile whatever so it is like this 
 
-## Usage
+    export MONGOLAB_URI="mongodb://127.0.0.1:27017/mk"
+3. Don't be an idiot about updating that url, you just need to point to mk instead of runlater
+4. make sure you source your bashrc or whatever so you get the new env variable
+5. go into 
 
-FIXME
+    clj-mmo/src/clj_mmo/core.clj
+6. Uncomment:  This will create a user when you start the server (only do it once) 
 
-## License
+    (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
 
-Copyright © 2013 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+    (db/persist_player p-one nil )
+6. Start the server with foreman start, don't actually connect or anything. 
+7. Kill it and comment those lines of code out. 
+8. Restart it and make sure you connect to object/1234 
