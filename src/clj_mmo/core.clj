@@ -21,12 +21,13 @@
 
 ;; this will create a user
 ;; (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
-;; (db/persist_player p-one nil )
+;; (db/persist_player nil nil nil p-one )
 
 (defn object-handler [ch request] 
-	(let [ params (:route-params request) ]
+	(let [ params (:route-params request) p  @(db/get_player all_players (:id params)) ]
 		(do 
-			(enqueue ch (json-str @(db/get_player all_players (:id params))))
+			(enqueue ch (json-str p ))
+			(siphon (:channel p) ch) 
 			(receive-all ch 
 				(fn [ msg ] 
 					(let [ player (db/get_player all_players (:id params))]

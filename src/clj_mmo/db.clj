@@ -1,4 +1,5 @@
 (ns clj-mmo.db
+ (:use lamina.core)
  (:require [monger.core :as mg] [monger.collection :as mc] )) 
 
 (prn "Connecting to Mongo " (mg/connect-via-uri! (System/getenv "MONGOLAB_URI" ) ))
@@ -19,4 +20,4 @@
 					new_p)))
 
 (defn get_all_players [ ] 
-	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent x) :persist persist_player)  }  )) )
+	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist_player)  }  )) )
