@@ -26,7 +26,7 @@
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) p  @(db/get_player all_players (:id params)) ]
 		(do 
-			(enqueue ch (json-str p ))
+			(enqueue ch (json-str (db/safe_player p) ))
 			(siphon (:channel p) ch) 
 			(receive-all ch 
 				(fn [ msg ] 
@@ -34,7 +34,7 @@
 						(do 
 					  		(prn "secondary message " msg )
 					  		(enqueue ch 
-					  			(json-str @(send player actions/determine-action (read-json msg) {})))
+					  			(json-str (db/safe_player @(send player actions/determine-action (read-json msg) {}))))
 						)
 					)
 				)

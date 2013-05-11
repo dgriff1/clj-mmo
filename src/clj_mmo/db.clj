@@ -21,3 +21,6 @@
 
 (defn get_all_players [ ] 
 	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist_player)  }  )) )
+
+(defn safe_player [ p ] 
+	(dissoc p :channel))
