@@ -45,5 +45,5 @@
 			"move" (do_move player evt ctx)
 			(do 
 				(prn "Invalid event " evt ) 
-				player)  )  player )
+				player)  ))
 		
