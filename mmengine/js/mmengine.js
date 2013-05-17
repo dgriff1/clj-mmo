@@ -1,4 +1,4 @@
-var		wsUri = "ws://192.168.1.109:5000/object/10"; 
+var		wsUri = "ws://192.168.1.109:5000/object/1234"; 
  		HERO_IMAGE = 'assets/hero.png',
 		ROCKS_IMAGE = 'assets/rocks.png',
 		TREE_IMAGE = 'assets/tree.png',
@@ -156,6 +156,7 @@ function _game()
  		websocket = new WebSocket(wsUri);
 
                 window.addEventListener("load", self.MMWebSocket, false);   
+                realPlayer = {"_id" : 0, "x" : 0, "y" : 0}
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
 		Ticker.setFPS(60);
@@ -281,8 +282,12 @@ function _game()
 				obj = world.children[i];
 				if(obj.name != 'Hero')
 				{
-					obj.x = obj.x + self.direction()[0];
-					obj.y = obj.y + self.direction()[1];
+					xDirection = self.direction()[0];
+                                        yDirection = self.direction()[1];
+					obj.x = obj.x + xDirection
+					obj.y = obj.y + yDirection;
+                                        realPlayer['x'] = realPlayer['x'] + xDirection;
+                                        realPlayer['y'] = realPlayer['y'] + yDirection;
 				}
 			}
 		}
@@ -291,10 +296,11 @@ function _game()
 			self.stopHeroAnimations();
 			if(self.wasMoving)
 			{
+                                  
 				self.doSend(JSON.stringify({"name" : "player", 
 								"action" : "move", 
-								"target_x" : 10, 
-								"target_y" : 15 }));
+								"target_x" : realPlayer['x'], 
+								"target_y" : realPlayer['y'] }));
 			}
 			self.wasMoving = false;
 
