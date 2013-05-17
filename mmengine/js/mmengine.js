@@ -59,17 +59,30 @@ function _game()
 
 		++requestedAssets;
 	}
+
+        self.checkAndInit = function() {
+		if(self.buffer != undefined) {
+			self.initializeGame();
+			window.clearInterval(self.checkForInit)
+		}
+	}
+
 	self.onLoadedAsset = function(e) {
 		++loadedAssets;
 		if ( loadedAssets == requestedAssets ) {
-			self.initializeGame();
+ 			websocket = new WebSocket(wsUri);
+                	window.addEventListener("load", self.MMWebSocket, false);   
+			self.checkForInit = setInterval(function(){self.checkAndInit()},100);
 		}
+	}
+
+        self.writeToBuffer = function(msg) {
+		self.buffer = JSON.parse(msg);
 	}
 
 	self.MMWebSocket = function(e) { 
  
 		websocket.onopen = function(evt) { 
-			console.log("Opened websocket");
 			self.onOpen(evt) ;
 		}; 
 
@@ -78,6 +91,7 @@ function _game()
 		}; 
 
 		websocket.onmessage = function(evt) { 
+                        self.writeToBuffer(evt.data);
 			self.onMessage(evt) ;
 		}; 
 
@@ -88,7 +102,6 @@ function _game()
 
 	self.onOpen = function(evt) { 
 		console.log("CONNECTED"); 
-		//self.doSend("WebSocket rocks"); 
 	} 
 
 	self.onClose = function(evt) { 
@@ -153,9 +166,6 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
- 		websocket = new WebSocket(wsUri);
-
-                window.addEventListener("load", self.MMWebSocket, false);   
                 realPlayer = {"_id" : 0, "x" : 0, "y" : 0}
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
@@ -194,11 +204,13 @@ function _game()
 		}
 		self.addWidget(375 * scale, h-335, new Bitmap(assets[TREE_BASE_IMAGE], SCENERY));
 
-		hero.x = w/2 - 60;
-		hero.y = h/2 ;
+		console.log(self.buffer);
+		//hero.x = w/2 - 60 ;
+		//hero.y = h/2 ;
+		hero.x = self.buffer['location']['x'];
+		hero.y = self.buffer['location']['y'];
 		hero.reset();
 		world.addChild(hero);
-
 		self.addWidget(10 * scale, h/1.25, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
 		self.addWidget(300 * scale, h-550, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
 		self.addWidget(400 * scale, h-450, new Bitmap(assets[TREE_IMAGE], SCENERY));
