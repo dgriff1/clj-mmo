@@ -23,3 +23,13 @@
 		(prn p-one)	
 ))
 
+(deftest proximity-test 
+	(let [ all_players 
+			(list
+				(assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} )
+				(assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1500 } )
+				(assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} )
+				(assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 500} )
+				(assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )
+			) p  (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} ) ] 
+		(prn "Proximity " (check_proximity p all_players))))	

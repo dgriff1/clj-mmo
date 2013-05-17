@@ -27,3 +27,17 @@
 		(move? player evt ctx)  (move evt ctx)
 		(take_damage? player evt ctx) (take_damage evt ctx)
 	))
+
+
+(defn check_proximity [  p allplayers ] 
+	(let [ x (get-in p [:location :x]) y (get-in p [:location :y] )]
+		(prn "X " x " Y " y )
+		(map (fn [ close_p ] 
+				(prn "close by " close_p ) )
+			(filter (fn [ ptwo ] 
+				(let [ px (get-in ptwo [:location :x]) py (get-in ptwo [:location :y])]
+					(if (and 
+							(or (< (- x 750) px ) (> px (+ x 750))) 
+							(or (< (- y 750) py ) (> py (+ y 750))))
+							true 
+							false))) allplayers))))

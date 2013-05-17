@@ -32,7 +32,7 @@
 				(fn [ msg ] 
 					(let [ player (db/get_player all_players (:id params))]
 						(do 
-					  		(prn "secondary message " msg )
+							(do "msg is " (read-json msg))
 					  		(enqueue ch 
 					  			(json-str (db/safe_player @(send player actions/determine-action (read-json msg) {}))))
 						)
