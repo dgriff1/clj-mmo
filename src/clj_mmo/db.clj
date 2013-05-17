@@ -13,7 +13,7 @@
 		(not= new_p old_p) 
 			(do 
 				(prn "saving player" new_p) 
-				(mc/save "mkusers" new_p) 
+				(mc/save "mkusers" (dissoc new_p :channel) ) 
 				new_p)
 			(do 
 				(prn "player did not change" )
