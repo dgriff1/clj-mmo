@@ -36,6 +36,7 @@ function _game()
 	self.scale = scale;
         self.clientMouseX = 0;
         self.clientMouseY = 0;
+        self.realPlayerCoords = {"_id" : 0, "x" : 0, "y" : 0}
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -126,10 +127,11 @@ function _game()
         }
 
 	self.initializeGame = function() {
-
-		assets[HERO_IMAGE] = nearestNeighborScale(assets[HERO_IMAGE], scale);
-		assets[ROCKS_IMAGE] = nearestNeighborScale(assets[ROCKS_IMAGE], scale);
+		assets[HERO_IMAGE] 	= nearestNeighborScale(assets[HERO_IMAGE], scale);
+		assets[ROCKS_IMAGE] 	= nearestNeighborScale(assets[ROCKS_IMAGE], scale);
 		assets[TREE_BASE_IMAGE] = nearestNeighborScale(assets[TREE_BASE_IMAGE], scale);
+		assets[TREE_IMAGE] 	= nearestNeighborScale(assets[TREE_IMAGE], scale);
+		assets[GRASS_IMAGE] 	= nearestNeighborScale(assets[GRASS_IMAGE], scale);
 
 		self.initializeSpriteSheets();
 
@@ -166,7 +168,6 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
-                realPlayer = {"_id" : 0, "x" : 0, "y" : 0}
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
 		Ticker.setFPS(60);
@@ -205,15 +206,17 @@ function _game()
 		self.addWidget(375 * scale, h-335, new Bitmap(assets[TREE_BASE_IMAGE], SCENERY));
 
 		console.log(self.buffer);
-		//hero.x = w/2 - 60 ;
-		//hero.y = h/2 ;
-		hero.x = self.buffer['location']['x'];
-		hero.y = self.buffer['location']['y'];
+		hero.x = w/2 - 60 ;
+		hero.y = h/2 ;
+		//hero.x = self.buffer['location']['x'];
+		//hero.y = self.buffer['location']['y'];
 		hero.reset();
 		world.addChild(hero);
 		self.addWidget(10 * scale, h/1.25, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
 		self.addWidget(300 * scale, h-550, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
 		self.addWidget(400 * scale, h-450, new Bitmap(assets[TREE_IMAGE], SCENERY));
+
+		self.movePlayer(self.buffer['location']['x'], self.buffer['location']['y']);
 
 
 	}
@@ -283,25 +286,31 @@ function _game()
 			hero.currentFrame = 1;
 	}
 
+	self.movePlayer = function(x, y) 
+	{
+		for(i = 0; i < world.children.length;i = i + 1)
+		{
+			obj = world.children[i];
+			if(obj.name != 'Hero')
+			{
+				obj.x = obj.x + x
+				obj.y = obj.y + y;
+			}
+		}		
+                self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
+                self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
+	}
+
 	self.tick = function(e)
 	{
                 movementSpeed = 3;
 		
                 if(mouseDown)
                 { 
-			for(i = 0; i < world.children.length;i = i + 1)
-			{
-				obj = world.children[i];
-				if(obj.name != 'Hero')
-				{
-					xDirection = self.direction()[0];
-                                        yDirection = self.direction()[1];
-					obj.x = obj.x + xDirection
-					obj.y = obj.y + yDirection;
-                                        realPlayer['x'] = realPlayer['x'] + xDirection;
-                                        realPlayer['y'] = realPlayer['y'] + yDirection;
-				}
-			}
+			xDirection = self.direction()[0];
+                        yDirection = self.direction()[1];
+			self.movePlayer(xDirection, yDirection);
+			
 		}
 		if(!mouseDown)
 		{
@@ -311,8 +320,8 @@ function _game()
                                   
 				self.doSend(JSON.stringify({"name" : "player", 
 								"action" : "move", 
-								"target_x" : realPlayer['x'], 
-								"target_y" : realPlayer['y'] }));
+								"target_x" : self.realPlayerCoords['x'], 
+								"target_y" : self.realPlayerCoords['y'] }));
 			}
 			self.wasMoving = false;
 
