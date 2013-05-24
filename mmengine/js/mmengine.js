@@ -1,9 +1,12 @@
 var		wsUri = "ws://192.168.1.109:5000/object/1234"; 
- 		HERO_IMAGE = 'assets/hero.png',
-		ROCKS_IMAGE = 'assets/rocks.png',
-		TREE_IMAGE = 'assets/tree.png',
-		TREE_BASE_IMAGE = 'assets/tree_base.png',
-		GRASS_IMAGE = 'assets/smaller_grass.jpg',
+
+		RESOURCES = {
+	 		'HERO_IMAGE'      : 'assets/hero.png',
+			'ROCKS_IMAGE'     : 'assets/rocks.png',
+			'TREE_IMAGE'      : 'assets/tree.png',
+			'TREE_BASE_IMAGE' : 'assets/tree_base.png',
+			'GRASS_IMAGE'     : 'assets/smaller_grass.jpg',
+		}
 		BASE_WIDTH = 800,
 		BASE_HEIGHT = 400,               
 		HERO_HEIGHT = 64;
@@ -42,11 +45,11 @@ function _game()
 	self.getCollideables = function() { return collideables; };
 
 	self.preloadResources = function() {
-		self.loadImage(HERO_IMAGE);
-		self.loadImage(ROCKS_IMAGE);
-		self.loadImage(TREE_IMAGE);
-		self.loadImage(TREE_BASE_IMAGE);
-		self.loadImage(GRASS_IMAGE);
+		self.loadImage(RESOURCES['HERO_IMAGE']);
+		self.loadImage(RESOURCES['ROCKS_IMAGE']);
+		self.loadImage(RESOURCES['TREE_IMAGE']);
+		self.loadImage(RESOURCES['TREE_BASE_IMAGE']);
+		self.loadImage(RESOURCES['GRASS_IMAGE']);
 	}
 
 	var requestedAssets = 0;
@@ -127,11 +130,11 @@ function _game()
         }
 
 	self.initializeGame = function() {
-		assets[HERO_IMAGE] 	= nearestNeighborScale(assets[HERO_IMAGE], scale);
-		assets[ROCKS_IMAGE] 	= nearestNeighborScale(assets[ROCKS_IMAGE], scale);
-		assets[TREE_BASE_IMAGE] = nearestNeighborScale(assets[TREE_BASE_IMAGE], scale);
-		assets[TREE_IMAGE] 	= nearestNeighborScale(assets[TREE_IMAGE], scale);
-		assets[GRASS_IMAGE] 	= nearestNeighborScale(assets[GRASS_IMAGE], scale);
+		assets[RESOURCES['HERO_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['HERO_IMAGE']], scale);
+		assets[RESOURCES['ROCKS_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['ROCKS_IMAGE']], scale);
+		assets[RESOURCES['TREE_BASE_IMAGE']]    = nearestNeighborScale(assets[RESOURCES['TREE_BASE_IMAGE']], scale);
+		assets[RESOURCES['TREE_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['TREE_IMAGE']], scale);
+		assets[RESOURCES['GRASS_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['GRASS_IMAGE']], scale);
 
 		self.initializeSpriteSheets();
 
@@ -145,7 +148,7 @@ function _game()
 		world = new Container();
 		stage.addChild(world);
 
-		hero = new Hero(spriteSheets[HERO_IMAGE]);
+		hero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
 		//hero.shadow = new createjs.Shadow("#FFF", 0, 5, 4);
 		hero.currentFrame = 1;
 
@@ -175,7 +178,7 @@ function _game()
 	self.initializeSpriteSheets = function() {
 
 		var heroData = {
-			images: [assets[HERO_IMAGE]],
+			images: [assets[RESOURCES['HERO_IMAGE']]],
 			frames: {
 				width: 20 * scale,
 				height: 42 * scale
@@ -186,7 +189,7 @@ function _game()
 			}
 		}
 
-		spriteSheets[HERO_IMAGE] = new SpriteSheet(heroData);
+		spriteSheets[RESOURCES['HERO_IMAGE']] = new SpriteSheet(heroData);
 		//Direction flip
 		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO_IMAGE], true, false, false);
 	}
@@ -200,10 +203,10 @@ function _game()
 		{
 			for(j = -1000; j < w*2; j = j + (126 * scale)/2)
 			{
-				self.addWidget(j, i, new Bitmap(assets[GRASS_IMAGE], TERRAIN));
+				self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
 			}
 		}
-		self.addWidget(375 * scale, h-335, new Bitmap(assets[TREE_BASE_IMAGE], SCENERY));
+		self.addWidget(375 * scale, h-335, new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 
 		console.log(self.buffer);
 		hero.x = w/2 - 60 ;
@@ -212,9 +215,9 @@ function _game()
 		//hero.y = self.buffer['location']['y'];
 		hero.reset();
 		world.addChild(hero);
-		self.addWidget(10 * scale, h/1.25, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
-		self.addWidget(300 * scale, h-550, new Bitmap(assets[ROCKS_IMAGE], SCENERY));
-		self.addWidget(400 * scale, h-450, new Bitmap(assets[TREE_IMAGE], SCENERY));
+		self.addWidget(10 * scale, h/1.25, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
+		self.addWidget(300 * scale, h-550, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
+		self.addWidget(400 * scale, h-450, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
 
 		self.movePlayer(self.buffer['location']['x'], self.buffer['location']['y']);
 
