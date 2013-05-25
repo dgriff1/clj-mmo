@@ -37,7 +37,7 @@
 			(filter (fn [ ptwo ] 
 				(let [ px (get-in ptwo [:location :x]) py (get-in ptwo [:location :y])]
 					(if (and 
-							(or (< (- x 750) px ) (> px (+ x 750))) 
-							(or (< (- y 750) py ) (> py (+ y 750))))
+							(or (< (- x 800) px ) (> px (+ x 800))) 
+							(or (< (- y 400) py ) (> py (+ y 400))))
 							true 
 							false))) allplayers))))

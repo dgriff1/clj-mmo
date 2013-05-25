@@ -47,6 +47,7 @@
   	; what's going on
 	(GET [ "/object/:id"] {} (wrap-aleph-handler object-handler))
 	; fall backs 
+	(GET "/" [] (resp/redirect "/index.html"))
 	(route/resources "/")
 	(route/not-found "Page not found")   
 )

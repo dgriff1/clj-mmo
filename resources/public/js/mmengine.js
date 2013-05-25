@@ -1,11 +1,11 @@
-var		wsUri = "ws://192.168.1.109:5000/object/1234"; 
+var		wsUri = "ws://localhost:5000/object/1234"; 
 
 		RESOURCES = {
-	 		'HERO_IMAGE'      : 'assets/hero.png',
-			'ROCKS_IMAGE'     : 'assets/rocks.png',
-			'TREE_IMAGE'      : 'assets/tree.png',
-			'TREE_BASE_IMAGE' : 'assets/tree_base.png',
-			'GRASS_IMAGE'     : 'assets/smaller_grass.jpg',
+	 		'HERO_IMAGE'      : '/assets/hero.png',
+			'ROCKS_IMAGE'     : '/assets/rocks.png',
+			'TREE_IMAGE'      : '/assets/tree.png',
+			'TREE_BASE_IMAGE' : '/assets/tree_base.png',
+			'GRASS_IMAGE'     : '/assets/smaller_grass.jpg',
 		}
 		BASE_WIDTH = 800,
 		BASE_HEIGHT = 400,               
