@@ -16,6 +16,7 @@
 	(do
 		(prn "Moving player" evt)
 	(-> player
+		(assoc :old_location (:location player))
 		(assoc-in [:location :x] (:target_x evt))
 		(assoc-in [:location :y] (:target_y evt))
 		)))
