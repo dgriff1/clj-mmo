@@ -1,4 +1,4 @@
-var		wsUri = "ws://mike-VirtualBox:5000/object/1234"; 
+var		wsUri = "ws://192.168.1.109:5000/object/1234"; 
 
 		RESOURCES = {
 	 		'HERO_IMAGE'      : '/assets/hero.png',
@@ -195,20 +195,17 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		for(i = -1000; i < h*2; i = i + (64 * scale)/2)
+		for(i = (h/2)-64; i <(h/2)+64; i = i + 64)
 		{
-			for(j = -1000; j < w*2; j = j + (126 * scale)/2)
+			for(j = (w/2)-126; j < (w/2)+126; j = j + 126)
 			{
 				self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
 			}
 		}
 		self.addWidget(375 * scale, h-335, new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 
-		console.log(self.buffer);
 		hero.x = w/2 - 60 ;
 		hero.y = h/2 ;
-		//hero.x = self.buffer['location']['x'];
-		//hero.y = self.buffer['location']['y'];
 		hero.reset();
 		world.addChild(hero);
 		self.addWidget(10 * scale, h/1.25, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
@@ -216,8 +213,6 @@ function _game()
 		self.addWidget(400 * scale, h-450, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
 
 		self.movePlayer(self.buffer['location']['x'], self.buffer['location']['y']);
-
-
 	}
 
 	self.doAnimation = function(spriteSheet)
