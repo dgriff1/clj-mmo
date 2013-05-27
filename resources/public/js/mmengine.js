@@ -1,4 +1,4 @@
-var		wsUri = "ws://localhost:5000/object/1234"; 
+var		wsUri = "ws://mike-VirtualBox:5000/object/1234"; 
 
 		RESOURCES = {
 	 		'HERO_IMAGE'      : '/assets/hero.png',
@@ -45,11 +45,9 @@ function _game()
 	self.getCollideables = function() { return collideables; };
 
 	self.preloadResources = function() {
-		self.loadImage(RESOURCES['HERO_IMAGE']);
-		self.loadImage(RESOURCES['ROCKS_IMAGE']);
-		self.loadImage(RESOURCES['TREE_IMAGE']);
-		self.loadImage(RESOURCES['TREE_BASE_IMAGE']);
-		self.loadImage(RESOURCES['GRASS_IMAGE']);
+		for(key in RESOURCES) {
+			self.loadImage(RESOURCES[key]);
+		}
 	}
 
 	var requestedAssets = 0;
@@ -130,11 +128,9 @@ function _game()
         }
 
 	self.initializeGame = function() {
-		assets[RESOURCES['HERO_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['HERO_IMAGE']], scale);
-		assets[RESOURCES['ROCKS_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['ROCKS_IMAGE']], scale);
-		assets[RESOURCES['TREE_BASE_IMAGE']]    = nearestNeighborScale(assets[RESOURCES['TREE_BASE_IMAGE']], scale);
-		assets[RESOURCES['TREE_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['TREE_IMAGE']], scale);
-		assets[RESOURCES['GRASS_IMAGE']] 	= nearestNeighborScale(assets[RESOURCES['GRASS_IMAGE']], scale);
+		for(key in RESOURCES) {
+			assets[RESOURCES[key]] = nearestNeighborScale(assets[RESOURCES[key]], scale);
+		}
 
 		self.initializeSpriteSheets();
 
@@ -291,9 +287,9 @@ function _game()
 
 	self.movePlayer = function(x, y) 
 	{
-		for(i = 0; i < world.children.length;i = i + 1)
+		for(count in world.children)
 		{
-			obj = world.children[i];
+			obj = world.children[count];
 			if(obj.name != 'Hero')
 			{
 				obj.x = obj.x + x
