@@ -1,4 +1,4 @@
-var		wsUri = "ws://192.168.1.109:5000/object/1234"; 
+var		wsUri = "ws://" + window.location.host + "/object/1234"; 
 
 		RESOURCES = {
 	 		'HERO_IMAGE'      : '/assets/hero.png',
