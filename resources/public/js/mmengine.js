@@ -202,15 +202,22 @@ function _game()
 				self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
 			}
 		}
-		self.addWidget(375 * scale, h-335, new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
+		//objects in background
+		self.addWidget((w/2) - 170, (h-205) + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
+		self.addWidget((w/2) - 870, (h-505) + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 
+		// hero
 		hero.x = w/2 - 60 ;
 		hero.y = h/2 ;
 		hero.reset();
 		world.addChild(hero);
-		self.addWidget(10 * scale, h/1.25, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
-		self.addWidget(300 * scale, h-550, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
-		self.addWidget(400 * scale, h-450, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
+
+		//objects in foreground
+		self.addWidget((w/2) - 200, (h/2) - 100, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
+		self.addWidget((w/2) - 900, (h/2) + 300, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
+
+		self.addWidget((w/2) - 170, h-205, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
+		self.addWidget((w/2) - 870, h-505, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
 
 		self.movePlayer(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
