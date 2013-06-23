@@ -1,5 +1,6 @@
 (ns clj-mmo.base
-	(:use clj-mmo.actions lamina.core))
+	(:require [clj-mmo.util :as util])
+	(:use clj-mmo.actions lamina.core clojure.data.json))
 
 (defn base_type [ target ]  
 	(merge  {:actions [] :behaviors []} target))
@@ -87,3 +88,11 @@
                 	(fn [ sub_p ]
                         (close? p sub_p))
             		others ) player_hash  ))))))
+
+
+(defn grab_adjacents [ p all_players ] 
+	(prn "The ids are " (keys (get p :adjacency {})))
+	(doall (map (fn [ p_id ]
+		(let [ other_p (get all_players p_id  ) ] 
+			(prn "Sending off " other_p)
+			(enqueue (:channel p) (json-str (util/safe_player @other_p))))) (keys (get p :adjacency {})))))

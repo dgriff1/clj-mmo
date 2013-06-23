@@ -9,6 +9,7 @@
  )
  (:require [compojure.route :as route]
  	[clj-mmo.db :as db ] 
+ 	[clj-mmo.util :as util ] 
 	[clj-mmo.base :as mmo]
 	[clj-mmo.actions :as actions]
 	[ring.util.response :as resp]
@@ -17,7 +18,7 @@
 
 (def all_players (agent (db/get_all_players)))
 
-; (prn "All Players " @all_players)
+(prn "All Players " @all_players)
 
 ;; this will create a user
 ;(def p-one (mmo/player-rec "45678" [:sword], {:strength 1}, {:building  0}))
@@ -26,15 +27,18 @@
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) p  @(db/get_player all_players (:id params)) ]
 		(do 
-			(enqueue ch (json-str (db/safe_player p) ))
+			(enqueue ch (json-str (util/safe_player p) ))
 			(siphon (:channel p) ch) 
+			(prn "Grabbing adjacents " (get p :adjacency))
+			(mmo/grab_adjacents p @all_players ) 
+			(prn "Done grabbing adjacents " )
 			(receive-all ch 
 				(fn [ msg ] 
 					(let [ player (db/get_player all_players (:id params))]
 						(do 
 							(do "msg is " (read-json msg))
 					  		(enqueue ch 
-					  			(json-str (db/safe_player @(send player actions/determine-action (read-json msg) {}))))
+					  			(json-str (util/safe_player @(send player actions/determine-action (read-json msg) {}))))
 						)
 					)
 				)

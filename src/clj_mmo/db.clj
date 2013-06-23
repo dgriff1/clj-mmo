@@ -1,5 +1,5 @@
 (ns clj-mmo.db
- (:use lamina.core clj-mmo.base)
+ (:use lamina.core clj-mmo.base clj-mmo.util)
  (:require [monger.core :as mg] [monger.collection :as mc] )) 
 
 (prn "Connecting to Mongo " (System/getenv "MONGOLAB_URI"))
@@ -14,7 +14,7 @@
 		(not= new_p old_p) 
 			(do 
 				(prn "saving player" new_p) 
-				(mc/save "mkusers" (dissoc new_p :channel) ) 
+				(mc/save "mkusers" (dissoc new_p :channel :adjacency) ) 
 				new_p)
 			(do 
 				(prn "player did not change" )
@@ -22,7 +22,8 @@
 
 
 (defn get_all_players [ ] 
-	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist_player)  }  )))
+	(apply merge 
+		(map (fn [ m ]  
+			{ (first m) (add-watch (agent (second m)) :persist persist_player ) } )
+			(determine_adjacency (apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (assoc x :channel (channel)) }  ))))))
 
-(defn safe_player [ p ] 
-	(dissoc p :channel))
