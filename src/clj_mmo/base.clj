@@ -51,3 +51,39 @@
 						)
 							true 
 							false))) allplayers))))
+
+;this weirdly returns a list of "id" player-rec that you can apply to assoc on the all players hash
+(defn set_adjacency [ p other_p]
+		(let [ bridge (channel) ] 
+			(join (:channel p) bridge (:channel other_p))
+			(list (:_id p) (assoc p  :adjacency  (merge (get p :adjacency {})  { (:_id other_p) bridge}))  
+		   		(:_id other_p) (assoc other_p  :adjacency  (merge (get other_p :adjacency {})  { (:_id p) bridge})) )  ))
+	
+
+(defn connect_players [ p other_p allplayers ] 
+	(apply assoc allplayers (set_adjacency p other_p)))
+
+
+(defn connect_all [ p others allplayers ] 
+	(if (empty? others )
+		allplayers
+		(connect_all p (rest others) (connect_players (get allplayers (:_id p)) (first others) allplayers )))) 
+
+(defn close? [ p other_p ] 
+	(let [  x (get-in p [:location :x]) y (get-in p [:location :y] )
+			px (get-in other_p [:location :x]) py (get-in other_p [:location :y]) ]
+		(and 
+			(and (>= px (- x 800)) (<= px (+ x 800))) 
+			(and (>= py (- y 400)) (<= py (+ y 400))))  ))
+
+; this is for start up connections
+(defn determine_adjacency 
+	( [ players ] (determine_adjacency (vals players) players))
+	( [ players player_hash ]
+	(let [p (first players) others (rest players) ]
+		(if (nil? p) player_hash
+    		(determine_adjacency others 
+            	(connect_all p (filter
+                	(fn [ sub_p ]
+                        (close? p sub_p))
+            		others ) player_hash  ))))))

@@ -17,11 +17,11 @@
 
 (def all_players (agent (db/get_all_players)))
 
-(prn "All Players " @all_players)
+; (prn "All Players " @all_players)
 
 ;; this will create a user
-;; (def p-one (mmo/player-rec "1234" [:sword], {:strength 1}, {:building  0}))
-;; (db/persist_player nil nil nil p-one )
+;(def p-one (mmo/player-rec "45678" [:sword], {:strength 1}, {:building  0}))
+;(db/persist_player nil nil nil p-one )
 
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) p  @(db/get_player all_players (:id params)) ]
