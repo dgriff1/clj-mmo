@@ -53,6 +53,13 @@
 							true 
 							false))) allplayers))))
 
+; this sends off the association to an agent
+(defn set_agent_adjacency [ p other_p]
+		(let [ bridge (channel) ] 
+			(join (:channel @p) bridge (:channel @other_p))
+			(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))
+			(send other_p assoc :adjacency (merge (get @other_p :adjacency {}) { (:_id @p) bridge }))))
+
 ;this weirdly returns a list of "id" player-rec that you can apply to assoc on the all players hash
 (defn set_adjacency [ p other_p]
 		(let [ bridge (channel) ] 
