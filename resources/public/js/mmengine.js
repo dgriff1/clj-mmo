@@ -41,6 +41,7 @@ function _game()
         self.clientMouseX = 0;
         self.clientMouseY = 0;
         self.realPlayerCoords = {"_id" : 0, "x" : 0, "y" : 0}
+	self.otherPlayers     = {};
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -116,6 +117,7 @@ function _game()
 
 	self.onMessage = function(evt) { 
 		console.log('RESPONSE: ' + evt.data); 
+                self.handleResponse(evt.data);
 	}  
 
 	self.onError = function(evt) { 
@@ -192,6 +194,13 @@ function _game()
 		spriteSheets[RESOURCES['HERO_IMAGE']] = new SpriteSheet(heroData);
 		//Direction flip
 		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO_IMAGE], true, false, false);
+	}
+
+	self.handleResponse = function(data) {
+		data = JSON.parse(data);
+		if(data._id != playerID) {
+			self.otherPlayers[data._id] = data.location;	
+		}
 	}
 
 	self.reset = function() {
@@ -306,6 +315,18 @@ function _game()
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 	}
 
+	self.tickOtherPlayers = function() {
+		for(each in self.otherPlayers) {
+			newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
+			newHero.currentFrame = 1;
+			newHero.x = each.x;
+			newHero.y = each.y
+			newHero.reset();
+			world.addChild(newHero);
+		}
+		self.otherPlayers = {};
+	}
+
 	self.tick = function(e)
 	{
                 movementSpeed = 3;
@@ -331,16 +352,10 @@ function _game()
 			self.wasMoving = false;
 
 		}
-		var c,p,l;
+
+	 	self.tickOtherPlayers();
 
 		ticks++;
-
-		l = parallaxObjects.length;
-		for ( c = 0; c < l; c++ ) {
-			p = parallaxObjects[c];
-			p.x = ((world.x * p.speedFactor - p.offsetX) % p.range) + p.range;
-		}
-
 
 		stage.update();
 	}
