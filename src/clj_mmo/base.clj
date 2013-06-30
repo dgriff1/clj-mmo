@@ -60,22 +60,12 @@
 			(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))
 			(send other_p assoc :adjacency (merge (get @other_p :adjacency {}) { (:_id @p) bridge }))))
 
-;this weirdly returns a list of "id" player-rec that you can apply to assoc on the all players hash
-(defn set_adjacency [ p other_p]
-		(let [ bridge (channel) ] 
-			(join (:channel p) bridge (:channel other_p))
-			(list (:_id p) (assoc p  :adjacency  (merge (get p :adjacency {})  { (:_id other_p) bridge}))  
-		   		(:_id other_p) (assoc other_p  :adjacency  (merge (get other_p :adjacency {})  { (:_id p) bridge})) )  ))
-	
-
-(defn connect_players [ p other_p allplayers ] 
-	(apply assoc allplayers (set_adjacency p other_p)))
-
-
-(defn connect_all [ p others allplayers ] 
+(defn connect_all [ p others] 
 	(if (empty? others )
-		allplayers
-		(connect_all p (rest others) (connect_players (get allplayers (:_id p)) (first others) allplayers )))) 
+		p
+		(do 
+			(set_agent_adjacency p (first others))
+			(connect_all p (rest others)))))
 
 (defn close? [ p other_p ] 
 	(let [  x (get-in p [:location :x]) y (get-in p [:location :y] )
@@ -86,15 +76,22 @@
 
 ; this is for start up connections
 (defn determine_adjacency 
-	( [ players ] (determine_adjacency (vals players) players))
-	( [ players player_hash ]
-	(let [p (first players) others (rest players) ]
-		(if (nil? p) player_hash
-    		(determine_adjacency others 
-            	(connect_all p (filter
-                	(fn [ sub_p ]
-                        (close? p sub_p))
-            		others ) player_hash  ))))))
+	 [ players ] 
+	 (dorun (map (fn [ p ] 
+		(connect_all p (filter (fn [ other_p ] 
+			(if 
+				(= (:_id @p) (:_id @other_p)) false
+				(close? @p @other_p) )) (vals players)))) (vals players)))
+		players)
+	 	
+;	( [ players player_hash ]
+;	(let [p (first players) others (rest players) ]
+;		(if (nil? p) player_hash
+;    		(determine_adjacency others 
+;            	(connect_all p (filter
+;                	(fn [ sub_p ]
+;                        (close? p sub_p))
+;            		others ) player_hash  ))))))
 
 
 (defn grab_adjacents [ p all_players ] 

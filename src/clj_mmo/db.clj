@@ -22,8 +22,5 @@
 
 
 (defn get_all_players [ ] 
-	(apply merge 
-		(map (fn [ m ]  
-			{ (first m) (add-watch (agent (second m)) :persist persist_player ) } )
-			(determine_adjacency (apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (assoc x :channel (channel)) }  ))))))
-
+	(determine_adjacency 
+		(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist_player)  }  ))))

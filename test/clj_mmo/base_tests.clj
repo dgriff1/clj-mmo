@@ -34,18 +34,20 @@
 			) p  (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} ) ] 
 		(prn "Proximity " (check_proximity p all_players))))	
 
+(defn adj_list [ kmap k ]  
+	(get (deref (get kmap k)) :adjacency ))
+
 (deftest adjacency-test 
 	(let [ all_players 
-				{ "1" (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} :old_location { :x 9999 :y 20001}    )
-				  "2" (assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1800 } )
-				  "3" (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} )
-				  "4" (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1800 :y 2400} )
-				  "5" (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} ) }  
+				{ "1" (agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} :old_location { :x 9999 :y 20001}    ))
+				  "2" (agent (assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1800 } ))
+				  "3" (agent (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} ))
+				  "4" (agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1800 :y 2400} ))
+				  "5" (agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )) }  
 				  with_adjacency (determine_adjacency all_players)  ]
-		(prn "the 1 record " (get with_adjacency "1"))
-		(is (contains? (get-in with_adjacency [ "1" :adjacency ]) "2"  ))
-		(is (contains? (get-in with_adjacency [ "1" :adjacency ]) "4"  ))
-		(is (not (contains? (get-in with_adjacency [ "1" :adjacency ]) "1" )))
-		(is (not (contains? (get-in with_adjacency [ "1" :adjacency ]) "3" )))
+		(is (contains? (adj_list with_adjacency "1") "2" ))
+		(is (contains? (adj_list with_adjacency "1" ) "4"  ))
+		(is (not (contains? (adj_list with_adjacency  "1") "1" )))
+		(is (not (contains? (adj_list with_adjacency "1" ) "3" )))
 		))	
 	
