@@ -1,4 +1,5 @@
-var		wsUri = "ws://" + window.location.host + "/object/1234"; 
+var	        playerID = window.location.search.substr(window.location.search.indexOf("id")+3);
+var		wsUri = "ws://" + window.location.host + "/object/" + playerID; 
 
 		RESOURCES = {
 	 		'HERO_IMAGE'      : '/assets/hero.png',
