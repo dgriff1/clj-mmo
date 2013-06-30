@@ -30,7 +30,7 @@
 			(enqueue ch (json-str (util/safe_player p) ))
 			(siphon (:channel p) ch) 
 			(prn "Grabbing adjacents " (get p :adjacency))
-			(mmo/grab_adjacents p @all_players ) 
+			(mmo/grab_adjacents ch p @all_players ) 
 			(prn "Done grabbing adjacents " )
 			(receive-all ch 
 				(fn [ msg ] 

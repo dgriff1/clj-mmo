@@ -46,10 +46,15 @@
 					(send p dissoc-in [ :adjacency (:_id @other_p) ] )
 					(send other_p dissoc-in [ :adjacency (:_id @p) ] )))))
 
+(defn entering? [ p_loc other_loc ] 
+	(if (nil? other_loc) true true))
+
 (defn check_proximity [  p allplayers ] 
 	(let [ x (get-in @p [:location :x]) y (get-in @p [:location :y] ) c (:channel @p)  ]
 		(map (fn [ close_p ] 
-				(set_agent_adjacency p close_p))
+				(if (entering? (:location @p) (:old_location @close_p)) (set_agent_adjacency p close_p)
+					(unset_agent_adjacency p close_p)	
+				))
 			(filter (fn [ ptwo ] 
 				(let [ px (get-in @ptwo [:location :x]) py (get-in @ptwo [:location :y])]
 					(if (or 
@@ -99,7 +104,8 @@
 ;            		others ) player_hash  ))))))
 
 
-(defn grab_adjacents [ p all_players ] 
+(defn grab_adjacents [ ch p all_players ] 
 	(doall (map (fn [ p_id ]
 		(let [ other_p (get all_players p_id  ) ] 
-			(enqueue (:channel p) (json-str (util/safe_player @other_p))))) (keys (get p :adjacency {})))))
+			(prn "Sending other player " other_p)
+			(enqueue ch (json-str (util/safe_player @other_p))))) (keys (get p :adjacency {})))))
