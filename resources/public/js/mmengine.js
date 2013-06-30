@@ -41,7 +41,8 @@ function _game()
         self.clientMouseX = 0;
         self.clientMouseY = 0;
         self.realPlayerCoords = {"_id" : 0, "x" : 0, "y" : 0}
-	self.otherPlayers     = {};
+	self.playersToAdd       = {};
+	self.currentPlayers     = [];
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -153,6 +154,7 @@ function _game()
 		hero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
 		//hero.shadow = new createjs.Shadow("#FFF", 0, 5, 4);
 		hero.currentFrame = 1;
+		hero._id = playerID;
 
 		self.reset();
 
@@ -199,7 +201,7 @@ function _game()
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
 		if(data._id != playerID) {
-			self.otherPlayers[data._id] = data.location;	
+			self.playersToAdd[data._id] = data.location;	
 		}
 	}
 
@@ -315,16 +317,22 @@ function _game()
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 	}
 
-	self.tickOtherPlayers = function() {
-		for(each in self.otherPlayers) {
-			newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
-			newHero.currentFrame = 1;
-			newHero.x = each.x;
-			newHero.y = each.y
-			newHero.reset();
-			world.addChild(newHero);
+	// Checks to see if others players need to be added to our world
+	self.checkToAddPlayers = function() {
+		for(each in self.playersToAdd) {
+			if(self.currentPlayers.indexOf(each)) {
+				self.currentPlayers.push(each);
+				newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
+				heroLocation = self.playersToAdd[each];
+				newHero._id  = each;
+				newHero.currentFrame = 1;
+				newHero.x = heroLocation.x;
+				newHero.y = heroLocation.y;
+				newHero.reset();
+				world.addChild(newHero);
+			}
 		}
-		self.otherPlayers = {};
+		self.playersToAdd = {};
 	}
 
 	self.tick = function(e)
@@ -353,7 +361,7 @@ function _game()
 
 		}
 
-	 	self.tickOtherPlayers();
+	 	self.checkToAddPlayers();
 
 		ticks++;
 
