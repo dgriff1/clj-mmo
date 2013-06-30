@@ -1,6 +1,6 @@
 (ns clj-mmo.base
-	(:require [clj-mmo.util :as util])
-	(:use clj-mmo.actions lamina.core clojure.data.json))
+	(:require [clj-mmo.util :as util] )
+	(:use clj-mmo.actions lamina.core clojure.data.json [ clojure.contrib.core :only [ dissoc-in]] ))
 
 (defn base_type [ target ]  
 	(merge  {:actions [] :behaviors []} target))
@@ -29,17 +29,29 @@
 		(take_damage? player evt ctx) (take_damage evt ctx)
 	))
 
+; this sends off the association to 2 agents
+(defn set_agent_adjacency [ p other_p]
+		(let [ bridge (channel) ] 
+			(join (:channel @p) bridge (:channel @other_p))
+			(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))
+			(send other_p assoc :adjacency (merge (get @other_p :adjacency {}) { (:_id @p) bridge }))))
+
+; this sends off the disassociation to the relevant agents
+(defn unset_agent_adjacency [ p other_p]
+		(let [ bridge (get-in @p [:adjacency (:_id @other_p) ] ) ]
+			(if 
+				(nil? bridge) p
+				(do 
+					(close bridge)
+					(send p dissoc-in [ :adjacency (:_id @other_p) ] )
+					(send other_p dissoc-in [ :adjacency (:_id @p) ] )))))
 
 (defn check_proximity [  p allplayers ] 
-	(let [ x (get-in p [:location :x]) y (get-in p [:location :y] ) c (:channel p)  ]
-		(prn "X " x " Y " y )
+	(let [ x (get-in @p [:location :x]) y (get-in @p [:location :y] ) c (:channel @p)  ]
 		(map (fn [ close_p ] 
-				(do
-					(siphon c (:channel close_p))
-					(siphon (:channel close_p) c)
-				(prn "close by " close_p )) )
+				(set_agent_adjacency p close_p))
 			(filter (fn [ ptwo ] 
-				(let [ px (get-in ptwo [:location :x]) py (get-in ptwo [:location :y])]
+				(let [ px (get-in @ptwo [:location :x]) py (get-in @ptwo [:location :y])]
 					(if (or 
 							; equal to Y and inside the range of X
 							(and 
@@ -52,13 +64,6 @@
 						)
 							true 
 							false))) allplayers))))
-
-; this sends off the association to an agent
-(defn set_agent_adjacency [ p other_p]
-		(let [ bridge (channel) ] 
-			(join (:channel @p) bridge (:channel @other_p))
-			(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))
-			(send other_p assoc :adjacency (merge (get @other_p :adjacency {}) { (:_id @p) bridge }))))
 
 (defn connect_all [ p others] 
 	(if (empty? others )
@@ -95,8 +100,6 @@
 
 
 (defn grab_adjacents [ p all_players ] 
-	(prn "The ids are " (keys (get p :adjacency {})))
 	(doall (map (fn [ p_id ]
 		(let [ other_p (get all_players p_id  ) ] 
-			(prn "Sending off " other_p)
 			(enqueue (:channel p) (json-str (util/safe_player @other_p))))) (keys (get p :adjacency {})))))

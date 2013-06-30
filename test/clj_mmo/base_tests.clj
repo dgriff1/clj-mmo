@@ -26,12 +26,12 @@
 (deftest proximity-test 
 	(let [ all_players 
 			(list
-				(assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} :old_location { :x 9999 :y 20001}    )
-				(assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1500 } )
-				(assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} )
-				(assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 500} )
-				(assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )
-			) p  (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} ) ] 
+				(agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} :old_location { :x 9999 :y 20001}    ))
+				(agent (assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1500 } ))
+				(agent (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} ))
+				(agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 500} ))
+				(agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} ))
+			) p  (agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} )) ] 
 		(prn "Proximity " (check_proximity p all_players))))	
 
 (defn adj_list [ kmap k ]  
@@ -46,6 +46,21 @@
 				  "5" (agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )) }  
 				  with_adjacency (determine_adjacency all_players)  ]
 		(is (contains? (adj_list with_adjacency "1") "2" ))
+		(is (contains? (adj_list with_adjacency "1" ) "4"  ))
+		(is (not (contains? (adj_list with_adjacency  "1") "1" )))
+		(is (not (contains? (adj_list with_adjacency "1" ) "3" )))
+		))	
+	
+(deftest disconnect-test 
+	(let [ all_players 
+				{ "1" (agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} :old_location { :x 9999 :y 20001}    ))
+				  "2" (agent (assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1800 } ))
+				  "3" (agent (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} ))
+				  "4" (agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1800 :y 2400} ))
+				  "5" (agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )) }  
+				  with_adjacency (determine_adjacency all_players)  ]
+		(unset_agent_adjacency (get with_adjacency "1") (get with_adjacency "2"))
+		(is (not (contains? (adj_list with_adjacency "1") "2" )))
 		(is (contains? (adj_list with_adjacency "1" ) "4"  ))
 		(is (not (contains? (adj_list with_adjacency  "1") "1" )))
 		(is (not (contains? (adj_list with_adjacency "1" ) "3" )))
