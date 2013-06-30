@@ -80,7 +80,10 @@ function _game()
 	}
 
         self.writeToBuffer = function(msg) {
-		self.buffer = JSON.parse(msg);
+                msg = JSON.parse(msg);
+                if(msg._id == playerID) { 
+			self.buffer = msg;
+		}
 	}
 
 	self.MMWebSocket = function(e) { 
