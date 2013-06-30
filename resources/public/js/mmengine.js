@@ -1,4 +1,4 @@
-var	        playerID = window.location.search.substr(window.location.search.indexOf("id")+3);
+var	        playerID = fetchGetParm("id");
 var		wsUri = "ws://" + window.location.host + "/object/" + playerID; 
 
 		RESOURCES = {

@@ -1,3 +1,9 @@
+function fetchGetParm(parm) {
+    parm = parm + "="
+    return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);
+		
+}
+
 function calculateIntersection(rect1, rect2, x, y)
 {
   // prevent x|y from being null||undefined
