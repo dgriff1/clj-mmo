@@ -307,7 +307,7 @@ function _game()
 		for(count in world.children)
 		{
 			obj = world.children[count];
-			if(obj.name != 'Hero')
+			if(obj.name != 'Hero' || (obj._id != undefined && obj._id != playerID))
 			{
 				obj.x = obj.x + x
 				obj.y = obj.y + y;
