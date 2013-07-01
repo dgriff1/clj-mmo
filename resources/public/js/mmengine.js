@@ -202,6 +202,7 @@ function _game()
 		data = JSON.parse(data);
 		if(data._id != playerID) {
 			self.playersToAdd[data._id] = data.location;	
+			console.log("Another player");
 		}
 	}
 
@@ -315,6 +316,10 @@ function _game()
 		}		
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
+		self.doSend(JSON.stringify({"name" : "player", 
+						"action" : "move", 
+						"target_x" : self.realPlayerCoords['x'] * scale, 
+						"target_y" : self.realPlayerCoords['y'] * scale}));
 	}
 
 	// Checks to see if others players need to be added to our world
@@ -326,8 +331,8 @@ function _game()
 				heroLocation = self.playersToAdd[each];
 				newHero._id  = each;
 				newHero.currentFrame = 1;
-				newHero.x = heroLocation.x;
-				newHero.y = heroLocation.y;
+				newHero.x = hero.x - (heroLocation.x * scale);
+				newHero.y = hero.y - (heroLocation.y * scale);
 				newHero.reset();
 				world.addChild(newHero);
 			}
@@ -349,14 +354,6 @@ function _game()
 		if(!mouseDown)
 		{
 			self.stopHeroAnimations();
-			if(self.wasMoving)
-			{
-                                  
-				self.doSend(JSON.stringify({"name" : "player", 
-								"action" : "move", 
-								"target_x" : self.realPlayerCoords['x'], 
-								"target_y" : self.realPlayerCoords['y'] }));
-			}
 			self.wasMoving = false;
 
 		}
