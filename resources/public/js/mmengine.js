@@ -318,8 +318,8 @@ function _game()
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 		self.doSend(JSON.stringify({"name" : "player", 
 						"action" : "move", 
-						"target_x" : self.realPlayerCoords['x'] * scale, 
-						"target_y" : self.realPlayerCoords['y'] * scale}));
+						"target_x" : self.realPlayerCoords['x'], 
+						"target_y" : self.realPlayerCoords['y']}));
 	}
 
 	// Checks to see if others players need to be added to our world
