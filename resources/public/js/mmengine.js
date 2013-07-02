@@ -235,7 +235,7 @@ function _game()
 		self.addWidget((w/2) - 170, h-205, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
 		self.addWidget((w/2) - 870, h-505, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
 
-		self.movePlayer(self.buffer['location']['x'], self.buffer['location']['y']);
+		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
 
 	self.doAnimation = function(spriteSheet)
@@ -303,6 +303,20 @@ function _game()
 			hero.currentFrame = 1;
 	}
 
+	self.initPlayerPosition = function(x, y) {
+		for(count in world.children)
+		{
+			obj = world.children[count];
+			if(obj.name != 'Hero' || (obj._id != undefined && obj._id != playerID))
+			{
+				obj.x = obj.x + (x * scale)
+				obj.y = obj.y + (y * scale);
+			}
+		}
+                self.realPlayerCoords['x'] = x ;
+                self.realPlayerCoords['y'] = y ;
+	}
+
 	self.movePlayer = function(x, y) 
 	{
 		for(count in world.children)
@@ -313,7 +327,7 @@ function _game()
 				obj.x = obj.x + (x * scale)
 				obj.y = obj.y + (y * scale);
 			}
-		}		
+		}
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 		console.log(self.realPlayerCoords);
@@ -332,8 +346,8 @@ function _game()
 				heroLocation = self.playersToAdd[each];
 				newHero._id  = each;
 				newHero.currentFrame = 1;
-				newHero.x = hero.x - (heroLocation.x * scale);
-				newHero.y = hero.y - (heroLocation.y * scale);
+				newHero.x = hero.x + (self.realPlayerCoords['x'] - (heroLocation.x * scale));
+				newHero.y = hero.y + (self.realPlayerCoords['y'] - (heroLocation.y * scale));
 				newHero.reset();
 				world.addChild(newHero);
 			}
