@@ -40,7 +40,7 @@ function _game()
 	self.scale = scale;
         self.clientMouseX = 0;
         self.clientMouseY = 0;
-        self.realPlayerCoords = {"_id" : 0, "x" : 0, "y" : 0}
+        self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
 	self.playersToAdd       = {};
 	self.currentPlayers     = [];
 
@@ -310,12 +310,13 @@ function _game()
 			obj = world.children[count];
 			if(obj.name != 'Hero' || (obj._id != undefined && obj._id != playerID))
 			{
-				obj.x = obj.x + x
-				obj.y = obj.y + y;
+				obj.x = obj.x + (x * scale)
+				obj.y = obj.y + (y * scale);
 			}
 		}		
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
+		console.log(self.realPlayerCoords);
 		self.doSend(JSON.stringify({"name" : "player", 
 						"action" : "move", 
 						"target_x" : self.realPlayerCoords['x'], 
