@@ -219,8 +219,7 @@ function _game()
 		//	}
 		//}
 		//objects in background
-		self.addWidget((w/2) - 170, (h-205) + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
-		self.addWidget((w/2) - 870, (h-505) + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
+		//self.addWidget(0, 0 + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 
 		// hero
 		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
@@ -229,11 +228,9 @@ function _game()
 		world.addChild(hero);
 
 		//objects in foreground
-		self.addWidget((w/2) - 200, (h/2) - 100, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
-		self.addWidget((w/2) - 900, (h/2) + 300, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
+		//self.addWidget(100 * scale, 100 * scale, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
 
-		self.addWidget((w/2) - 170, h-205, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
-		self.addWidget((w/2) - 870, h-505, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
+		//self.addWidget(0, 0, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
 
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
@@ -346,8 +343,8 @@ function _game()
 				heroLocation = self.playersToAdd[each];
 				newHero._id  = each;
 				newHero.currentFrame = 1;
-				newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x) * scale);
-				newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y) * scale);
+					newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x )  * scale);
+					newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
 				newHero.reset();
 				world.addChild(newHero);
 			}
@@ -386,7 +383,7 @@ function _game()
 
 		img.x = x;
 		img.y = y;
-		img.snapToPixel = true;
+		img.snapToPixel = false;
                 img.type = type;
 
 		world.addChild(img);
