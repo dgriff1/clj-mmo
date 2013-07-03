@@ -206,6 +206,17 @@ function _game()
 		}
 	}
 
+	self.calculatePosition = function(heroX, heroY, objX, objY) {
+		wx = heroX + ((self.realPlayerCoords['x'] - objX )  * scale);
+		wy = heroY + ((self.realPlayerCoords['y'] - objY )  * scale);
+		return [wx, wy]
+	}
+
+	self.addWidgetToWorld = function(x, y, resource, resourceType) {
+		pos = self.calculatePosition(hero.x, hero.y, x, y);
+		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource], resourceType));
+	}
+
 	// Sets up world and widgets, called first before tick
 	self.reset = function() {
 		collideables = [];
@@ -220,15 +231,13 @@ function _game()
 		//	}
 		//}
 		//objects in background
-		self.addWidget(0, 0 + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
+		self.addWidgetToWorld(-100, -20 + (60 * scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY);
 
 		// hero
 		self.addOurHero();
 
-		//objects in foreground
-		self.addWidget(100 * scale, 100 * scale, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
-
-		self.addWidget(0, 0, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
+		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-100, -20, RESOURCES['TREE_IMAGE'], SCENERY);
 
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
