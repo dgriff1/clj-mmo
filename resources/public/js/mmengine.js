@@ -206,6 +206,7 @@ function _game()
 		}
 	}
 
+	// Sets up world and widgets, called first before tick
 	self.reset = function() {
 		collideables = [];
 		world.removeAllChildren();
@@ -219,20 +220,24 @@ function _game()
 		//	}
 		//}
 		//objects in background
-		//self.addWidget(0, 0 + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
+		self.addWidget(0, 0 + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 
 		// hero
+		self.addOurHero();
+
+		//objects in foreground
+		self.addWidget(100 * scale, 100 * scale, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
+
+		self.addWidget(0, 0, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
+
+		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
+	}
+
+	self.addOurHero = function() {
 		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
 		hero.y = h/2 - ((HERO_HEIGHT*scale)/2);
 		hero.reset();
 		world.addChild(hero);
-
-		//objects in foreground
-		//self.addWidget(100 * scale, 100 * scale, new Bitmap(assets[RESOURCES['ROCKS_IMAGE']], SCENERY));
-
-		//self.addWidget(0, 0, new Bitmap(assets[RESOURCES['TREE_IMAGE']], SCENERY));
-
-		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
 
 	self.doAnimation = function(spriteSheet)
@@ -300,6 +305,7 @@ function _game()
 			hero.currentFrame = 1;
 	}
 
+	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
 		for(count in world.children)
 		{
@@ -314,6 +320,7 @@ function _game()
                 self.realPlayerCoords['y'] = y ;
 	}
 
+	// Moved world around player while moving players actually coords
 	self.movePlayer = function(x, y) 
 	{
 		for(count in world.children)
@@ -334,19 +341,23 @@ function _game()
 						"target_y" : self.realPlayerCoords['y']}));
 	}
 
+	// Adds new player to world
+	self.addNewPlayer = function(id, heroLocation) {
+		newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
+		newHero._id  = id;
+		newHero.currentFrame = 1;
+		newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x )  * scale);
+		newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
+		newHero.reset();
+		world.addChild(newHero);
+	}
+
 	// Checks to see if others players need to be added to our world
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
 			if(self.currentPlayers.indexOf(each)) {
 				self.currentPlayers.push(each);
-				newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
-				heroLocation = self.playersToAdd[each];
-				newHero._id  = each;
-				newHero.currentFrame = 1;
-					newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x )  * scale);
-					newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
-				newHero.reset();
-				world.addChild(newHero);
+				self.addNewPlayer(each, self.playersToAdd[each]);
 			}
 		}
 		self.playersToAdd = {};
