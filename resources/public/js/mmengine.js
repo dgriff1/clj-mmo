@@ -237,7 +237,7 @@ function _game()
 			for(j = self.buffer['location']['x'] - (w/2); j < self.buffer['location']['x'] + (w/2); j = j + 126)
 			{
 				//self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
-		 	     	self.addWidgetToWorld(j, i, RESOURCES['GRASS_IMAGE'], TERRAIN, true);
+		 	     	self.addWidgetToWorld(j+126, i, RESOURCES['GRASS_IMAGE'], TERRAIN, true);
 			}
 		}
 	}
