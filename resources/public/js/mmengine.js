@@ -43,6 +43,7 @@ function _game()
         self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
 	self.playersToAdd       = {};
 	self.currentPlayers     = [];
+	self.lastSentMessage	= 0;
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -363,10 +364,14 @@ function _game()
 		}
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
+		now = true;
+		// stub below.  Eventually will check for a window of time
+		if(self.lastSentMessage < now) {
 		self.doSend(JSON.stringify({"name" : "player", 
 						"action" : "move", 
 						"target_x" : self.realPlayerCoords['x'], 
 						"target_y" : self.realPlayerCoords['y']}));
+		}
 	}
 
 	// Adds new player to world
