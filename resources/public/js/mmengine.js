@@ -212,8 +212,15 @@ function _game()
 		return [wx, wy]
 	}
 
-	self.addWidgetToWorld = function(x, y, resource, resourceType) {
-		pos = self.calculatePosition(hero.x, hero.y, x, y);
+	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
+		if(preHero != undefined && preHero) {
+			hx = w/2 - ((HERO_WIDTH*scale)/2);
+			hy = h/2 - ((HERO_HEIGHT*scale)/2);
+			pos = self.calculatePosition(hx, hy, x, y);
+		}
+		else {
+			pos = self.calculatePosition(hero.x, hero.y, x, y);
+		}
 		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource], resourceType));
 	}
 
@@ -231,7 +238,7 @@ function _game()
 		//	}
 		//}
 		//objects in background
-		self.addWidgetToWorld(-100, -20 + (60 * scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-100, -20 + (60 * scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
 
 		// hero
 		self.addOurHero();
