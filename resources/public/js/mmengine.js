@@ -183,7 +183,7 @@ function _game()
 		
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
-		Ticker.setFPS(60);
+		Ticker.setFPS(30);
 	}
 
 	self.initializeSpriteSheets = function() {
@@ -231,19 +231,26 @@ function _game()
 		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource], resourceType));
 	}
 
+	self.drawTerrain = function() {
+		for(i = self.buffer['location']['y'] - (h/2); i < self.buffer['location']['y'] + (h/2); i = i + 64)
+		{
+			for(j = self.buffer['location']['x'] - (w/2); j < self.buffer['location']['x'] + (w/2); j = j + 126)
+			{
+				//self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
+		 	     	self.addWidgetToWorld(j, i, RESOURCES['GRASS_IMAGE'], TERRAIN, true);
+			}
+		}
+	}
+
 	// Sets up world and widgets, called first before tick
 	self.reset = function() {
 		collideables = [];
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		//for(i = (h/2)-64; i <(h/2)+64; i = i + 64)
-		//{
-		//	for(j = (w/2)-126; j < (w/2)+126; j = j + 126)
-		//	{
-		//		self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
-		//	}
-		//}
+		// terrain
+		self.drawTerrain();
+
 		//objects in background
 		self.addWidgetToWorld(-100, -20 - ((60*scale)/2) - (30/scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
 
