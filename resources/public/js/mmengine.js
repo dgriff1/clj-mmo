@@ -10,8 +10,8 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		}
 		BASE_WIDTH = 800,
 		BASE_HEIGHT = 400,               
-		HERO_HEIGHT = 64;
-		HERO_WIDTH = 64;
+		HERO_HEIGHT = 42;
+		HERO_WIDTH = 20;
 // BASE TYPES
 		TERRAIN = 0
 		SCENERY = 1
@@ -184,8 +184,8 @@ function _game()
 		var heroData = {
 			images: [assets[RESOURCES['HERO_IMAGE']]],
 			frames: {
-				width: 20 * scale,
-				height: 42 * scale
+				width: HERO_WIDTH * scale,
+				height: HERO_HEIGHT * scale
 			},
 			animations: {
 				down: [0,17,true,1],
@@ -211,20 +211,20 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		for(i = (h/2)-64; i <(h/2)+64; i = i + 64)
-		{
-			for(j = (w/2)-126; j < (w/2)+126; j = j + 126)
-			{
-				self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
-			}
-		}
+		//for(i = (h/2)-64; i <(h/2)+64; i = i + 64)
+		//{
+		//	for(j = (w/2)-126; j < (w/2)+126; j = j + 126)
+		//	{
+		//		self.addWidget(j, i, new Bitmap(assets[RESOURCES['GRASS_IMAGE']], TERRAIN));
+		//	}
+		//}
 		//objects in background
 		self.addWidget((w/2) - 170, (h-205) + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 		self.addWidget((w/2) - 870, (h-505) + (60 * scale), new Bitmap(assets[RESOURCES['TREE_BASE_IMAGE']], SCENERY));
 
 		// hero
-		hero.x = w/2 - 60 ;
-		hero.y = h/2 ;
+		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
+		hero.y = h/2 - ((HERO_HEIGHT*scale)/2);
 		hero.reset();
 		world.addChild(hero);
 
@@ -346,8 +346,8 @@ function _game()
 				heroLocation = self.playersToAdd[each];
 				newHero._id  = each;
 				newHero.currentFrame = 1;
-				newHero.x = hero.x + (self.realPlayerCoords['x'] - (heroLocation.x * scale));
-				newHero.y = hero.y + (self.realPlayerCoords['y'] - (heroLocation.y * scale));
+				newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x) * scale);
+				newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y) * scale);
 				newHero.reset();
 				world.addChild(newHero);
 			}
