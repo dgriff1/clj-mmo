@@ -238,7 +238,7 @@ function _game()
 		//	}
 		//}
 		//objects in background
-		self.addWidgetToWorld(-100, -20 + (60 * scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-100, -20 - ((60*scale)/2) - (30/scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
 
 		// hero
 		self.addOurHero();
