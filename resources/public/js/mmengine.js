@@ -55,6 +55,7 @@ function _game()
 
 	var requestedAssets = 0;
 	var loadedAssets = 0;
+
 	self.loadImage = function(e) {
 		var img = new Image();
 		img.onload = self.onLoadedAsset;
@@ -65,6 +66,7 @@ function _game()
 		++requestedAssets;
 	}
 
+	// Wait until first response fills our buffer
         self.checkAndInit = function() {
 		if(self.buffer != undefined) {
 			self.initializeGame();
@@ -72,6 +74,7 @@ function _game()
 		}
 	}
 
+	// Count all assets loaded.  Once all loaded start up websocket
 	self.onLoadedAsset = function(e) {
 		++loadedAssets;
 		if ( loadedAssets == requestedAssets ) {
@@ -81,6 +84,7 @@ function _game()
 		}
 	}
 
+	// Write first response to buffer to invoke init callback
         self.writeToBuffer = function(msg) {
                 msg = JSON.parse(msg);
                 if(msg._id == playerID) { 
@@ -88,6 +92,7 @@ function _game()
 		}
 	}
 
+	// Our web socket callbacks
 	self.MMWebSocket = function(e) { 
  
 		websocket.onopen = function(evt) { 
@@ -134,6 +139,7 @@ function _game()
 		return {}
         }
 
+	// Set up for game
 	self.initializeGame = function() {
 		for(key in RESOURCES) {
 			assets[RESOURCES[key]] = nearestNeighborScale(assets[RESOURCES[key]], scale);
@@ -179,6 +185,7 @@ function _game()
 		Ticker.useRAF = true;
 		Ticker.setFPS(60);
 	}
+
 	self.initializeSpriteSheets = function() {
 
 		var heroData = {
@@ -316,9 +323,9 @@ function _game()
 
        self.stopHeroAnimations = function() 
 	{
-			hero.gotoAndStop('up');
-			hero.gotoAndStop('down');
-			hero.currentFrame = 1;
+		hero.gotoAndStop('up');
+		hero.gotoAndStop('down');
+		hero.currentFrame = 1;
 	}
 
 	// sets up initial location based on first message
