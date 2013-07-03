@@ -183,7 +183,7 @@ function _game()
 		
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
-		Ticker.setFPS(30);
+		Ticker.setFPS(60);
 	}
 
 	self.initializeSpriteSheets = function() {
@@ -209,7 +209,6 @@ function _game()
 		data = JSON.parse(data);
 		if(data._id != playerID) {
 			self.playersToAdd[data._id] = data.location;	
-			console.log("Another player");
 		}
 	}
 
@@ -364,7 +363,6 @@ function _game()
 		}
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
-		console.log(self.realPlayerCoords);
 		self.doSend(JSON.stringify({"name" : "player", 
 						"action" : "move", 
 						"target_x" : self.realPlayerCoords['x'], 
