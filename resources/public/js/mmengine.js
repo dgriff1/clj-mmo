@@ -16,7 +16,9 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		TERRAIN = 0
 		SCENERY = 1
 		SCENERY_BASE = 2
-
+// NETWORK
+		// Increase for smoother updates but lowers performance
+		CMD_RATE = 0.25;
 function _game()
 {
 	window.Game = this;
@@ -43,7 +45,7 @@ function _game()
         self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
 	self.playersToAdd       = {};
 	self.currentPlayers     = [];
-	self.lastSentMessage	= 0;
+	self.lastSentMessage	= new Date() / 1000;
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -364,13 +366,14 @@ function _game()
 		}
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
-		now = true;
-		// stub below.  Eventually will check for a window of time
-		if(self.lastSentMessage < now) {
-		self.doSend(JSON.stringify({"name" : "player", 
-						"action" : "move", 
-						"target_x" : self.realPlayerCoords['x'], 
-						"target_y" : self.realPlayerCoords['y']}));
+		now = new Date() / 1000;
+		// stub below.  Eventuallywill check for a window of time
+		if(now - self.lastSentMessage > CMD_RATE) {
+			self.doSend(JSON.stringify({"name" : "player", 
+							"action" : "move", 
+							"target_x" : self.realPlayerCoords['x'], 
+							"target_y" : self.realPlayerCoords['y']}));
+			self.lastSentMessage = new Date() / 1000;
 		}
 	}
 
