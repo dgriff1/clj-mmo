@@ -16,6 +16,8 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		TERRAIN = 0
 		SCENERY = 1
 		SCENERY_BASE = 2
+//GRAPHICS
+		FPS_RATE = 60;
 // NETWORK
 		// Increase for smoother updates but lowers performance
 		CMD_RATE = 0.25;
@@ -186,7 +188,7 @@ function _game()
 		
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
-		Ticker.setFPS(60);
+		Ticker.setFPS(FPS_RATE);
 	}
 
 	self.initializeSpriteSheets = function() {
@@ -401,7 +403,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-                movementSpeed = 3;
+                movementSpeed = (20/FPS_RATE) * 10;
 		
                 if(mouseDown)
                 { 
