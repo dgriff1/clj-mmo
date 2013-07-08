@@ -223,9 +223,9 @@ function _game()
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
-		wx = heroX + ((self.realPlayerCoords['x'] - objX )  * scale);
-		wy = heroY + ((self.realPlayerCoords['y'] - objY )  * scale);
-		return [wx, wy]
+		self.wx = heroX + ((self.realPlayerCoords['x'] - objX )  * scale);
+		self.wy = heroY + ((self.realPlayerCoords['y'] - objY )  * scale);
+		return [self.wx, self.wy]
 	}
 
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {

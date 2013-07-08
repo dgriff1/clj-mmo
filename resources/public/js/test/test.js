@@ -3,7 +3,7 @@ ourGame = window.Game;
 ourGame.testMode = true;
 
 playerStruct = {  '_id' : 1,
-            'location' : {'x' : 1, 'y' : 1}
+                  'location' : {'x' : 1, 'y' : 1}
 }
 
 ourGame.realPlayerCoords['x'] = 100;
