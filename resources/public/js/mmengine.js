@@ -48,6 +48,7 @@ function _game()
 	self.playersToAdd       = {};
 	self.currentPlayers     = [];
 	self.lastSentMessage	= new Date() / 1000;
+        self.playerID = playerID;
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -92,7 +93,7 @@ function _game()
 	// Write first response to buffer to invoke init callback
         self.writeToBuffer = function(msg) {
                 msg = JSON.parse(msg);
-                if(msg._id == playerID) { 
+                if(msg._id == self.playerID) { 
 			self.buffer = msg;
 		}
 	}
