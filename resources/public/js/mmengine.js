@@ -60,8 +60,8 @@ function _game()
 		}
 	}
 
-	var requestedAssets = 0;
-	var loadedAssets = 0;
+	self.requestedAssets = 0;
+	self.loadedAssets = 0;
 
 	self.loadImage = function(e) {
 		var img = new Image();
@@ -70,7 +70,7 @@ function _game()
 
 		assets[e] = img;
 
-		++requestedAssets;
+		++self.requestedAssets;
 	}
 
 	// Wait until first response fills our buffer
@@ -83,8 +83,8 @@ function _game()
 
 	// Count all assets loaded.  Once all loaded start up websocket
 	self.onLoadedAsset = function(e) {
-		++loadedAssets;
-		if ( loadedAssets == requestedAssets ) {
+		++self.loadedAssets;
+		if ( self.loadedAssets == self.requestedAssets ) {
  			websocket = new WebSocket(wsUri);
                 	window.addEventListener("load", self.MMWebSocket, false);   
 			self.checkForInit = setInterval(function(){self.checkAndInit()},100);
