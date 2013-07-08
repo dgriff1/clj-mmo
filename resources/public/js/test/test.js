@@ -1,5 +1,6 @@
 
 ourGame = window.Game;
+ourGame.testMode = true;
 
 test( "Test to see if width gets set", function() {
   ok( ourGame.width != undefined, "Passed!" );

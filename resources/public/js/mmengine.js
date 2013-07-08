@@ -49,6 +49,7 @@ function _game()
 	self.currentPlayers     = [];
 	self.lastSentMessage	= new Date() / 1000;
         self.playerID = playerID;
+	self.testMode = false;
 
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -147,6 +148,9 @@ function _game()
 
 	// Set up for game
 	self.initializeGame = function() {
+		if(self.testMode) {
+			return;
+		}
 		for(key in RESOURCES) {
 			assets[RESOURCES[key]] = nearestNeighborScale(assets[RESOURCES[key]], scale);
 		}
@@ -193,7 +197,7 @@ function _game()
 	}
 
 	self.initializeSpriteSheets = function() {
-
+		
 		var heroData = {
 			images: [assets[RESOURCES['HERO_IMAGE']]],
 			frames: {
