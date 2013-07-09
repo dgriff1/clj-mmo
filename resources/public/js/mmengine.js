@@ -7,6 +7,7 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 			'TREE_IMAGE'      : '/assets/tree.png',
 			'TREE_BASE_IMAGE' : '/assets/tree_base.png',
 			'GRASS_IMAGE'     : '/assets/smaller_grass.jpg',
+			'BUSH_IMAGE'      : '/assets/bush.png'
 		}
 		BASE_WIDTH = 800,
 		BASE_HEIGHT = 400,               
@@ -259,6 +260,20 @@ function _game()
 
 		// terrain
 		self.drawTerrain();
+		self.addWidgetToWorld(100,-80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(75, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(50, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(25, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(0,  -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(-25,-80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+
+		self.addWidgetToWorld(100,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(75, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(50, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(25, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(0,  -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+
 
 		//objects in background
 		self.addWidgetToWorld(-100, -20 - ((60*scale)/2) - (30/scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
@@ -267,7 +282,10 @@ function _game()
 		self.addOurHero();
 
 		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE'], SCENERY);
+
 		self.addWidgetToWorld(-100, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+
 
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
