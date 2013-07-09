@@ -276,7 +276,15 @@ function _game()
 
 
 		//objects in background
-		self.addWidgetToWorld(-100, -20 - ((60*scale)/2) - (30/scale), RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-220, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-170, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(30, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, 120 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, 80 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-130, 180 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
 
 		// hero
 		self.addOurHero();
@@ -284,8 +292,15 @@ function _game()
 		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE'], SCENERY);
 		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE'], SCENERY);
 
-		self.addWidgetToWorld(-100, -20, RESOURCES['TREE_IMAGE'], SCENERY);
-
+		self.addWidgetToWorld(-150, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-220, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-170, -60, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, -60, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(30, -60, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, 120, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, 80, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-130, 180, RESOURCES['TREE_IMAGE'], SCENERY);
 
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
