@@ -308,49 +308,51 @@ function _game()
 
         self.direction = function() 
         {
+                movementSpeed = 0.25 * scale ;
+		
 		if(self.clientMouseY > h/2 && self.clientMouseY < h/2 + HERO_HEIGHT
 			&& self.clientMouseX < w/2)
                 {
 			self.doAnimation("down");
-			return [2, 0];
+			return [movementSpeed, 0];
                 }
 		else if(self.clientMouseY > h/2 && self.clientMouseY < h/2 + HERO_HEIGHT
 			&& self.clientMouseX > w/2)
                 {
 			self.doAnimation("down");
-			return [-2, 0];
+			return [-movementSpeed, 0];
                 }
 		else if(self.clientMouseX > w/2 - HERO_WIDTH * scale && self.clientMouseX < w/2
 			&& self.clientMouseY > h/2)
                 {
 			self.doAnimation("down");
-			return [0, -2];
+			return [0, -movementSpeed];
                 }
 		else if(self.clientMouseX > w/2 - HERO_WIDTH * scale && self.clientMouseX < w/2
 			&& self.clientMouseY < h/2)
                 {
 			self.doAnimation("up");
-			return [0, 2];
+			return [0, movementSpeed];
                 }
 		else if(self.clientMouseX < w/2 && self.clientMouseY < h/2)
                 {
 			self.doAnimation("up");
-			return [2, 2];
+			return [movementSpeed, movementSpeed];
                 }
 		else if(self.clientMouseX < w/2 && self.clientMouseY > h/2)
                 {
 			self.doAnimation("down");
-			return [2, -2];
+			return [movementSpeed, -movementSpeed];
                 }
 		else if(self.clientMouseX > w/2 && self.clientMouseY < h/2)
                 {
 			self.doAnimation("up");
-			return [-2, 2];
+			return [-movementSpeed, movementSpeed];
                 }
 		else if(self.clientMouseX > w/2 && self.clientMouseY > h/2)
                 {
 			self.doAnimation("down");
-			return [-2, -2];
+			return [-movementSpeed, -movementSpeed];
                 }
 		return [0, 0];
         }
@@ -418,8 +420,6 @@ function _game()
 
 	self.tick = function(e)
 	{
-                movementSpeed = 1.5 * scale;
-		
                 if(mouseDown)
                 { 
 			xDirection = self.direction()[0];
