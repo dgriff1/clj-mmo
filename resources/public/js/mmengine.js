@@ -192,6 +192,17 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
+		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#000000");
+ 		textInfo.x = 50;
+ 		textInfo.y = 50;
+		textInfo.textBaseline = "alphabetic";
+		stage.addChild(textInfo);
+		text = new createjs.Text("FPS: ", "20px Arial", "#000000");
+ 		text.x = 50;
+ 		text.y = 80;
+		text.textBaseline = "alphabetic";
+		stage.addChild(text);
+
 		Ticker.addListener(self.tick, self);
 		Ticker.useRAF = true;
 		Ticker.setFPS(FPS_RATE);
