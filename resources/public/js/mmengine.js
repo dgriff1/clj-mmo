@@ -324,47 +324,49 @@ function _game()
         self.direction = function() 
         {
                 movementSpeed = 0.25 * scale ;
-		
-		if(self.clientMouseY > h/2 && self.clientMouseY < h/2 + HERO_HEIGHT
-			&& self.clientMouseX < w/2)
+		clientMouseX = self.clientMouseX;
+		clientMouseY = self.clientMouseY;		
+
+		if(clientMouseY > h/2 && clientMouseY < h/2 + HERO_HEIGHT
+			&& clientMouseX < w/2)
                 {
 			self.doAnimation("down");
 			return [movementSpeed, 0];
                 }
-		else if(self.clientMouseY > h/2 && self.clientMouseY < h/2 + HERO_HEIGHT
-			&& self.clientMouseX > w/2)
+		else if(clientMouseY > h/2 && clientMouseY < h/2 + HERO_HEIGHT
+			&& clientMouseX > w/2)
                 {
 			self.doAnimation("down");
 			return [-movementSpeed, 0];
                 }
-		else if(self.clientMouseX > w/2 - HERO_WIDTH * scale && self.clientMouseX < w/2
-			&& self.clientMouseY > h/2)
+		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
+			&& clientMouseY > h/2)
                 {
 			self.doAnimation("down");
 			return [0, -movementSpeed];
                 }
-		else if(self.clientMouseX > w/2 - HERO_WIDTH * scale && self.clientMouseX < w/2
-			&& self.clientMouseY < h/2)
+		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
+			&& clientMouseY < h/2)
                 {
 			self.doAnimation("up");
 			return [0, movementSpeed];
                 }
-		else if(self.clientMouseX < w/2 && self.clientMouseY < h/2)
+		else if(clientMouseX < w/2 && clientMouseY < h/2)
                 {
 			self.doAnimation("up");
 			return [movementSpeed, movementSpeed];
                 }
-		else if(self.clientMouseX < w/2 && self.clientMouseY > h/2)
+		else if(clientMouseX < w/2 && clientMouseY > h/2)
                 {
 			self.doAnimation("down");
 			return [movementSpeed, -movementSpeed];
                 }
-		else if(self.clientMouseX > w/2 && self.clientMouseY < h/2)
+		else if(clientMouseX > w/2 && clientMouseY < h/2)
                 {
 			self.doAnimation("up");
 			return [-movementSpeed, movementSpeed];
                 }
-		else if(self.clientMouseX > w/2 && self.clientMouseY > h/2)
+		else if(clientMouseX > w/2 && clientMouseY > h/2)
                 {
 			self.doAnimation("down");
 			return [-movementSpeed, -movementSpeed];
