@@ -168,7 +168,7 @@ function _game()
 		stage.addChild(world);
 
 		hero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
-		//hero.shadow = new createjs.Shadow("#FFF", 0, 5, 4);
+		hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		hero.currentFrame = 1;
 		hero._id = playerID;
 
@@ -237,7 +237,7 @@ function _game()
 		else {
 			pos = self.calculatePosition(hero.x, hero.y, x, y);
 		}
-		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource], resourceType));
+		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
 	}
 
 	self.drawTerrain = function() {
@@ -382,6 +382,7 @@ function _game()
 		newHero.currentFrame = 1;
 		newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x )  * scale);
 		newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
+             	newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		newHero.reset();
 		world.addChild(newHero);
 	}
@@ -399,7 +400,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-                movementSpeed = (20/FPS_RATE) * 10;
+                movementSpeed = 1.5 * scale;
 		
                 if(mouseDown)
                 { 
@@ -445,6 +446,9 @@ function _game()
                 img.type = type;
 
 		world.addChild(img);
+		if(type) {
+             	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
+		}
 		collideables.push(img);
 	}
 
