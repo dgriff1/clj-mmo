@@ -18,7 +18,9 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		SCENERY = 1
 		SCENERY_BASE = 2
 //GRAPHICS
-		FPS_RATE = 60;
+		FPS_RATE = 30;
+//WORLD
+		MOVEMENT_SPEED = 1;
 // NETWORK
 		// Increase for smoother updates but lowers performance
 		CMD_RATE = 0.45;
@@ -193,6 +195,7 @@ function _game()
 		}
 		
 		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#000000");
+		textInfo.onMouseMove = function(e) { alert(1); };
  		textInfo.x = 50;
  		textInfo.y = 50;
 		textInfo.textBaseline = "alphabetic";
@@ -334,29 +337,33 @@ function _game()
 
         self.direction = function() 
         {
-                movementSpeed = 0.25 * scale ;
+                movementSpeed = MOVEMENT_SPEED * scale ;
 		clientMouseX = self.clientMouseX;
 		clientMouseY = self.clientMouseY;		
 
-		if(clientMouseY > h/2 && clientMouseY < h/2 + HERO_HEIGHT
+		// Left
+		if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 			&& clientMouseX < w/2)
                 {
 			self.doAnimation("down");
 			return [movementSpeed, 0];
                 }
-		else if(clientMouseY > h/2 && clientMouseY < h/2 + HERO_HEIGHT
+		// Right
+		else if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 			&& clientMouseX > w/2)
                 {
 			self.doAnimation("down");
 			return [-movementSpeed, 0];
                 }
-		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
+		// Up
+		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2 + HERO_WIDTH
 			&& clientMouseY > h/2)
                 {
 			self.doAnimation("down");
 			return [0, -movementSpeed];
                 }
-		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
+		// Down
+		else if(clientMouseX + HERO_WIDTH > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
 			&& clientMouseY < h/2)
                 {
 			self.doAnimation("up");
