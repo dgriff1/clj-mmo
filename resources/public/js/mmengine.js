@@ -18,9 +18,9 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		SCENERY = 1
 		SCENERY_BASE = 2
 //GRAPHICS
-		FPS_RATE = 30;
+		FPS_RATE = 60;
 //WORLD
-		MOVEMENT_SPEED = 1;
+		MOVEMENT_SPEED = 1.25;
 // NETWORK
 		// Increase for smoother updates but lowers performance
 		CMD_RATE = 0.45;
