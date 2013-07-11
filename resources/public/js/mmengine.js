@@ -23,7 +23,7 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		MOVEMENT_SPEED = 1.25;
 // NETWORK
 		// Increase for smoother updates but lowers performance
-		CMD_RATE = 0.05;
+		CMD_RATE = 0.02;
 function _game()
 {
 	window.Game = this;
@@ -40,7 +40,6 @@ function _game()
 		parallaxObjects = [],
 		keyDown = false,
 		mouseDown = false;
-		wasMoving = false;
 
 	self.width = w;
 	self.height = h;
@@ -49,7 +48,7 @@ function _game()
         self.clientMouseY = 0;
         self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
 	self.playersToAdd       = {};
-	self.currentPlayers     = [];
+	self.currentPlayers     = {};
 	self.lastSentMessage	= new Date() / 1000;
         self.playerID = playerID;
 	self.testMode = false;
@@ -233,7 +232,7 @@ function _game()
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
 		if(data._id != playerID) {
-			if(self.currentPlayers.indexOf(data._id) == -1) {
+			if(self.currentPlayers[data._id] === undefined) {
 				self.playersToAdd[data._id] = data.location;	
 			}
 			else {
@@ -328,15 +327,16 @@ function _game()
 		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
 		hero.y = h/2 - ((HERO_HEIGHT*scale)/2);
 		hero.reset();
+		hero.wasMoving = false;
 		world.addChild(hero);
 	}
 
-	self.doAnimation = function(spriteSheet)
+	self.doAnimation = function(hero, spriteSheet)
 	{
-		if(!self.wasMoving)
+		if(!hero.wasMoving)
 		{
 			hero.gotoAndPlay(spriteSheet);
-			self.wasMoving = true;
+			hero.wasMoving = true;
 		}
 	}
 
@@ -350,54 +350,54 @@ function _game()
 		if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 			&& clientMouseX < w/2)
                 {
-			self.doAnimation("down");
+			self.doAnimation(hero, "down");
 			return [movementSpeed, 0];
                 }
 		// Right
 		else if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 			&& clientMouseX > w/2)
                 {
-			self.doAnimation("down");
+			self.doAnimation(hero, "down");
 			return [-movementSpeed, 0];
                 }
 		// Up
 		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2 + HERO_WIDTH
 			&& clientMouseY > h/2)
                 {
-			self.doAnimation("down");
+			self.doAnimation(hero, "down");
 			return [0, -movementSpeed];
                 }
 		// Down
 		else if(clientMouseX + HERO_WIDTH > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
 			&& clientMouseY < h/2)
                 {
-			self.doAnimation("up");
+			self.doAnimation(hero, "up");
 			return [0, movementSpeed];
                 }
 		else if(clientMouseX < w/2 && clientMouseY < h/2)
                 {
-			self.doAnimation("up");
+			self.doAnimation(hero, "up");
 			return [movementSpeed, movementSpeed];
                 }
 		else if(clientMouseX < w/2 && clientMouseY > h/2)
                 {
-			self.doAnimation("down");
+			self.doAnimation(hero, "down");
 			return [movementSpeed, -movementSpeed];
                 }
 		else if(clientMouseX > w/2 && clientMouseY < h/2)
                 {
-			self.doAnimation("up");
+			self.doAnimation(hero, "up");
 			return [-movementSpeed, movementSpeed];
                 }
 		else if(clientMouseX > w/2 && clientMouseY > h/2)
                 {
-			self.doAnimation("down");
+			self.doAnimation(hero, "down");
 			return [-movementSpeed, -movementSpeed];
                 }
 		return [0, 0];
         }
 
-       self.stopHeroAnimations = function() 
+       self.stopHeroAnimations = function(hero) 
 	{
 		hero.gotoAndStop('up');
 		hero.gotoAndStop('down');
@@ -447,14 +447,14 @@ function _game()
 		newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
              	newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		newHero.reset();
+		self.currentPlayers[id] = newHero;
 		world.addChild(newHero);
 	}
 
 	// Checks to see if others players need to be added to our world
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
-			if(self.currentPlayers.indexOf(each)) {
-				self.currentPlayers.push(each);
+			if(self.currentPlayers[each] === undefined) {
 				self.addNewPlayer(each, self.playersToAdd[each]);
 			}
 		}
@@ -462,9 +462,11 @@ function _game()
 	}
 
 	self.movePlayers = function(msg) {
-		for(count in world.children) {
-			obj = world.children[count];
+		console.log(self.currentPlayers);
+		for(count in self.currentPlayers) {
+			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
+			        self.doAnimation(obj, "down");
 				loc = msg.location;
 				loc = self.calculatePosition(hero.x, hero.y, loc.x, loc.y);
 				obj.x = loc[0];
@@ -484,8 +486,8 @@ function _game()
 		}
 		if(!mouseDown)
 		{
-			self.stopHeroAnimations();
-			self.wasMoving = false;
+			self.stopHeroAnimations(hero);
+			hero.wasMoving = false;
 
 		}
 
