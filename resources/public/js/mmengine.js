@@ -23,7 +23,7 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		MOVEMENT_SPEED = 1.25;
 // NETWORK
 		// Increase for smoother updates but lowers performance
-		CMD_RATE = 0.45;
+		CMD_RATE = 10.45;
 function _game()
 {
 	window.Game = this;

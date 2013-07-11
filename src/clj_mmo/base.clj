@@ -31,10 +31,17 @@
 
 ; this sends off the association to 2 agents
 (defn set_agent_adjacency [ p other_p]
-		(let [ bridge (channel) ] 
-			(join (:channel @p) bridge (:channel @other_p))
-			(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))
-			(send other_p assoc :adjacency (merge (get @other_p :adjacency {}) { (:_id @p) bridge }))))
+	(if 
+		(not (contains? (:adjacency @p) (:_id other_p)))
+			(let [ bridge (channel) ] 
+				(prn "Associating ")
+				(join (:channel @p) bridge (:channel @other_p))
+				(join (:channel @other_p) bridge (:channel @p))
+				(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))
+				(send other_p assoc :adjacency (merge (get @other_p :adjacency {}) { (:_id @p) bridge }))
+				(receive-all bridge
+					(fn [ msg ] (prn "Msg is " msg ) ) ))
+		p))
 
 ; this sends off the disassociation to the relevant agents
 (defn unset_agent_adjacency [ p other_p]
@@ -104,8 +111,15 @@
 ;            		others ) player_hash  ))))))
 
 
-(defn grab_adjacents [ ch p all_players ] 
+(defn grab_adjacents [ch p all_players ] 
 	(doall (map (fn [ p_id ]
 		(let [ other_p (get all_players p_id  ) ] 
 			(prn "Sending other player " other_p)
 			(enqueue ch (json-str (util/safe_player @other_p))))) (keys (get p :adjacency {})))))
+
+(defn send_to_adjacents [ch p all_players ] 
+	(doall (map (fn [ p_id ]
+		(let [ other_p (get all_players p_id  ) ] 
+			(if (contains? @other_p :socket) 
+				(do 
+					(prn "sending to other_p " (:socket @other_p)) (enqueue (:socket @other_p) (json-str (util/safe_player p))))))) (keys (get p :adjacency {})))))

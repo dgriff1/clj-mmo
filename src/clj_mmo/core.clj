@@ -25,20 +25,22 @@
 ;(db/persist_player nil nil nil p-one )
 
 (defn object-handler [ch request] 
-	(let [ params (:route-params request) p  @(db/get_player all_players (:id params)) ]
+	(let [ params (:route-params request) p  (db/get_player all_players (:id params)) ]
 		(do 
-			(enqueue ch (json-str (util/safe_player p) ))
-			(siphon (:channel p) ch) 
-			(prn "Grabbing adjacents " (get p :adjacency))
-			(mmo/grab_adjacents ch p @all_players ) 
+			;(join ch (:channel @p))
+			(send p assoc :socket ch) 
+			(prn "En1 " (enqueue ch (json-str (util/safe_player @p) )))
+			(prn "Grabbing adjacents " (get @p :adjacency))
+			(mmo/grab_adjacents ch @p @all_players ) 
 			(prn "Done grabbing adjacents " )
 			(receive-all ch 
 				(fn [ msg ] 
+					(prn "Got a message " msg)
 					(let [ player (db/get_player all_players (:id params))]
 						(do 
-							(do "msg is " (read-json msg))
-					  		(enqueue ch 
-					  			(json-str (util/safe_player @(send player actions/determine-action (read-json msg) {}))))
+					  		(let [msg (json-str (util/safe_player @(send player actions/determine-action (read-json msg) {}))) ]
+								(enqueue ch msg) 
+								(mmo/send_to_adjacents ch @p @all_players))
 						)
 					)
 				)

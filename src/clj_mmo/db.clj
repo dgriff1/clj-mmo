@@ -13,14 +13,12 @@
 	(if 
 		(not= new_p old_p) 
 			(do 
-				(prn "saving player" new_p) 
-				(mc/save "mkusers" (dissoc new_p :channel :adjacency) ) 
+				(mc/save "mkusers" (dissoc new_p :channel :adjacency :socket) ) 
 				new_p)
 			(do 
-				(prn "player did not change" )
 					new_p)))
 
 
 (defn get_all_players [ ] 
 	(determine_adjacency 
-		(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist_player)  }  ))))
+	 	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist_player)  }  ))))

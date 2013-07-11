@@ -1,5 +1,6 @@
 (ns clj-mmo.base-tests
   (:use clojure.test
+  		lamina.core
         clj-mmo.base))
 
 (deftest create-player-test
@@ -65,4 +66,16 @@
 		(is (not (contains? (adj_list with_adjacency  "1") "1" )))
 		(is (not (contains? (adj_list with_adjacency "1" ) "3" )))
 		))	
-	
+
+
+(deftest lamina-test
+	(let [ ch1 (channel 3) ch2 (channel 3) ch3 (channel 3) ] 
+		(do 
+			(join ch1 ch2) 
+			(join ch1 ch3) 
+			(let [ r1 (read-channel ch1) r2 (read-channel ch2) r3 (read-channel ch3) ] 
+				(enqueue ch1 1) 
+				(prn "Starting to read Channels")
+				(prn "Ch1 " @r1)
+				(prn "Ch2 " @r2)
+				(prn "Ch3 " @r3)))))
