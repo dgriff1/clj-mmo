@@ -23,7 +23,7 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 		MOVEMENT_SPEED = 1.25;
 // NETWORK
 		// Increase for smoother updates but lowers performance
-		CMD_RATE = 10.45;
+		CMD_RATE = 0.05;
 function _game()
 {
 	window.Game = this;
@@ -233,7 +233,12 @@ function _game()
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
 		if(data._id != playerID) {
-			self.playersToAdd[data._id] = data.location;	
+			if(self.currentPlayers.indexOf(data._id) == -1) {
+				self.playersToAdd[data._id] = data.location;	
+			}
+			else {
+				self.movePlayers(data);
+			}
 		}
 	}
 
@@ -428,12 +433,15 @@ function _game()
 		}
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
+
+		self.sendPlayerState();
 	}
 
 	// Adds new player to world
 	self.addNewPlayer = function(id, heroLocation) {
 		newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']]);
 		newHero._id  = id;
+		newHero.type = 'Hero';
 		newHero.currentFrame = 1;
 		newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x )  * scale);
 		newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
@@ -451,6 +459,18 @@ function _game()
 			}
 		}
 		self.playersToAdd = {};
+	}
+
+	self.movePlayers = function(msg) {
+		for(count in world.children) {
+			obj = world.children[count];
+			if(obj._id != undefined && obj._id == msg._id) {
+				loc = msg.location;
+				loc = self.calculatePosition(hero.x, hero.y, loc.x, loc.y);
+				obj.x = loc[0];
+				obj.y = loc[1];
+			}
+		}	
 	}
 
 	self.tick = function(e)
@@ -473,8 +493,6 @@ function _game()
 
 		ticks++;
 		
-		self.sendPlayerState();
-
 		stage.update();
 	}
 	
