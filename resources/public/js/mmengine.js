@@ -131,6 +131,7 @@ function _game()
 	}  
 
 	self.onMessage = function(evt) { 
+		console.log('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
 	}  
 
@@ -139,6 +140,7 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
+		console.log("Sending " + message + " to " + websocket.url) ;
 		websocket.send(message); 
 	}  
 
