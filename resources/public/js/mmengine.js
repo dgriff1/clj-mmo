@@ -20,7 +20,7 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 //GRAPHICS
 		FPS_RATE = 60;
 //WORLD
-		MOVEMENT_SPEED = 1.25;
+		MOVEMENT_SPEED = 2.00;
 // NETWORK
 		// Increase for smoother updates but lowers performance
 		CMD_RATE = 0.02;
@@ -342,7 +342,7 @@ function _game()
 
         self.direction = function() 
         {
-                movementSpeed = MOVEMENT_SPEED * scale ;
+                movementSpeed = MOVEMENT_SPEED / scale ;
 		clientMouseX = self.clientMouseX;
 		clientMouseY = self.clientMouseY;		
 
