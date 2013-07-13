@@ -20,7 +20,7 @@ var		wsUri = "ws://" + window.location.host + "/object/" + playerID;
 //GRAPHICS
 		FPS_RATE = 60;
 //WORLD
-		MOVEMENT_SPEED = 2.00;
+		MOVEMENT_SPEED = 3.00;
 // NETWORK
 		// Increase for smoother updates but lowers performance
 		CMD_RATE = 0.02;
@@ -500,10 +500,11 @@ function _game()
 	self.sendPlayerState = function() {
 		now = new Date() / 1000;
 		if(now - self.lastSentMessage > CMD_RATE) {
-			self.doSend(JSON.stringify({"name" : "player", 
-							"action" : "move", 
-							"target_x" : self.realPlayerCoords['x'], 
-							"target_y" : self.realPlayerCoords['y']}));
+			self.doSend(JSON.stringify({    "name"      : "player", 
+							"action"    : "move", 
+							"target_x"  : self.realPlayerCoords['x'], 
+							"target_y"  : self.realPlayerCoords['y'],
+                                                        "direction" : 0}));
 			self.lastSentMessage = new Date() / 1000;
 		}
 	}
