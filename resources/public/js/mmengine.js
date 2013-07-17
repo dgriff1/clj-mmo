@@ -315,7 +315,7 @@ function _game()
 
         self.direction = function() 
         {
-                movementSpeed = MOVEMENT_SPEED / scale ;
+                movementSpeed = MOVEMENT_SPEED ;
 		clientMouseX = self.clientMouseX;
 		clientMouseY = self.clientMouseY;		
 
