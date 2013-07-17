@@ -197,7 +197,7 @@ function _game()
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Project: Manking v0.0.1", (20 * scale).toStrong() + "px Arial", "#000000");
+		textInfo = new createjs.Text("Project: Mankind v0.0.1", (20 * scale).toStrong() + "px Arial", "#000000");
 		textInfo.onMouseMove = function(e) { alert(1); };
  		textInfo.x = 50 * scale;
  		textInfo.y = 50 * scale;
