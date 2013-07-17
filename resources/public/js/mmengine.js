@@ -197,15 +197,15 @@ function _game()
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#000000");
+		textInfo = new createjs.Text("Project: Manking v0.0.1", (20 * scale).toStrong() + "px Arial", "#000000");
 		textInfo.onMouseMove = function(e) { alert(1); };
- 		textInfo.x = 50;
- 		textInfo.y = 50;
+ 		textInfo.x = 50 * scale;
+ 		textInfo.y = 50 * scale;
 		textInfo.textBaseline = "alphabetic";
 		stage.addChild(textInfo);
-		text = new createjs.Text("FPS: ", "20px Arial", "#000000");
- 		text.x = 50;
- 		text.y = 80;
+		text = new createjs.Text("FPS: ", (20 * scale).toString() + "px Arial", "#000000");
+ 		text.x = 50 * scale;
+ 		text.y = 80 * scale;
 		text.textBaseline = "alphabetic";
 		stage.addChild(text);
 	}
@@ -300,7 +300,7 @@ function _game()
 		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
 		hero.y = h/2 - ((HERO_HEIGHT*scale)/2);
 		hero.reset();
-		hero.wasMoving = false;
+		hero.wasMoving = true;
 		world.addChild(hero);
 	}
 
@@ -413,11 +413,11 @@ function _game()
 		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
 
 		// hero
-		self.addOurHero();
 	 	self.checkToAddPlayers();
  		for(each in self.currentPlayers) {
 			world.addChild(self.currentPlayers[each]);
 		}
+		self.addOurHero();
 
 		//objects in background
 		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
