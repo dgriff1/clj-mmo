@@ -413,11 +413,11 @@ function _game()
 		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
 
 		// hero
-	 	self.checkToAddPlayers();
  		for(each in self.currentPlayers) {
 			world.addChild(self.currentPlayers[each]);
 		}
 		self.addOurHero();
+	 	self.checkToAddPlayers();
 
 		//objects in background
 		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
