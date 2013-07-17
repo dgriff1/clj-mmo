@@ -92,6 +92,7 @@ function _game()
 
 	// Write first response to buffer to invoke init callback
         self.writeToBuffer = function(msg) {
+		if(self.buffer != undefined) { return }
                 msg = JSON.parse(msg);
                 if(msg._id == self.playerID) { 
 			self.buffer = msg;
