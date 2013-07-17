@@ -53,9 +53,6 @@ function _game()
         self.playerID = playerID;
 	self.testMode = false;
 
-	var collideables = [];
-	self.getCollideables = function() { return collideables; };
-
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
 			self.loadImage(RESOURCES[key]);
@@ -193,6 +190,12 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
+		Ticker.addListener(self.tick, self);
+		Ticker.useRAF = true;
+		Ticker.setFPS(FPS_RATE);
+	}
+
+	self.drawHud = function() {
 		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#000000");
 		textInfo.onMouseMove = function(e) { alert(1); };
  		textInfo.x = 50;
@@ -204,10 +207,6 @@ function _game()
  		text.y = 80;
 		text.textBaseline = "alphabetic";
 		stage.addChild(text);
-
-		Ticker.addListener(self.tick, self);
-		Ticker.useRAF = true;
-		Ticker.setFPS(FPS_RATE);
 	}
 
 	self.initializeSpriteSheets = function() {
@@ -270,55 +269,28 @@ function _game()
 		}
 	}
 
+	self.drawHud = function() {
+		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#000000");
+		textInfo.onMouseMove = function(e) { alert(1); };
+ 		textInfo.x = 50;
+ 		textInfo.y = 50;
+		textInfo.textBaseline = "alphabetic";
+		stage.addChild(textInfo);
+		text = new createjs.Text("FPS: ", "20px Arial", "#000000");
+ 		text.x = 50;
+ 		text.y = 80;
+		text.textBaseline = "alphabetic";
+		stage.addChild(text);
+	}
+
 	// Sets up world and widgets, called first before tick
 	self.reset = function() {
-		collideables = [];
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		// terrain
-		self.drawTerrain();
-		self.addWidgetToWorld(100,-80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(75, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(50, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(25, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(0,  -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(-25,-80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.reconcilleMap(self.buffer['location']['x'], self.buffer['location']['y']);
 
-		self.addWidgetToWorld(100,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(75, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(50, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(25, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(0,  -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
-
-
-		//objects in background
-		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-220, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-270, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-170, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-270, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(30, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-270, 120 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-270, 80 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-		self.addWidgetToWorld(-130, 180 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
-
-		// hero
-		self.addOurHero();
-
-		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE'], SCENERY);
-
-		self.addWidgetToWorld(-150, -20, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-220, -20, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-270, -20, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-170, -60, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-270, -60, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(30, -60, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-270, 120, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-270, 80, RESOURCES['TREE_IMAGE'], SCENERY);
-		self.addWidgetToWorld(-130, 180, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.drawHud();
 
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
@@ -419,9 +391,63 @@ function _game()
                 self.realPlayerCoords['y'] = y ;
 	}
 
+	self.reconcilleMap = function(x, y) {
+		world.removeAllChildren();
+		world.x = world.y = 0;
+
+		// terrain
+		self.drawTerrain();
+		self.addWidgetToWorld(100,-80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(75, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(50, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(25, -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(0,  -80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(-25,-80, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+
+		self.addWidgetToWorld(100,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(75, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(50, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(25, -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(0,  -50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE'], TERRAIN, true);
+
+		// hero
+		self.addOurHero();
+	 	self.checkToAddPlayers();
+ 		for(each in self.currentPlayers) {
+			world.addChild(self.currentPlayers[each]);
+		}
+
+		//objects in background
+		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-220, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, -20 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-170, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(30, -60 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, 120 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-270, 80 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+		self.addWidgetToWorld(-130, 180 - 64, RESOURCES['TREE_BASE_IMAGE'], SCENERY, true);
+
+		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE'], SCENERY);
+
+		self.addWidgetToWorld(-150, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-220, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, -20, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-170, -60, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, -60, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(30, -60, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, 120, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-270, 80, RESOURCES['TREE_IMAGE'], SCENERY);
+		self.addWidgetToWorld(-130, 180, RESOURCES['TREE_IMAGE'], SCENERY);
+	}
+
 	// Moved world around player while moving players actually coords
 	self.movePlayer = function(x, y) 
 	{
+		self.reconcilleMap(x, y);
+
 		for(count in world.children)
 		{
 			obj = world.children[count];
@@ -490,8 +516,6 @@ function _game()
 
 		}
 
-	 	self.checkToAddPlayers();
-
 		ticks++;
 		
 		stage.update();
@@ -522,7 +546,6 @@ function _game()
 		if(type) {
              	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
 		}
-		collideables.push(img);
 	}
 
         self.handleMouseMove = function(e)
