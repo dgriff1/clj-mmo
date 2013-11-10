@@ -153,8 +153,16 @@ function _game()
 		return {}
         }
 
+	self.hideLoader = function() {
+		document.body.style.backgroundImage = "none";
+		document.body.style.backgroundColor = "#111111";
+		document.getElementById("loader").style.display = "None";
+	}
+
 	// Set up for game
 	self.initializeGame = function() {
+		self.hideLoader();
+
 		if(self.testMode) {
 			return;
 		}
@@ -180,7 +188,6 @@ function _game()
 		hero._id = playerID;
 
 		self.MAP_DATA = self.fetchMapData();
-		console.log(self.MAP_DATA);
 
 		self.reset();
 
@@ -339,7 +346,6 @@ function _game()
 	self.drawTerrain = function() {
 		MAP_DATA = self.MAP_DATA;
 		for(each in MAP_DATA) {
-			console.log(MAP_DATA[parseInt(each)]);
 			x = MAP_DATA[parseInt(each)]['x'];
 			y = MAP_DATA[parseInt(each)]['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
