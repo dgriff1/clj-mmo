@@ -15,7 +15,7 @@ var	wsUri = "ws://" + window.location.host + "/object/" + playerID;
 	BASE_HEIGHT = 400,               
 	HERO_HEIGHT = 42;
 	HERO_WIDTH = 20;
-// BASE TYPES
+// SCENE BASE TYPES
 	TERRAIN = 0
 	SCENERY = 1
 	SCENERY_BASE = 2
@@ -25,7 +25,7 @@ var	wsUri = "ws://" + window.location.host + "/object/" + playerID;
 	MOVEMENT_SPEED = 3.00;
 // NETWORK
 	// Increase for smoother updates but lowers performance
-	CMD_RATE = 0.02;
+	UPDATE_RATE = 0.02;
 
 function _game()
 {
@@ -159,6 +159,19 @@ function _game()
 		document.getElementById("loader").style.display = "None";
 	}
 
+	self.scaleResources = function() {
+		for(key in RESOURCES) {
+			assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
+		}
+	}
+
+	self.initHero = function () { 
+		hero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']['image']]);
+		hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
+		hero.currentFrame = 1;
+		hero._id = playerID;
+	}
+
 	// Set up for game
 	self.initializeGame = function() {
 		self.hideLoader();
@@ -166,9 +179,8 @@ function _game()
 		if(self.testMode) {
 			return;
 		}
-		for(key in RESOURCES) {
-			assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
-		}
+
+		self.scaleResources();
 
 		self.initializeSpriteSheets();
 
@@ -181,16 +193,14 @@ function _game()
 
 		world = new Container();
 		stage.addChild(world);
-
-		hero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']['image']]);
-		hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
-		hero.currentFrame = 1;
-		hero._id = playerID;
+	
+		self.initHero();
 
 		self.MAP_DATA = self.fetchMapData();
 
 		self.reset();
 
+		//Event override
 		if ('ontouchstart' in document.documentElement) {
 			canvas.addEventListener('touchstart', function(e) {
 				self.handleKeyDown();
@@ -364,7 +374,7 @@ function _game()
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
 	}
 
-	self.addOurHero = function() {
+	self.addOurHeroToWorld = function() {
 		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
 		hero.y = h/2 - ((HERO_HEIGHT*scale)/2);
 		hero.reset();
@@ -484,7 +494,7 @@ function _game()
  		for(each in self.currentPlayers) {
 			world.addChild(self.currentPlayers[each]);
 		}
-		self.addOurHero();
+		self.addOurHeroToWorld();
 	 	self.checkToAddPlayers();
 
 		//objects in background
@@ -618,7 +628,7 @@ function _game()
 	
 	self.sendPlayerState = function() {
 		now = new Date() / 1000;
-		if(now - self.lastSentMessage > CMD_RATE) {
+		if(now - self.lastSentMessage > UPDATE_RATE) {
 			self.doSend(JSON.stringify({    "name"      : "player", 
 							"action"    : "move", 
 							"target_x"  : self.realPlayerCoords['x'], 
