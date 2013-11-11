@@ -22,7 +22,7 @@ var	wsUri = "ws://" + window.location.host + "/object/" + playerID;
 //GRAPHICS
 	FPS_RATE = 60;
 //WORLD
-	MOVEMENT_SPEED = 3.00;
+	MOVEMENT_SPEED = 1.80;
 // NETWORK
 	// Increase for smoother updates but lowers performance
 	UPDATE_RATE = 0.02;
@@ -285,58 +285,21 @@ function _game()
 	}
 
 	self.fetchMapData = function() { 
-		width = RESOURCES['GRASS_IMAGE']['width'];
-		height = RESOURCES['GRASS_IMAGE']['height'];
-		MAP_DATA = { 
-		}
-		for(i = 40; i >= 0; i = i - 4)
-		{
-			modifier = 32 * i;
-			MAP_DATA[parseInt(i+3)]    =  {'x' : -472 + modifier, 'y' : 14 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+2)]  =  {'x' : -440 + modifier, 'y' : 28 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+1)]  =  {'x' : -504 + modifier, 'y' : 28 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+0)]  =  {'x' : -474 + modifier, 'y' : 46  , 'image' :  'GRASS_IMAGE'};
-		}
-		for(i = 80; i > 40; i = i - 4)
-		{
-			modifier = 32 * (i-40);
-			MAP_DATA[parseInt(i)]    =  {'x' : -408 + modifier, 'y' : 10 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+2)]  =  {'x' : -440 + modifier, 'y' : -4 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+1)]  =  {'x' : -376 + modifier, 'y' : -4 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+3)]    =  {'x' : -408 + modifier , 'y' : -20  , 'image' :  'GRASS_IMAGE'};
-		}
-		for(i = 120; i >= 80; i = i - 4)
-		{
-			modifier = 32 * (i-80);
-			MAP_DATA[parseInt(i)]    =  {'x' : -472 + modifier, 'y' : -22 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+1)]  =  {'x' : -440 + modifier, 'y' : -36 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+2)]  =  {'x' : -504 + modifier, 'y' : -36 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+3)]  =  {'x' : -472 + modifier, 'y' : -52 , 'image' :  'GRASS_IMAGE'};
-		}
-		for(i = 160; i > 120; i = i - 4)
-		{
-			modifier = 32 * (i-120);
-			MAP_DATA[parseInt(i)]    =  {'x' : -408 + modifier, 'y' : -54 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+2)]  =  {'x' : -440 + modifier, 'y' : -68 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+1)]  =  {'x' : -376 + modifier, 'y' : -68 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+3)]    =  {'x' : -408 + modifier , 'y' : -84  , 'image' :  'GRASS_IMAGE'};
-		}
-		for(i = 200; i > 160; i = i - 4)
-		{
-			modifier = 32 * (i-160);
-			MAP_DATA[parseInt(i)]    =  {'x' : -472 + modifier, 'y' : -86 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+1)]  =  {'x' : -440 + modifier, 'y' : -100 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+2)]  =  {'x' : -504 + modifier, 'y' : -100 , 'image' :  'GRASS_IMAGE'};
-			MAP_DATA[parseInt(i+3)]  =  {'x' : -472 + modifier, 'y' : -116 , 'image' :  'GRASS_IMAGE'};
-		}
-		for(i = 240; i > 200; i = i - 4)
-		{
-			modifier = 32 * (i-200);
-			MAP_DATA[parseInt(i)]    =  {'x' : -408 + modifier, 'y' : -114 , 'image' :  'BEACH_IMAGE'};
-			MAP_DATA[parseInt(i+1)]  =  {'x' : -440 + modifier, 'y' : -128 , 'image' :  'BEACH_IMAGE'};
-			MAP_DATA[parseInt(i+2)]  =  {'x' : -504 + modifier, 'y' : -128 , 'image' :  'BEACH_IMAGE'};
-		}
-		return self.sortMapData(MAP_DATA);
+		jQuery.ajax({
+			url: "/js/TERRAIN.DAT",
+			async: false,
+			success: function(data) {
+				self.MAP_DATA = jQuery.parseJSON(data);
+			}
+		});
+		return self.MAP_DATA;
+	}
+
+	self.serialize = function(obj) {
+	  var str = [];
+	  for(var p in obj)
+	     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+	  return str.join("&");
 	}
 
 	self.drawTerrain = function() {
