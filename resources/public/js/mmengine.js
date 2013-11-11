@@ -22,7 +22,7 @@ var	wsUri = "ws://" + window.location.host + "/object/" + playerID;
 //GRAPHICS
 	FPS_RATE = 60;
 //WORLD
-	MOVEMENT_SPEED = 1.80;
+	MOVEMENT_SPEED = 4.80;
 // NETWORK
 	// Increase for smoother updates but lowers performance
 	UPDATE_RATE = 0.02;
@@ -288,6 +288,7 @@ function _game()
 		jQuery.ajax({
 			url: "/js/TERRAIN.DAT",
 			async: false,
+			cache: false,
 			success: function(data) {
 				self.MAP_DATA = jQuery.parseJSON(data);
 			}
