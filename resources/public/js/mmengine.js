@@ -492,8 +492,8 @@ function _game()
 
                 if(mouseDown)
                 { 
-			xDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, true, hero, self.doAnimation)[0];
-			yDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, true, hero, self.doAnimation)[1];
+			xDirection = direction(MOVEMENT_SPEED, hero)[0];
+			yDirection = direction(MOVEMENT_SPEED, hero)[1];
 			self.movePlayer(xDirection, yDirection);
 			
 		}

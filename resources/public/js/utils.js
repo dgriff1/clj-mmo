@@ -13,17 +13,21 @@ function loadSettings() {
 function fetchGetParm(parm) {
     parm = parm + "="
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);
-		
 }
 
-
-function direction(clientMouseX, clientMouseY, h, w, scale, movementSpeed, animation, hero, f) 
+function direction(movementSpeed, hero) 
 {
+	scale = window.Game.scale;
+	clientMouseX = self.Game.clientMouseX;
+	clientMouseY = self.Game.clientMouseY;
+	w = window.Game.width;
+	h = window.Game.height;
+	f = window.Game.doAnimation;
 	// Left
 	if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 		&& clientMouseX < w/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "down");
 		}
 		return [movementSpeed, 0];
@@ -32,7 +36,7 @@ function direction(clientMouseX, clientMouseY, h, w, scale, movementSpeed, anima
 	else if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 		&& clientMouseX > w/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "down");
 		}
 		return [-movementSpeed, 0];
@@ -41,7 +45,7 @@ function direction(clientMouseX, clientMouseY, h, w, scale, movementSpeed, anima
 	else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2 + HERO_WIDTH
 		&& clientMouseY > h/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "down");
 		}
 		return [0, -movementSpeed];
@@ -50,35 +54,35 @@ function direction(clientMouseX, clientMouseY, h, w, scale, movementSpeed, anima
 	else if(clientMouseX + HERO_WIDTH > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
 		&& clientMouseY < h/2)
         {	
-		if(animation) {
+		if(hero) {
 			f(hero, "up");
 		}
 		return [0, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY < h/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "up");
 		}
 		return [movementSpeed, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY > h/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "down");	
 		}
 		return [movementSpeed, -movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY < h/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "up");
 		}
 		return [-movementSpeed, movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY > h/2)
         {
-		if(animation) {
+		if(hero) {
 			f(hero, "down");
 		}
 		return [-movementSpeed, -movementSpeed];

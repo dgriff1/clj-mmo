@@ -1,6 +1,12 @@
 
 loadSettings();
 
+$("#output").click(function() {
+	console.log("E");
+	alert(1);
+});
+
+
 function _game()
 {
 	window.Game = this;
@@ -227,8 +233,8 @@ function _game()
 		self.calculateFramesPerSecond();
 
 		if(mouseDown) {
-			xDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, false)[0];
-			yDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, false)[1];
+			xDirection = direction(10, false)[0];
+			yDirection = direction(10, false)[1];
 			world.x = world.x + xDirection;
 			world.y = world.y + yDirection;
 		}
