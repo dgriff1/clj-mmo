@@ -1,0 +1,289 @@
+
+loadSettings();
+
+function _game()
+{
+	window.Game = this;
+	var self = this,
+		w = getWidth(),
+		h = getHeight(),
+		scale = snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
+		ticks = 0,
+		canvas,ctx,
+		stage,
+		world,
+		hero,
+		assets = [], spriteSheets = [],
+		parallaxObjects = [],
+		keyDown = false,
+		mouseDown = false;
+
+	self.width = w;
+	self.height = h;
+	self.scale = scale;
+        self.clientMouseX = 0;
+        self.clientMouseY = 0;
+	self.buffer = {};
+        self.realPlayerCoords = {"_id" : 0, "x" : 0, "y" : 0}
+	self.playersToAdd       = {};
+	self.currentPlayers     = {};
+	self.lastSentMessage	= new Date() / 1000;
+        self.playerID = 0;
+	self.testMode = false;
+	self.frameTimer = undefined;
+	self.framesPerSecondCounter = 0;
+	self.framesPerSecond = 0;
+	self.MAP_DATA = {};
+
+	self.preloadResources = function() {
+		for(key in RESOURCES) {
+			self.loadImage(RESOURCES[key]['image']);
+		}
+	}
+
+	self.requestedAssets = 0;
+	self.loadedAssets = 0;
+
+	self.loadImage = function(e) {
+		var img = new Image();
+		img.onload = self.onLoadedAsset;
+		img.src = e;
+
+		assets[e] = img;
+
+		++self.requestedAssets;
+	}
+
+	// Wait until first response fills our buffer
+        self.checkAndInit = function() {
+		self.buffer['location'] = {};
+		self.buffer['location']['x'] = 0;
+		self.buffer['location']['y'] = 0;
+		self.initializeGame();
+	}
+
+	// Count all assets loaded.  Once all loaded start up websocket
+	self.onLoadedAsset = function(e) {
+		++self.loadedAssets;
+		if ( self.loadedAssets == self.requestedAssets ) {
+			self.checkAndInit();
+		}
+	}
+
+	// Write first response to buffer to invoke init callback
+        self.writeToBuffer = function(msg) {
+		if(self.buffer != undefined) { return }
+                msg = JSON.parse(msg);
+                if(msg._id == self.playerID) { 
+			self.buffer = msg;
+		}
+	}
+
+
+	self.scaleResources = function() {
+		for(key in RESOURCES) {
+			assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
+		}
+	}
+
+	// Set up for game
+	self.initializeGame = function() {
+
+		self.scaleResources();
+
+		canvas = document.createElement('canvas');
+		canvas.width = w;
+		canvas.height = h;
+		document.body.appendChild(canvas);
+
+		stage = new Stage(canvas);
+
+		world = new Container();
+		stage.addChild(world);
+	
+		self.MAP_DATA = self.fetchMapData();
+
+		self.reset();
+
+		//Event override
+		if ('ontouchstart' in document.documentElement) {
+			canvas.addEventListener('touchstart', function(e) {
+				self.handleKeyDown();
+			}, false);
+
+			canvas.addEventListener('touchend', function(e) {
+				self.handleKeyUp();
+			}, false);
+		} else {
+
+			document.onkeydown = self.handleKeyDown;
+			document.onkeyup = self.handleKeyUp;
+			document.onmousedown = self.handleMouseDown;
+			document.onmouseup = self.handleMouseUp;
+			document.onmousemove = self.handleMouseMove;
+		}
+		
+		Ticker.addListener(self.tick, self);
+		Ticker.useRAF = true;
+		Ticker.setFPS(FPS_RATE);
+	}
+
+	self.calculatePosition = function(heroX, heroY, objX, objY) {
+		self.wx = heroX + ((self.realPlayerCoords['x'] - objX )  * scale);
+		self.wy = heroY + ((self.realPlayerCoords['y'] - objY )  * scale);
+		return [self.wx, self.wy]
+	}
+
+	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
+		if(preHero != undefined && preHero) {
+			hx = w/2 - ((HERO_WIDTH*scale)/2);
+			hy = h/2 - ((HERO_HEIGHT*scale)/2);
+			pos = self.calculatePosition(hx, hy, x, y);
+		}
+		else {
+			pos = self.calculatePosition(hero.x, hero.y, x, y);
+		}
+		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
+	}
+
+	self.fetchMapData = function() { 
+		jQuery.ajax({
+			url: "/js/TERRAIN.DAT",
+			async: false,
+			success: function(data) {
+				self.MAP_DATA = jQuery.parseJSON(data);
+			}
+		});
+		return self.MAP_DATA;
+	}
+
+	self.serialize = function(obj) {
+	  var str = [];
+	  for(var p in obj)
+	     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+	  return str.join("&");
+	}
+
+	self.drawTerrain = function() {
+		MAP_DATA = self.MAP_DATA;
+		for(each in MAP_DATA) {
+			x = MAP_DATA[parseInt(each)]['x'];
+			y = MAP_DATA[parseInt(each)]['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
+		}
+	}
+
+	self.drawHud = function() {
+		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#FFFFFF");
+		textInfo.onMouseMove = function(e) { alert(1); };
+ 		textInfo.x = 50;
+ 		textInfo.y = 50;
+		textInfo.textBaseline = "alphabetic";
+		stage.addChild(textInfo);
+		text = new createjs.Text("FPS: ", "20px Arial", "#FFFFFF");
+ 		text.x = 50;
+ 		text.y = 80;
+		text.textBaseline = "alphabetic";
+		stage.addChild(text);
+	}
+
+	// Sets up world and widgets, called first before tick
+	self.reset = function() {
+		world.removeAllChildren();
+		world.x = world.y = 0;
+
+		self.drawTerrain();
+
+		self.drawHud();
+
+	}
+
+	self.calculateFramesPerSecond = function() {
+		self.framesPerSecondCounter = self.framesPerSecondCounter + 1;
+                if(self.frameTimer === undefined)
+		{
+                	self.frameTimer = new Date() / 1000;
+		}
+		nextTimer= new Date() / 1000;
+		if(nextTimer - self.frameTimer > 1)
+		{
+                        self.framesPerSecond = self.framesPerSecondCounter - 1;
+                        for(children in stage.children) {
+				if(stage.children[children].text != undefined) {
+					if(stage.children[children].text.indexOf("FPS") !== -1) {
+						stage.children[children].text = "FPS: " + self.framesPerSecond;
+						stage.update();
+					}
+				}
+			}
+			self.framesPerSecondCounter = 0;
+			self.frameTimer = nextTimer;
+		}
+		return self.framesPerSecondCounter;
+	}
+
+	self.tick = function(e)
+	{
+		self.calculateFramesPerSecond();
+
+		if(mouseDown) {
+			xDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, false)[0];
+			yDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, false)[1];
+			world.x = world.x + xDirection;
+			world.y = world.y + yDirection;
+		}
+
+		ticks++;
+		
+		stage.update();
+	}
+	
+	self.addWidget = function(x,y,img,type) {
+		x = Math.round(x);
+		y = Math.round(y);
+
+		img.x = x;
+		img.y = y;
+		img.snapToPixel = false;
+                img.type = type;
+
+		world.addChild(img);
+		if(type) {
+             	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
+		}
+	}
+
+        self.handleMouseMove = function(e)
+	{
+                self.clientMouseX = e.clientX;
+                self.clientMouseY = e.clientY;
+	}
+
+        self.handleMouseDown = function(e)
+	{
+		if ( !mouseDown ) {
+			mouseDown = true;
+		}
+	}
+
+        self.handleMouseUp  = function(e)
+	{
+		mouseDown = false;
+	}
+
+	self.handleKeyDown = function(e)
+	{
+		if ( !keyDown ) {
+			keyDown = true;
+		}
+	}
+
+	self.handleKeyUp = function(e)
+	{
+		keyDown = false;
+	}
+
+	self.preloadResources();
+};
+
+new _game();
