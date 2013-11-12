@@ -1,3 +1,15 @@
+
+function loadSettings() {
+	jQuery.ajax({
+		url: "/js/settings.cfg",
+		async: false,
+		cache: false,
+		success: function(data) {
+			eval(data);
+		}
+	});
+}
+
 function fetchGetParm(parm) {
     parm = parm + "="
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);

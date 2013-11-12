@@ -1,31 +1,7 @@
 var	playerID = fetchGetParm("id");
 var	wsUri = "ws://" + window.location.host + "/object/" + playerID; 
 
-	RESOURCES = {
-		'HERO_IMAGE'      : { 'image' : '/assets/hero.png' },
-		'ROCKS_IMAGE'     : { 'image' : '/assets/rocks.png' },
-		'TREE_IMAGE'      : { 'image' : '/assets/tree.png' },
-		'TREE_BASE_IMAGE' : { 'image' : '/assets/tree_base.png' },
-		'GRASS_IMAGE'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 },
-		'WATER_IMAGE'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 },
-		'BEACH_IMAGE'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 },
-		'BUSH_IMAGE'      : { 'image' : '/assets/bush.png' }
-	}	
-	BASE_WIDTH = 800,
-	BASE_HEIGHT = 400,               
-	HERO_HEIGHT = 42;
-	HERO_WIDTH = 20;
-// SCENE BASE TYPES
-	TERRAIN = 0
-	SCENERY = 1
-	SCENERY_BASE = 2
-//GRAPHICS
-	FPS_RATE = 60;
-//WORLD
-	MOVEMENT_SPEED = 4.80;
-// NETWORK
-	// Increase for smoother updates but lowers performance
-	UPDATE_RATE = 0.02;
+loadSettings();
 
 function _game()
 {
