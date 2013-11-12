@@ -331,63 +331,6 @@ function _game()
 		}
 	}
 
-        self.direction = function() 
-        {
-                movementSpeed = MOVEMENT_SPEED ;
-		clientMouseX = self.clientMouseX;
-		clientMouseY = self.clientMouseY;		
-
-		// Left
-		if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
-			&& clientMouseX < w/2)
-                {
-			self.doAnimation(hero, "down");
-			return [movementSpeed, 0];
-                }
-		// Right
-		else if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
-			&& clientMouseX > w/2)
-                {
-			self.doAnimation(hero, "down");
-			return [-movementSpeed, 0];
-                }
-		// Up
-		else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2 + HERO_WIDTH
-			&& clientMouseY > h/2)
-                {
-			self.doAnimation(hero, "down");
-			return [0, -movementSpeed];
-                }
-		// Down
-		else if(clientMouseX + HERO_WIDTH > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
-			&& clientMouseY < h/2)
-                {
-			self.doAnimation(hero, "up");
-			return [0, movementSpeed];
-                }
-		else if(clientMouseX < w/2 && clientMouseY < h/2)
-                {
-			self.doAnimation(hero, "up");
-			return [movementSpeed, movementSpeed];
-                }
-		else if(clientMouseX < w/2 && clientMouseY > h/2)
-                {
-			self.doAnimation(hero, "down");
-			return [movementSpeed, -movementSpeed];
-                }
-		else if(clientMouseX > w/2 && clientMouseY < h/2)
-                {
-			self.doAnimation(hero, "up");
-			return [-movementSpeed, movementSpeed];
-                }
-		else if(clientMouseX > w/2 && clientMouseY > h/2)
-                {
-			self.doAnimation(hero, "down");
-			return [-movementSpeed, -movementSpeed];
-                }
-		return [0, 0];
-        }
-
        self.stopHeroAnimations = function(hero) 
 	{
 		hero.gotoAndStop('up');
@@ -549,8 +492,8 @@ function _game()
 
                 if(mouseDown)
                 { 
-			xDirection = self.direction()[0];
-                        yDirection = self.direction()[1];
+			xDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, true, hero, self.doAnimation)[0];
+			yDirection = direction(self.clientMouseX, self.clientMouseY, h, w, scale, MOVEMENT_SPEED, true, hero, self.doAnimation)[1];
 			self.movePlayer(xDirection, yDirection);
 			
 		}

@@ -16,6 +16,76 @@ function fetchGetParm(parm) {
 		
 }
 
+
+function direction(clientMouseX, clientMouseY, h, w, scale, movementSpeed, animation, hero, f) 
+{
+	// Left
+	if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
+		&& clientMouseX < w/2)
+        {
+		if(animation) {
+			f(hero, "down");
+		}
+		return [movementSpeed, 0];
+        }
+	// Right
+	else if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
+		&& clientMouseX > w/2)
+        {
+		if(animation) {
+			f(hero, "down");
+		}
+		return [-movementSpeed, 0];
+        }
+	// Up
+	else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2 + HERO_WIDTH
+		&& clientMouseY > h/2)
+        {
+		if(animation) {
+			f(hero, "down");
+		}
+		return [0, -movementSpeed];
+        }
+	// Down
+	else if(clientMouseX + HERO_WIDTH > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
+		&& clientMouseY < h/2)
+        {	
+		if(animation) {
+			f(hero, "up");
+		}
+		return [0, movementSpeed];
+        }
+	else if(clientMouseX < w/2 && clientMouseY < h/2)
+        {
+		if(animation) {
+			f(hero, "up");
+		}
+		return [movementSpeed, movementSpeed];
+        }
+	else if(clientMouseX < w/2 && clientMouseY > h/2)
+        {
+		if(animation) {
+			f(hero, "down");	
+		}
+		return [movementSpeed, -movementSpeed];
+        }
+	else if(clientMouseX > w/2 && clientMouseY < h/2)
+        {
+		if(animation) {
+			f(hero, "up");
+		}
+		return [-movementSpeed, movementSpeed];
+        }
+	else if(clientMouseX > w/2 && clientMouseY > h/2)
+        {
+		if(animation) {
+			f(hero, "down");
+		}
+		return [-movementSpeed, -movementSpeed];
+        }
+	return [0, 0];
+}
+
 function calculateIntersection(rect1, rect2, x, y)
 {
   // prevent x|y from being null||undefined
