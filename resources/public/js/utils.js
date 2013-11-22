@@ -20,11 +20,22 @@ function fetchGetParm(parm) {
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);
 }
 
+function findInResources(item) {
+	for(each in RESOURCES) {
+		resource  =RESOURCES[each]['image'];
+		if(resource.indexOf(item) != -1 ) {
+			return each;
+		}
+	}
+}
+
 function exportMap() {
 	exportStr = "{";
 	for(children in window.Game.world.children) {
 		childNode = window.Game.world.children[children];
-		exportStr += '"' + children + '" : {"x" : ' + childNode.x + ', "y" :' +  childNode.y + ', "image" : "' + childNode.src.split("/")[2].split(".")[0].toUpperCase() + '"}, ';
+		image = childNode.src.split("/")[2];
+		image = findInResources(image);
+		exportStr += '"' + children + '" : {"x" : ' + childNode.x + ', "y" : ' +  childNode.y + ', "image" : "' + image + '"}, ';
 	}
 	exportStr += "}";
 	console.log(exportStr);
