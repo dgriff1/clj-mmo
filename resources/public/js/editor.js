@@ -145,7 +145,7 @@ function _game()
 		else {
 			pos = self.calculatePosition(hero.x, hero.y, x, y);
 		}
-		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
+		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType, resource);
 	}
 
 	self.fetchMapData = function() { 
@@ -243,7 +243,7 @@ function _game()
 		stage.update();
 	}
 	
-	self.addWidget = function(x,y,img,type) {
+	self.addWidget = function(x,y,img,type, resource) {
 		x = Math.round(x);
 		y = Math.round(y);
 
@@ -251,6 +251,7 @@ function _game()
 		img.y = y;
 		img.snapToPixel = false;
                 img.type = type;
+		img.src = resource;
 
 		self.world.addChild(img);
 		if(type) {

@@ -24,7 +24,10 @@ function exportMap() {
 	exportDict = {};
 	for(children in window.Game.world.children) {
 		childNode = window.Game.world.children[children];
+		exportDict[children] = {'x' : childNode.x, 'y' : childNode.y, 'image' : childNode.src.split("/")[2].toUpperCase()};
 	}
+	exportStr = exportDict.toString();
+	console.log(exportStr);
 }
 
 function directionKeys(movementSpeed, hero) 
