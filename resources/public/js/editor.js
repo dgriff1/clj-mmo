@@ -40,6 +40,7 @@ function _game()
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
 	self.MAP_DATA = {};
+	self.keyPressed = [];
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -238,6 +239,15 @@ function _game()
 			world.x = world.x + xDirection;
 			world.y = world.y + yDirection;
 		}
+		if(keyDown) {
+			direction = directionKeys(MOVEMENT_SPEED, hero);
+			xDirection = direction[0];
+			yDirection = direction[1];
+			if(xDirection != 0 || yDirection != 0) {
+				world.x = world.x + xDirection;
+				world.y = world.y + yDirection;
+			}
+		}
 
 		ticks++;
 		
@@ -281,12 +291,14 @@ function _game()
 	{
 		if ( !keyDown ) {
 			keyDown = true;
+			self.keyPressed.push(e.keyCode);
 		}
 	}
 
 	self.handleKeyUp = function(e)
 	{
 		keyDown = false;
+		self.keyPressed.pop(e.keyCode);
 	}
 
 	self.preloadResources();
