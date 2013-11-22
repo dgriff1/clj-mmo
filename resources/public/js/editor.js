@@ -233,8 +233,8 @@ function _game()
 		self.calculateFramesPerSecond();
 
 		if(mouseDown) {
-			xDirection = direction(10, false)[0];
-			yDirection = direction(10, false)[1];
+			xDirection = directionMouse(10, false)[0];
+			yDirection = directionMouse(10, false)[1];
 			world.x = world.x + xDirection;
 			world.y = world.y + yDirection;
 		}

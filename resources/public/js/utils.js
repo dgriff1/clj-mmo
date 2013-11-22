@@ -1,4 +1,9 @@
 
+leftKey = 37;
+rightKey = 39;
+upKey = 38;
+downKey = 40;
+
 function loadSettings() {
 	jQuery.ajax({
 		url: "/js/settings.cfg",
@@ -11,11 +16,47 @@ function loadSettings() {
 }
 
 function fetchGetParm(parm) {
-    parm = parm + "="
+    parm = parm + "=";
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);
 }
 
-function direction(movementSpeed, hero) 
+function directionKeys(movementSpeed, hero) 
+{
+	keyPressed = self.Game.keyPressed;
+	f = window.Game.doAnimation;
+
+	// Left
+	if(self.keyPressed == leftKey) {
+		if(hero) {
+			f(hero, "down");
+		}
+		return [movementSpeed, 0];
+	}	
+	// Right
+	if(self.keyPressed == rightKey) {
+		if(hero) {
+			f(hero, "down");
+		}
+		return [-movementSpeed, 0];
+	}	
+	// Top
+	if(self.keyPressed == upKey) {
+		if(hero) {
+			f(hero, "up");
+		}
+		return [0, movementSpeed];
+	}	
+	// Down
+	if(self.keyPressed == downKey) {
+		if(hero) {
+			f(hero, "down");
+		}
+		return [0, -movementSpeed];
+	}	
+	return [0, 0];
+}
+
+function directionMouse(movementSpeed, hero) 
 {
 	scale = window.Game.scale;
 	clientMouseX = self.Game.clientMouseX;

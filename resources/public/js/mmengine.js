@@ -35,6 +35,7 @@ function _game()
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
 	self.MAP_DATA = {};
+	self.keyPressed = 0;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -492,12 +493,21 @@ function _game()
 
                 if(mouseDown)
                 { 
-			xDirection = direction(MOVEMENT_SPEED, hero)[0];
-			yDirection = direction(MOVEMENT_SPEED, hero)[1];
+			direction = directionMouse(MOVEMENT_SPEED, hero);
+			xDirection = direction[0];
+			yDirection = direction[1];
 			self.movePlayer(xDirection, yDirection);
 			
 		}
-		if(!mouseDown)
+		if(keyDown) {
+			direction = directionKeys(MOVEMENT_SPEED, hero);
+			xDirection = direction[0];
+			yDirection = direction[1];
+			if(xDirection != 0 || yDirection != 0) {
+				self.movePlayer(xDirection, yDirection);
+			}
+		}
+		if(!mouseDown && !keyDown)
 		{
 			self.stopHeroAnimations(hero);
 			hero.wasMoving = false;
@@ -558,12 +568,14 @@ function _game()
 	{
 		if ( !keyDown ) {
 			keyDown = true;
+			self.keyPressed = e.keyCode;
 		}
 	}
 
 	self.handleKeyUp = function(e)
 	{
 		keyDown = false;
+		self.keyPressed = 0;
 	}
 
 	self.preloadResources();
