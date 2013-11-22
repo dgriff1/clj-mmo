@@ -25,35 +25,38 @@ function directionKeys(movementSpeed, hero)
 	keyPressed = self.Game.keyPressed;
 	f = window.Game.doAnimation;
 
+	movementSpeedX = 0;
+	movementSpeedY = 0;
+
 	// Left
-	if(self.keyPressed == leftKey) {
+	if(self.keyPressed.indexOf(leftKey) != -1) {
 		if(hero) {
 			f(hero, "down");
 		}
-		return [movementSpeed, 0];
+		movementSpeedX += movementSpeed;
 	}	
 	// Right
-	if(self.keyPressed == rightKey) {
+	if(self.keyPressed.indexOf(rightKey) != -1) {
 		if(hero) {
 			f(hero, "down");
 		}
-		return [-movementSpeed, 0];
+		movementSpeedX -= movementSpeed;
 	}	
 	// Top
-	if(self.keyPressed == upKey) {
+	if(self.keyPressed.indexOf(upKey) != -1) {
 		if(hero) {
 			f(hero, "up");
 		}
-		return [0, movementSpeed];
+		movementSpeedY += movementSpeed;
 	}	
 	// Down
-	if(self.keyPressed == downKey) {
+	if(self.keyPressed.indexOf(downKey) != -1) {
 		if(hero) {
 			f(hero, "down");
 		}
-		return [0, -movementSpeed];
+		movementSpeedY -= movementSpeed;
 	}	
-	return [0, 0];
+	return [movementSpeedX, movementSpeedY];
 }
 
 function directionMouse(movementSpeed, hero) 

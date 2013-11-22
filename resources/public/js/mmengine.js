@@ -35,7 +35,7 @@ function _game()
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
 	self.MAP_DATA = {};
-	self.keyPressed = 0;
+	 self.keyPressed = [];
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -568,14 +568,14 @@ function _game()
 	{
 		if ( !keyDown ) {
 			keyDown = true;
-			self.keyPressed = e.keyCode;
+			self.keyPressed.push(e.keyCode);
 		}
 	}
 
 	self.handleKeyUp = function(e)
 	{
 		keyDown = false;
-		self.keyPressed = 0;
+		self.keyPressed.pop(e.keyCode);
 	}
 
 	self.preloadResources();
