@@ -35,7 +35,9 @@ function exportMap() {
 		childNode = window.Game.world.children[children];
 		image = childNode.src.split("/")[2];
 		image = findInResources(image);
-		exportStr += '"' + children + '" : {"x" : ' + childNode.x + ', "y" : ' +  childNode.y + ', "image" : "' + image + '"}, ';
+		x = -childNode.x;
+		y = -childNode.y;
+		exportStr += '"' + children + '" : {"x" : ' + x + ', "y" : ' +  y + ', "image" : "' + image + '"}, ';
 	}
 	exportStr += "}";
 	console.log(exportStr);
