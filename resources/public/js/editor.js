@@ -1,12 +1,6 @@
 
 loadSettings();
 
-$("#output").click(function() {
-	console.log("E");
-	alert(1);
-});
-
-
 function _game()
 {
 	window.Game = this;
@@ -41,6 +35,7 @@ function _game()
 	self.framesPerSecond = 0;
 	self.MAP_DATA = {};
 	self.keyPressed = [];
+	self.world = 0;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -105,8 +100,8 @@ function _game()
 
 		stage = new Stage(canvas);
 
-		world = new Container();
-		stage.addChild(world);
+		self.world = new Container();
+		stage.addChild(self.world);
 	
 		self.MAP_DATA = self.fetchMapData();
 
@@ -181,23 +176,17 @@ function _game()
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#FFFFFF");
-		textInfo.onMouseMove = function(e) { alert(1); };
- 		textInfo.x = 50;
- 		textInfo.y = 50;
+		textInfo = new createjs.Text("Manking Editor v0.0.1", "20px Arial", "#000000");
+ 		textInfo.x = 10;
+ 		textInfo.y = 30;
 		textInfo.textBaseline = "alphabetic";
 		stage.addChild(textInfo);
-		text = new createjs.Text("FPS: ", "20px Arial", "#FFFFFF");
- 		text.x = 50;
- 		text.y = 80;
-		text.textBaseline = "alphabetic";
-		stage.addChild(text);
 	}
 
 	// Sets up world and widgets, called first before tick
 	self.reset = function() {
-		world.removeAllChildren();
-		world.x = world.y = 0;
+		self.world.removeAllChildren();
+		self.world.x = self.world.y = 0;
 
 		self.drawTerrain();
 
@@ -236,16 +225,16 @@ function _game()
 		if(mouseDown) {
 			xDirection = directionMouse(10, false)[0];
 			yDirection = directionMouse(10, false)[1];
-			world.x = world.x + xDirection;
-			world.y = world.y + yDirection;
+			self.world.x = self.world.x + xDirection;
+			self.world.y = self.world.y + yDirection;
 		}
 		if(keyDown) {
 			direction = directionKeys(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			if(xDirection != 0 || yDirection != 0) {
-				world.x = world.x + xDirection;
-				world.y = world.y + yDirection;
+				self.world.x = self.world.x + xDirection;
+				self.world.y = self.world.y + yDirection;
 			}
 		}
 
@@ -263,7 +252,7 @@ function _game()
 		img.snapToPixel = false;
                 img.type = type;
 
-		world.addChild(img);
+		self.world.addChild(img);
 		if(type) {
              	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
 		}

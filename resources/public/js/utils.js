@@ -20,6 +20,13 @@ function fetchGetParm(parm) {
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);
 }
 
+function exportMap() {
+	exportDict = {};
+	for(children in window.Game.world.children) {
+		childNode = window.Game.world.children[children];
+	}
+}
+
 function directionKeys(movementSpeed, hero) 
 {
 	keyPressed = self.Game.keyPressed;

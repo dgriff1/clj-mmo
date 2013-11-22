@@ -8,7 +8,7 @@
 				border: 0px;
 				margin: 0px;
 			}
-			button {
+			.button {
 				padding: 6px;
 				margin: 6px;
 				border: 2px solid black;
@@ -35,7 +35,12 @@
 	<script src="/js/utils.js"></script>
 	<script src="/js/editor.js"></script>
 
-	<button id="addTile" class="add">Add Tile</button>
-	<button id="outputButton" class="output">Output Map Data to Console</button>
+	<input class="button" style="top: 40px;" type="button" value="Export Map" id="export"/>
+
+	<script>
+		$("#export").click(function(e) {
+			exportMap();
+		});
+	</script>
 
 </html>
