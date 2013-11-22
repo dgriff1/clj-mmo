@@ -21,12 +21,12 @@ function fetchGetParm(parm) {
 }
 
 function exportMap() {
-	exportDict = {};
+	exportStr = "{";
 	for(children in window.Game.world.children) {
 		childNode = window.Game.world.children[children];
-		exportDict[children] = {'x' : childNode.x, 'y' : childNode.y, 'image' : childNode.src.split("/")[2].toUpperCase()};
+		exportStr += '"' + children + '" : {"x" : ' + childNode.x + ', "y" :' +  childNode.y + ', "image" : "' + childNode.src.split("/")[2].split(".")[0].toUpperCase() + '"}, ';
 	}
-	exportStr = exportDict.toString();
+	exportStr += "}";
 	console.log(exportStr);
 }
 
