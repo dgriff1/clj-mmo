@@ -230,14 +230,14 @@ function _game()
 				self.world.x = self.world.x + xDirection;
 				self.world.y = self.world.y + yDirection;
 			}
-			if(keyDown) {
-				direction = directionKeys(MOVEMENT_SPEED, hero);
-				xDirection = direction[0];
-				yDirection = direction[1];
-				if(xDirection != 0 || yDirection != 0) {
-					self.world.x = self.world.x + xDirection;
-					self.world.y = self.world.y + yDirection;
-				}
+		}
+		if(keyDown) {
+			direction = directionKeys(MOVEMENT_SPEED, hero);
+			xDirection = direction[0];
+			yDirection = direction[1];
+			if(xDirection != 0 || yDirection != 0) {
+				self.world.x = self.world.x + xDirection;
+				self.world.y = self.world.y + yDirection;
 			}
 		}
 
