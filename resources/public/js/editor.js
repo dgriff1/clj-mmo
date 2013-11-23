@@ -36,6 +36,7 @@ function _game()
 	self.MAP_DATA = {};
 	self.keyPressed = [];
 	self.world = 0;
+	self.allowMovement = true;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -222,19 +223,21 @@ function _game()
 	{
 		self.calculateFramesPerSecond();
 
-		if(mouseDown) {
-			xDirection = directionMouse(10, false)[0];
-			yDirection = directionMouse(10, false)[1];
-			self.world.x = self.world.x + xDirection;
-			self.world.y = self.world.y + yDirection;
-		}
-		if(keyDown) {
-			direction = directionKeys(MOVEMENT_SPEED, hero);
-			xDirection = direction[0];
-			yDirection = direction[1];
-			if(xDirection != 0 || yDirection != 0) {
+		if(self.allowMovement) {
+			if(mouseDown) {
+				xDirection = directionMouse(10, false)[0];
+				yDirection = directionMouse(10, false)[1];
 				self.world.x = self.world.x + xDirection;
 				self.world.y = self.world.y + yDirection;
+			}
+			if(keyDown) {
+				direction = directionKeys(MOVEMENT_SPEED, hero);
+				xDirection = direction[0];
+				yDirection = direction[1];
+				if(xDirection != 0 || yDirection != 0) {
+					self.world.x = self.world.x + xDirection;
+					self.world.y = self.world.y + yDirection;
+				}
 			}
 		}
 

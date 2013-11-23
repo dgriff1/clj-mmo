@@ -42,6 +42,12 @@
 		$("#export").click(function(e) {
 			exportMap();
 		});
+		$("#export").mouseenter(function(e) {
+			window.Game.allowMovement = false;
+		});
+		$("#export").mouseleave(function(e) {
+			window.Game.allowMovement = true;
+		});
 	</script>
 
 </html>
