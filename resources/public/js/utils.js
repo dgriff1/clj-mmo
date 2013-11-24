@@ -30,17 +30,17 @@ function findInResources(item) {
 }
 
 function exportMap() {
-	exportStr = "{";
+	exportDict = {};
 	for(children in window.Game.world.children) {
 		childNode = window.Game.world.children[children];
 		image = childNode.src.split("/")[2];
 		image = findInResources(image);
 		x = -childNode.x + window.Game.width  / 2; 
 		y = -childNode.y + window.Game.height / 2;
-		exportStr += '"' + children + '" : {"x" : ' + x + ', "y" : ' +  y + ', "image" : "' + image + '"}, ';
+		exportDict[children.toString()] =  {"x" :  x , "y" : y, "image" : image};
 	}
-	exportStr += "}";
-	console.log(exportStr);
+	exportDict = JSON.stringify(exportDict);
+	console.log(exportDict);
 }
 
 function directionKeys(movementSpeed, hero) 

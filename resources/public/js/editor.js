@@ -94,12 +94,12 @@ function _game()
 
 		self.scaleResources();
 
-		canvas = document.createElement('canvas');
-		canvas.width = w;
-		canvas.height = h;
-		document.body.appendChild(canvas);
+		self.canvas = document.createElement('canvas');
+		self.canvas.width = w;
+		self.canvas.height = h;
+		document.body.appendChild(self.canvas);
 
-		stage = new Stage(canvas);
+		stage = new Stage(self.canvas);
 
 		self.world = new Container();
 		stage.addChild(self.world);
@@ -110,11 +110,11 @@ function _game()
 
 		//Event override
 		if ('ontouchstart' in document.documentElement) {
-			canvas.addEventListener('touchstart', function(e) {
+			self.canvas.addEventListener('touchstart', function(e) {
 				self.handleKeyDown();
 			}, false);
 
-			canvas.addEventListener('touchend', function(e) {
+			self.canvas.addEventListener('touchend', function(e) {
 				self.handleKeyUp();
 			}, false);
 		} else {
