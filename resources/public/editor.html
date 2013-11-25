@@ -26,6 +26,7 @@
 				height: 120px;
 				border: 1px solid #686868;
 				background-color: #FFCC23;
+				display: none;
 			}
 		</style>
 	</head>
@@ -44,12 +45,17 @@
 	<input class="button" style="top: 80px;" type="button" value="Add Grass" id="addGrass"/>
 
 	<div class="output button" id="output">
-		<textarea id="outputarea" rows=7 cols=65></textarea>
+		<textarea id="outputarea" rows=7 cols=60></textarea>
+		<input class="button" type="button" value="close" id="close"/>
 	</div>
 
 	<script>
 		$("#export").click(function(e) {
+			$("#output").css("display", "block");
 			exportMap();
+		});
+		$("#close").click(function(e) {
+			$("#output").css("display", "none");
 		});
 		$("#addGrass").click(function(e) {
 			window.Game.addWidgetToWorld(-100, -100, '/assets/smaller_grass.png', 0, true);
