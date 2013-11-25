@@ -43,11 +43,10 @@
 			exportMap();
 		});
 		$("#addTerrain").click(function(e) {
-			//console.log(document.body.style.cursor);
-			//$('html').css("cursor: url'(assets/smaller_grass.jpg'), auto");
-			//document.body.style.cursor = "url('/assets/smaller_grass.jpg)";
-			//console.log(document.body.style.cursor);
-			$(window.Game.canvas).css('cursor : url("/assets/smaller_grass.png"), auto');
+			window.Game.addWidgetToWorld(-100, -100, '/assets/smaller_grass.png', 0, true);
+			obj = window.Game.world.children[window.Game.world.children.length-1];
+			window.Game.editMode = true;
+			window.Game.moveWidgetWithMouse(obj);
 		});
 		$(".button").mouseenter(function(e) {
 			window.Game.allowMovement = false;

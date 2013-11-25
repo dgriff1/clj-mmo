@@ -37,6 +37,7 @@ function _game()
 	self.keyPressed = [];
 	self.world = 0;
 	self.allowMovement = true;
+	self.editMode = false;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -137,6 +138,16 @@ function _game()
 		return [self.wx, self.wy]
 	}
 
+	self.moveWidgetWithMouse = function(widget) {
+		widget.x = self.clientMouseX;	
+		widget.y = self.clientMouseY;	
+		self.allowMovement = false;
+		if(self.editMode) {
+			self.editMode = false;
+			self.moveWidget = setInterval(function(){self.moveWidgetWithMouse(widget)},100);
+		}
+	}
+
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((HERO_WIDTH*scale)/2);
@@ -230,6 +241,10 @@ function _game()
 				self.world.x = self.world.x + xDirection;
 				self.world.y = self.world.y + yDirection;
 			}
+		}
+		if(mouseDown) {
+			window.clearInterval(self.moveWidget);
+			self.editMode = false;
 		}
 		if(keyDown) {
 			direction = directionKeys(MOVEMENT_SPEED, hero);
