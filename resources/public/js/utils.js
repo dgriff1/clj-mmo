@@ -41,6 +41,7 @@ function exportMap() {
 	}
 	exportDict = JSON.stringify(exportDict);
 	console.log(exportDict);
+	$("#outputarea").text(exportDict);
 }
 
 function directionKeys(movementSpeed, hero) 
