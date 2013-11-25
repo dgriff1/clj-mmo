@@ -139,8 +139,8 @@ function _game()
 	}
 
 	self.moveWidgetWithMouse = function(widget) {
-		widget.x = self.clientMouseX;	
-		widget.y = self.clientMouseY;	
+		widget.x = self.clientMouseX - self.world.x;
+		widget.y = self.clientMouseY - self.world.y;
 		self.allowMovement = false;
 		if(self.editMode) {
 			self.editMode = false;
