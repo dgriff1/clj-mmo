@@ -17,7 +17,6 @@ function _game()
 		hero,
 		assets = [], spriteSheets = [],
 		parallaxObjects = [],
-		keyDown = false,
 		mouseDown = false;
 
 	self.width = w;
@@ -499,7 +498,7 @@ function _game()
 			self.movePlayer(xDirection, yDirection);
 			
 		}
-		if(keyDown) {
+		if(self.keyPressed.length) {
 			direction = directionKeys(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
@@ -507,7 +506,7 @@ function _game()
 				self.movePlayer(xDirection, yDirection);
 			}
 		}
-		if(!mouseDown && !keyDown)
+		if(!mouseDown && !self.keyPressed.length)
 		{
 			self.stopHeroAnimations(hero);
 			hero.wasMoving = false;
@@ -566,15 +565,13 @@ function _game()
 
 	self.handleKeyDown = function(e)
 	{
-		if ( !keyDown ) {
-			keyDown = true;
+		if(self.keyPressed.indexOf(e.keyCode) == -1) {
 			self.keyPressed.push(e.keyCode);
 		}
 	}
 
 	self.handleKeyUp = function(e)
 	{
-		keyDown = false;
 		self.keyPressed.pop(e.keyCode);
 	}
 
