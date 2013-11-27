@@ -37,7 +37,7 @@ function exportMap() {
 		image = findInResources(image);
 		x = -childNode.x + window.Game.width  / 2; 
 		y = -childNode.y + window.Game.height / 2;
-		exportDict[children.toString()] =  {"x" :  x , "y" : y, "image" : image};
+		exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x , "y" : y}, "image" : image, "type" : TERRAIN};
 	}
 	exportDict = JSON.stringify(exportDict);
 	console.log(exportDict);

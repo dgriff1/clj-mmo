@@ -180,8 +180,8 @@ function _game()
 	self.drawTerrain = function() {
 		MAP_DATA = self.MAP_DATA;
 		for(each in MAP_DATA) {
-			x = MAP_DATA[parseInt(each)]['x'];
-			y = MAP_DATA[parseInt(each)]['y'];
+			x = MAP_DATA[parseInt(each)]['location']['x'];
+			y = MAP_DATA[parseInt(each)]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
 		}
 	}
