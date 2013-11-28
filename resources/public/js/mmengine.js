@@ -498,7 +498,7 @@ function _game()
 			self.movePlayer(xDirection, yDirection);
 			
 		}
-		if(self.keyPressed.length) {
+		if(self.keyPressed.length != []) {
 			direction = directionKeys(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
@@ -506,7 +506,7 @@ function _game()
 				self.movePlayer(xDirection, yDirection);
 			}
 		}
-		if(!mouseDown && !self.keyPressed.length)
+		if(!mouseDown && self.keyPressed.length < 1)
 		{
 			self.stopHeroAnimations(hero);
 			hero.wasMoving = false;
@@ -572,7 +572,7 @@ function _game()
 
 	self.handleKeyUp = function(e)
 	{
-		self.keyPressed.pop(e.keyCode);
+		self.keyPressed = [];
 	}
 
 	self.preloadResources();
