@@ -34,7 +34,7 @@ function _game()
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
 	self.MAP_DATA = {};
-	 self.keyPressed = [];
+ 	self.keyPressed = [];
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -391,7 +391,7 @@ function _game()
 		self.drawScenery(SCENERY_POST, true);
 	}
 
-	// Moved world around player while moving players actually coords
+	// Moved world around player while moving players actual coords
 	self.movePlayer = function(x, y) 
 	{
 		self.reconcilleMap(x, y);

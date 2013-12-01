@@ -8,6 +8,17 @@ TERRAIN = 0
 SCENERY_PRE = 1
 SCENERY_POST = 2
 
+RESOURCES = {
+	'HERO_IMAGE'      : { 'image' : '/assets/hero.png' , 'type' : -1},
+	'ROCKS_IMAGE'     : { 'image' : '/assets/rocks.png' , 'type' : SCENERY_PRE},
+	'TREE_IMAGE'      : { 'image' : '/assets/tree.png' , 'type' : SCENERY_POST},
+	'TREE_BASE_IMAGE' : { 'image' : '/assets/tree_base.png' , 'type' : SCENERY_PRE},
+	'GRASS_IMAGE'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'WATER_IMAGE'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'BEACH_IMAGE'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'BUSH_IMAGE'      : { 'image' : '/assets/bush.png' , 'type' : SCENERY_POST}
+}	
+
 function loadSettings() {
 	jQuery.ajax({
 		url: "/js/settings.cfg",
@@ -50,7 +61,7 @@ function exportMap() {
 		image = findInResources(image);
 		x = -childNode.x + window.Game.width  / 2; 
 		y = -childNode.y + window.Game.height / 2;
-		exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x , "y" : y}, "image" : image, "type" : TERRAIN};
+		exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x , "y" : y}, "image" : image, "type" : RESOURCES[image]['type']};
 	}
 	exportDict = JSON.stringify(exportDict);
 	console.log(exportDict);
