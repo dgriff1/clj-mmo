@@ -272,18 +272,13 @@ function _game()
 		return self.MAP_DATA;
 	}
 
-	self.serialize = function(obj) {
-	  var str = [];
-	  for(var p in obj)
-	     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-	  return str.join("&");
-	}
-
 	self.drawTerrain = function() {
 		MAP_DATA = self.MAP_DATA;
 		for(each in MAP_DATA) {
-			x = MAP_DATA[parseInt(each)]['location']['x'];
-			y = MAP_DATA[parseInt(each)]['location']['y'];
+			if(MAP_DATA[parseInt(each)]['type'] == TERRAIN) {
+				x = MAP_DATA[parseInt(each)]['location']['x'];
+				y = MAP_DATA[parseInt(each)]['location']['y'];
+			}
 			self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
 		}
 	}
