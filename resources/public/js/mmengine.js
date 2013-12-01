@@ -172,7 +172,7 @@ function _game()
 	
 		self.initHero();
 
-		self.MAP_DATA = self.fetchMapData();
+		self.fetchMapData();
 
 		self.reset();
 
@@ -266,10 +266,23 @@ function _game()
 			async: false,
 			cache: false,
 			success: function(data) {
-				self.MAP_DATA = jQuery.parseJSON(data);
+				MAP_DATA = jQuery.parseJSON(data);
 			}
 		});
-		return self.MAP_DATA;
+		tempMapData = {}
+		for(each in MAP_DATA) {
+			if(MAP_DATA[each]['type'] == TERRAIN) {
+				tempMapData[each] = MAP_DATA[each];
+			}
+		}
+		self.MAP_DATA = tempMapData;
+		tempSceneData = {}
+		for(each in MAP_DATA) {
+			if(MAP_DATA[each]['type'] != TERRAIN) {
+				tempSceneData[each] = MAP_DATA[each];
+			}
+		}
+		self.SCENE_DATA = tempSceneData;
 	}
 
 	self.drawTerrain = function() {
@@ -280,6 +293,17 @@ function _game()
 				y = MAP_DATA[parseInt(each)]['location']['y'];
 			}
 			self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
+		}
+	}
+
+	self.drawScenery = function(SCENERY_TYPE, preHero) {
+		SCENE_DATA = self.SCENE_DATA;
+		for(each in SCENE_DATA) {
+			if(SCENE_DATA[parseInt(each)]['type'] == SCENERY_TYPE) {
+				x = SCENE_DATA[parseInt(each)]['location']['x'];
+				y = SCENE_DATA[parseInt(each)]['location']['y'];
+			}
+			self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[parseInt(each)]['image']]['image'], SCENERY_TYPE, preHero);
 		}
 	}
 
@@ -354,19 +378,7 @@ function _game()
 
 		// terrain
 		self.drawTerrain();
-		self.addWidgetToWorld(100,-80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(75, -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(50, -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(25, -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(0,  -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(-25,-80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-
-		self.addWidgetToWorld(100,-50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(75, -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(50, -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(25, -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(0,  -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
-		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.drawScenery(SCENERY_PRE, true);
 
 		// hero
  		for(each in self.currentPlayers) {
@@ -376,28 +388,7 @@ function _game()
 	 	self.checkToAddPlayers();
 
 		//objects in background
-		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-220, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-270, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-170, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-270, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(30, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-270, 120 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-270, 80 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-		self.addWidgetToWorld(-130, 180 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
-
-		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE']['images'], SCENERY_POST);
-		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE']['images'], SCENERY_POST);
-
-		self.addWidgetToWorld(-150, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(-220, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(-270, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(-170, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(-270, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(30, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(-270, 120, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
-		self.addWidgetToWorld(-270, 80, RESOURCES['TREE_IMAGE']['images'], SCENERY_POST);
-		self.addWidgetToWorld(-130, 180, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.drawScenery(SCENERY_POST, true);
 	}
 
 	// Moved world around player while moving players actually coords
