@@ -291,8 +291,8 @@ function _game()
 			if(MAP_DATA[parseInt(each)]['type'] == TERRAIN) {
 				x = MAP_DATA[parseInt(each)]['location']['x'];
 				y = MAP_DATA[parseInt(each)]['location']['y'];
+				self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
 			}
-			self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
 		}
 	}
 
@@ -302,13 +302,13 @@ function _game()
 			if(SCENE_DATA[parseInt(each)]['type'] == SCENERY_TYPE) {
 				x = SCENE_DATA[parseInt(each)]['location']['x'];
 				y = SCENE_DATA[parseInt(each)]['location']['y'];
+				self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[parseInt(each)]['image']]['image'], SCENERY_TYPE, preHero);
 			}
-			self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[parseInt(each)]['image']]['image'], SCENERY_TYPE, preHero);
 		}
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Project: Manking v0.0.1", "20px Arial", "#FFFFFF");
+		textInfo = new createjs.Text("Project: Mankind v0.0.1", "20px Arial", "#FFFFFF");
 		textInfo.onMouseMove = function(e) { alert(1); };
  		textInfo.x = 50;
  		textInfo.y = 50;

@@ -43,6 +43,9 @@
 
 	<input class="button" style="top: 40px;" type="button" value="Export Map" id="export"/>
 	<input class="button" style="top: 80px;" type="button" value="Add Grass" id="addGrass"/>
+	<input class="button" style="top: 120px;" type="button" value="Add Sand" id="addSand"/>
+	<input class="button" style="top: 40px; left: 100px;" type="button" value="Add Tree Top" id="addTreeTop"/>
+	<input class="button" style="top: 80px; left: 100px;" type="button" value="Add Tree Base" id="addTreeBase"/>
 
 	<div class="output button" id="output">
 		<textarea id="outputarea" rows=7 cols=60></textarea>
@@ -58,10 +61,16 @@
 			$("#output").css("display", "none");
 		});
 		$("#addGrass").click(function(e) {
-			window.Game.addWidgetToWorld(-100, -100, '/assets/smaller_grass.png', 0, true);
-			obj = window.Game.world.children[window.Game.world.children.length-1];
-			window.Game.editMode = true;
-			window.Game.moveWidgetWithMouse(obj);
+			editorAdd('smaller_grass', 0);
+		});
+		$("#addSand").click(function(e) {
+			editorAdd('smaller_beach', 0);
+		});
+		$("#addTreeTop").click(function(e) {
+			editorAdd('tree', 1);
+		});
+		$("#addTreeBase").click(function(e) {
+			editorAdd('tree_base', 2);
 		});
 		$(".button").mouseenter(function(e) {
 			window.Game.allowMovement = false;

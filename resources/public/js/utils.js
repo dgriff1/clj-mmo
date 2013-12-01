@@ -35,6 +35,12 @@ function fetchGetParm(parm) {
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);
 }
 
+function editorAdd(asset, type) {
+	window.Game.addWidgetToWorld(-100, -100, '/assets/' + asset + '.png', type, true);
+	obj = window.Game.world.children[window.Game.world.children.length-1];
+	window.Game.editMode = true;
+	window.Game.moveWidgetWithMouse(obj);
+}
 
 function serialize(obj) {
   var str = [];
@@ -61,7 +67,7 @@ function exportMap() {
 		image = findInResources(image);
 		x = -childNode.x + window.Game.width  / 2; 
 		y = -childNode.y + window.Game.height / 2;
-		exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x , "y" : y}, "image" : image, "type" : RESOURCES[image]['type']};
+		exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x / window.Game.scale, "y" : y / window.Game.scale}, "image" : image, "type" : RESOURCES[image]['type']};
 	}
 	exportDict = JSON.stringify(exportDict);
 	console.log(exportDict);

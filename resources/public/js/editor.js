@@ -187,7 +187,7 @@ function _game()
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Manking Editor v0.0.1", "20px Arial", "#000000");
+		textInfo = new createjs.Text("Mankind Editor v0.0.1", "20px Arial", "#000000");
  		textInfo.x = 10;
  		textInfo.y = 30;
 		textInfo.textBaseline = "alphabetic";
