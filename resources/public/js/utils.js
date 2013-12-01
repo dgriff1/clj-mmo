@@ -4,6 +4,10 @@ rightKey = 39;
 upKey = 38;
 downKey = 40;
 
+TERRAIN = 0
+SCENERY_PRE = 1
+SCENERY_POST = 2
+
 function loadSettings() {
 	jQuery.ajax({
 		url: "/js/settings.cfg",

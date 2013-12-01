@@ -303,7 +303,12 @@ function _game()
 
 	self.handleKeyUp = function(e)
 	{
-		self.keyPressed.pop(e.keyCode);
+		if(self.keyPressed.length > 1) {
+			self.keyPressed = [];
+		}
+		else {
+			self.keyPressed.pop(e.keyCode);
+		}
 	}
 
 	self.preloadResources();

@@ -359,19 +359,19 @@ function _game()
 
 		// terrain
 		self.drawTerrain();
-		self.addWidgetToWorld(100,-80, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(75, -80, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(50, -80, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(25, -80, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(0,  -80, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(-25,-80, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
+		self.addWidgetToWorld(100,-80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(75, -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(50, -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(25, -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(0,  -80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(-25,-80, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
 
-		self.addWidgetToWorld(100,-50, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(75, -50, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(50, -50, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(25, -50, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(0,  -50, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
-		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE']['image'], TERRAIN, true);
+		self.addWidgetToWorld(100,-50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(75, -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(50, -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(25, -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(0,  -50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
+		self.addWidgetToWorld(-25,-50, RESOURCES['BUSH_IMAGE']['image'], SCENERY_PRE, true);
 
 		// hero
  		for(each in self.currentPlayers) {
@@ -381,28 +381,28 @@ function _game()
 	 	self.checkToAddPlayers();
 
 		//objects in background
-		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-220, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-270, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-170, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-270, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(30, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-270, 120 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-270, 80 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
-		self.addWidgetToWorld(-130, 180 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY, true);
+		self.addWidgetToWorld(-150, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-220, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-270, -20 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-170, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-270, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(30, -60 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-270, 120 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-270, 80 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
+		self.addWidgetToWorld(-130, 180 - 64, RESOURCES['TREE_BASE_IMAGE']['image'], SCENERY_POST, true);
 
-		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE']['images'], SCENERY);
-		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE']['images'], SCENERY);
+		self.addWidgetToWorld(100, 100, RESOURCES['ROCKS_IMAGE']['images'], SCENERY_POST);
+		self.addWidgetToWorld(-100, -170, RESOURCES['ROCKS_IMAGE']['images'], SCENERY_POST);
 
-		self.addWidgetToWorld(-150, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(-220, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(-270, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(-170, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(-270, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(30, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(-270, 120, RESOURCES['TREE_IMAGE']['image'], SCENERY);
-		self.addWidgetToWorld(-270, 80, RESOURCES['TREE_IMAGE']['images'], SCENERY);
-		self.addWidgetToWorld(-130, 180, RESOURCES['TREE_IMAGE']['image'], SCENERY);
+		self.addWidgetToWorld(-150, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(-220, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(-270, -20, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(-170, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(-270, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(30, -60, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(-270, 120, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
+		self.addWidgetToWorld(-270, 80, RESOURCES['TREE_IMAGE']['images'], SCENERY_POST);
+		self.addWidgetToWorld(-130, 180, RESOURCES['TREE_IMAGE']['image'], SCENERY_POST);
 	}
 
 	// Moved world around player while moving players actually coords
@@ -572,7 +572,12 @@ function _game()
 
 	self.handleKeyUp = function(e)
 	{
-		self.keyPressed = [];
+		if(self.keyPressed.length > 1) {
+			self.keyPressed = [];
+		}
+		else {
+			self.keyPressed.pop(e.keyCode);
+		}
 	}
 
 	self.preloadResources();
