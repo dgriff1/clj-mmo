@@ -34,7 +34,6 @@
 	(if 
 		(not (contains? (:adjacency @p) (:_id other_p)))
 			(let [ bridge (channel) ] 
-				(prn "Associating ")
 				(join (:channel @p) bridge (:channel @other_p))
 				(join (:channel @other_p) bridge (:channel @p))
 				(send p assoc :adjacency (merge (get @p :adjacency {}) { (:_id @other_p) bridge }))

@@ -3,6 +3,7 @@
 # setup 
 
 1. get mongo running
+1a. In the Mongo shell do "use mk" and " db.mkentities.ensureIndex( { "location": "2d" } ) "
 2. update your bashrc/profile whatever so it is like this 
 
     export MONGOLAB_URI="mongodb://127.0.0.1:27017/mk"
