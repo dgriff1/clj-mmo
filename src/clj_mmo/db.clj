@@ -20,8 +20,8 @@
 					new_p)))
 
 
-(defn persist_entity [ entity ] 
-	(mc/save "mkentities" (assoc entity :id (ObjectId.)) ))
+(defn persist-entity [ entity ] 
+	(mc/save "mkentities" (assoc entity :_id (ObjectId.)) ))
 
 (defn get_all_players [ ] 
 	(determine_adjacency 
