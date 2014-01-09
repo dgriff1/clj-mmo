@@ -6,6 +6,8 @@
 (prn "Connecting to Mongo " (System/getenv "MONGOLAB_URI"))
 (mg/connect-via-uri! (System/getenv "MONGOLAB_URI" ) )
 
+(mc/ensure-index "mkentities" (array-map "location" "2d") { :min -5000 :max 5000 } ) 
+
 (defn get_player [ all_players id ] 
 	(get @all_players id))
 
@@ -20,7 +22,7 @@
 					new_p)))
 
 
-(defn persist-entity [ entity ] 
+(defn persist_entity [ entity ] 
 	(mc/save "mkentities" (assoc entity :_id (ObjectId.)) ))
 
 (defn get_all_players [ ] 
@@ -29,3 +31,6 @@
 
 (defn get_close_entities [ fromx fromy ] 
 	(mc/find-maps "mkentities" { :location { "$near" [ fromx fromy ] "$maxDistance" 400 } } ))
+
+(defn delete_all_entities [ ] 
+	(mc/remove "mkentities"))
