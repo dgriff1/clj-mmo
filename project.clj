@@ -13,4 +13,6 @@
 		[aleph "0.3.0-beta7"]
 		[lein-ring "0.5.4"]
 		[clj-http "0.1.1"]
+		[clj-time "0.6.0"]
+		[cheshire "5.1.1"]
   ])

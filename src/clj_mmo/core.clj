@@ -21,8 +21,8 @@
 ;(prn "All Players " @all_players)
 
 ;; this will create a user
-;(def p-one (mmo/player-rec "45678" [:sword], {:strength 1}, {:building  0}))
-;(db/persist_player nil nil nil p-one )
+;; (def p-one (mmo/player-rec "45678" [:sword], {:strength 1}, {:building  0}))
+;; (db/persist_player nil nil nil p-one )
 ;(db/persist_entity { :location { :x 1 :y 10 } :type "terrain" :resource "terrain1.png" } )
 ;(db/persist_entity { :location { :x 4 :y 20 } :type "item" :resource "sword.png" } )
 ;(db/persist_entity { :location { :x 0 :y 0 } :type "terrain" :resource "tree.png" } )
@@ -40,7 +40,6 @@
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) p  (db/get_player all_players (:id params)) ]
 		(do 
-			;(join ch (:channel @p))
 			(send p assoc :socket ch) 
 			(prn "En1 " (enqueue ch (json-str (util/safe_player @p) )))
 			(prn "Grabbing adjacents " (get @p :adjacency))
@@ -48,6 +47,7 @@
 			(prn "Done grabbing adjacents " )
 			(receive-all ch 
 				(fn [ msg ] 
+					(prn "Msg is " msg )
 					(message-handler ch p (read-json msg) params  )
 				)
 			)    

@@ -1,6 +1,6 @@
 (ns clj-mmo.db
- (:use lamina.core clj-mmo.base clj-mmo.util)
- (:require [monger.core :as mg] [monger.collection :as mc] )
+ (:use lamina.core clj-mmo.base clj-mmo.util )
+ (:require [monger.core :as mg] [monger.collection :as mc] monger.json )
  (:import org.bson.types.ObjectId)) 
 
 (prn "Connecting to Mongo " (System/getenv "MONGOLAB_URI"))
