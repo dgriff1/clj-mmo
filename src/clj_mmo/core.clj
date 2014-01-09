@@ -32,8 +32,8 @@
 		(= (:type msg) "proximity" ) (json-str (db/get_close_entities (get-in msg :location :x ) (get-in msg :location :y ) ))
 		:else  (let [ player (db/get_player all_players (:id params))]
 						(do 
-					  		(let [msg (json-str (util/safe_player @(send player actions/determine-action (read-json msg) {}))) ]
-								(enqueue ch msg) 
+					  		(let [json_msg (json-str (util/safe_player @(send player actions/determine-action msg {}))) ]
+								(enqueue ch json_msg) 
 								(mmo/send_to_adjacents ch @p @all_players)) ) ) ) )
 
 
@@ -48,7 +48,7 @@
 			(prn "Done grabbing adjacents " )
 			(receive-all ch 
 				(fn [ msg ] 
-					(message-handler ch p msg params  )
+					(message-handler ch p (read-json msg) params  )
 				)
 			)    
 		)
