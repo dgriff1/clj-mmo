@@ -16,7 +16,7 @@
 	[compojure.handler :as handler])
 )
 
-(def all_players (agent (db/get_all_players)))
+(def all_players (agent (db/get-all-players)))
 
 ;(prn "All Players " @all_players)
 
@@ -29,21 +29,21 @@
 
 (defn message-handler [ ch p msg params ] 
 	(cond 
-		(= (:type msg) "proximity" ) (json-str (db/get_close_entities (get-in msg :location :x ) (get-in msg :location :y ) ))
-		:else  (let [ player (db/get_player all_players (:id params))]
+		(= (:type msg) "proximity" ) (json-str (db/get-close-entities (get-in msg :location :x ) (get-in msg :location :y ) ))
+		:else  (let [ player (db/get-player all_players (:id params))]
 						(do 
-					  		(let [json_msg (json-str (util/safe_player @(send player actions/determine-action msg {}))) ]
+					  		(let [json_msg (json-str (util/safe-player @(send player actions/determine-action msg {}))) ]
 								(enqueue ch json_msg) 
-								(mmo/send_to_adjacents ch @p @all_players)) ) ) ) )
+								(mmo/send-to-adjacents ch @p @all_players)) ) ) ) )
 
 
 (defn object-handler [ch request] 
-	(let [ params (:route-params request) p  (db/get_player all_players (:id params)) ]
+	(let [ params (:route-params request) p  (db/get-player all_players (:id params)) ]
 		(do 
 			(send p assoc :socket ch) 
-			(prn "En1 " (enqueue ch (json-str (util/safe_player @p) )))
+			(prn "En1 " (enqueue ch (json-str (util/safe-player @p) )))
 			(prn "Grabbing adjacents " (get @p :adjacency))
-			(mmo/grab_adjacents ch @p @all_players ) 
+			(mmo/grab-adjacents ch @p @all_players ) 
 			(prn "Done grabbing adjacents " )
 			(receive-all ch 
 				(fn [ msg ] 

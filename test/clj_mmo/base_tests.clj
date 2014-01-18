@@ -20,7 +20,7 @@
   )) 
 
 (deftest create-action-test
-	(let [ event {:to 123}  p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on_move p-one event {:terrain nil} ) ]
+	(let [ event {:to 123}  p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on-move p-one event {:terrain nil} ) ]
 		(prn p-one)	
 ))
 
@@ -33,7 +33,7 @@
 				(agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 500} ))
 				(agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} ))
 			) p  (agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} )) ] 
-		(prn "Proximity " (check_proximity p all_players))))	
+		(prn "Proximity " (check-proximity p all_players))))	
 
 (defn adj_list [ kmap k ]  
 	(get (deref (get kmap k)) :adjacency ))
@@ -45,7 +45,7 @@
 				  "3" (agent (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} ))
 				  "4" (agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1800 :y 2400} ))
 				  "5" (agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )) }  
-				  with_adjacency (determine_adjacency all_players)  ]
+				  with_adjacency (determine-adjacency all_players)  ]
 		(is (contains? (adj_list with_adjacency "1") "2" ))
 		(is (contains? (adj_list with_adjacency "1" ) "4"  ))
 		(is (not (contains? (adj_list with_adjacency  "1") "1" )))
@@ -59,8 +59,8 @@
 				  "3" (agent (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} ))
 				  "4" (agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1800 :y 2400} ))
 				  "5" (agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} )) }  
-				  with_adjacency (determine_adjacency all_players)  ]
-		(unset_agent_adjacency (get with_adjacency "1") (get with_adjacency "2"))
+				  with_adjacency (determine-adjacency all_players)  ]
+		(unset-agent-adjacency (get with_adjacency "1") (get with_adjacency "2"))
 		(is (not (contains? (adj_list with_adjacency "1") "2" )))
 		(is (contains? (adj_list with_adjacency "1" ) "4"  ))
 		(is (not (contains? (adj_list with_adjacency  "1") "1" )))

@@ -20,7 +20,7 @@
 
 
 (deftest trigger-action-test
-	(let [ event { :xcoord 12 :ycoord 14} p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on_move p-one event {:terrain nil} ) ]
+	(let [ event { :xcoord 12 :ycoord 14} p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on-move p-one event {:terrain nil} ) ]
 		(prn p-one)	
 ))
 
