@@ -2,6 +2,7 @@
 	(:use clj-mmo.db) ) 
 
 (defn read-it [ file_name ] 
+	(delete-all-entities)
 	(dorun (map 
 				(fn [m] 
 					(do 
