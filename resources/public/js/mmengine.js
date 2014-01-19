@@ -172,7 +172,12 @@ function _game()
 	
 		self.initHero();
 
-		self.fetchMapData();
+                // Need map
+		self.doSend(JSON.stringify({"type"     : "proximity", 
+                                            "location" : {"x" : self.buffer['location']['x'],
+                                                          "y" : self.buffer['location']['y']}
+                                           }));;
+		//self.fetchMapData();
 
 		self.reset();
 
