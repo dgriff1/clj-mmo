@@ -29,7 +29,7 @@
 
 (defn message-handler [ ch p msg params ] 
 	(cond 
-		(= (:type msg) "proximity" ) (json-str (db/get-close-entities (get-in msg :location :x ) (get-in msg :location :y ) ))
+		(= (:type msg) "proximity" ) (json-str (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] ) ))
 		:else  (let [ player (db/get-player all_players (:id params))]
 						(do 
 					  		(let [json_msg (json-str (util/safe-player @(send player actions/determine-action msg {}))) ]
