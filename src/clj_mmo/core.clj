@@ -28,6 +28,7 @@
 ;(db/persist_entity { :location { :x 0 :y 0 } :type "terrain" :resource "tree.png" } )
 
 (defn message-handler [ ch p msg params ] 
+	(prn "Msg " msg )
 	(cond 
 		(= (:type msg) "proximity" ) (json-str (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] ) ))
 		:else  (let [ player (db/get-player all_players (:id params))]
