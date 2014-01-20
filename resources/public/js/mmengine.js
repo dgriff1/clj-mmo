@@ -235,8 +235,9 @@ function _game()
 				}
 			}
 		}
-		else if(data.type == TERRAIN || data.type == SCENARY_POST || data.type == SCENARY_PRE) {
-			console("\nB\n");
+		else if(data.type == TERRAIN || data.type == SCENERY_POST || data.type == SCENERY_PRE) {
+	        	//self.addWidgetToWorld(data.location.x, data.location.y, data.image, data.type);
+			self.MAP_DATA[data._id] = data;
 		}
 	}
 
@@ -256,18 +257,6 @@ function _game()
 			pos = self.calculatePosition(hero.x, hero.y, x, y);
 		}
 		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
-	}
-
-	self.sortMapData = function(MAP_DATA) {
-		last_y = MAP_DATA['0'];
-		for(ySort in MAP_DATA) {
-			if(MAP_DATA[ySort]['y'] > last_y['y'] ) {
-				tempData = last_y;
-				last_y = MAP_DATA[ySort];
-				MAP_DATA[ySort] = tempData;
-			}
-		}
-		return MAP_DATA;
 	}
 
 	self.fetchMapData = function() { 
@@ -298,10 +287,10 @@ function _game()
 	self.drawTerrain = function() {
 		MAP_DATA = self.MAP_DATA;
 		for(each in MAP_DATA) {
-			if(MAP_DATA[parseInt(each)]['type'] == TERRAIN) {
-				x = MAP_DATA[parseInt(each)]['location']['x'];
-				y = MAP_DATA[parseInt(each)]['location']['y'];
-				self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[parseInt(each)]['image']]['image'], TERRAIN, true);
+			if(MAP_DATA[each]['type'] == TERRAIN) {
+				x = MAP_DATA[each]['location']['x'];
+				y = MAP_DATA[each]['location']['y'];
+				self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[each]['image']]['image'], TERRAIN, true);
 			}
 		}
 	}
