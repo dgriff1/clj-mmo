@@ -238,6 +238,7 @@ function _game()
 		else if(data.type == TERRAIN || data.type == SCENERY_POST || data.type == SCENERY_PRE) {
 	        	//self.addWidgetToWorld(data.location.x, data.location.y, data.image, data.type);
 			self.MAP_DATA[data._id] = data;
+			self.drawTerrain();
 		}
 	}
 
