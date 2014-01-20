@@ -1,4 +1,5 @@
 (ns clj-mmo.util)
 
 (defn safe-player [ p ]
-    (dissoc p :channel :adjacency :socket))
+    (assoc p (dissoc p :channel :adjacency :socket) :type 4))
+
