@@ -225,13 +225,18 @@ function _game()
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
-		if(data._id != playerID) {
-			if(self.currentPlayers[data._id] === undefined) {
-				self.playersToAdd[data._id] = data.location;	
+                if(data.type == PLAYER) {
+			if(data._id != playerID) {
+				if(self.currentPlayers[data._id] === undefined) {
+					self.playersToAdd[data._id] = data.location;	
+				}
+				else {
+					self.movePlayers(data);
+				}
 			}
-			else {
-				self.movePlayers(data);
-			}
+		}
+		else if(data.type == TERRAIN || data.type == SCENARY_POST || data.type == SCENARY_PRE) {
+			console("\nB\n");
 		}
 	}
 

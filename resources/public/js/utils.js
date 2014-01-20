@@ -7,6 +7,7 @@ downKey = 40;
 TERRAIN = 0
 SCENERY_PRE = 1
 SCENERY_POST = 2
+PLAYER = 4
 
 RESOURCES = {
 	'HERO_IMAGE'      : { 'image' : '/assets/hero.png' , 'type' : -1},
