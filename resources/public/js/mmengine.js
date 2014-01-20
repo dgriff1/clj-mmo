@@ -235,7 +235,7 @@ function _game()
 				}
 			}
 		}
-		else if(data.type == TERRAIN || data.type == SCENERY_POST || data.type == SCENERY_PRE) {
+		else if(data.type == TERRAIN || data.type == ENTITY) {
 	        	//self.addWidgetToWorld(data.location.x, data.location.y, data.image, data.type);
 			self.MAP_DATA[data._id] = data;
 			self.drawTerrain();
@@ -296,13 +296,13 @@ function _game()
 		}
 	}
 
-	self.drawScenery = function(SCENERY_TYPE, preHero) {
+	self.drawScenery = function(TYPE, preHero) {
 		SCENE_DATA = self.SCENE_DATA;
 		for(each in SCENE_DATA) {
 			if(SCENE_DATA[parseInt(each)]['type'] == SCENERY_TYPE) {
 				x = SCENE_DATA[parseInt(each)]['location']['x'];
 				y = SCENE_DATA[parseInt(each)]['location']['y'];
-				self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[parseInt(each)]['image']]['image'], SCENERY_TYPE, preHero);
+				self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[parseInt(each)]['image']]['image'], TYPE, preHero);
 			}
 		}
 	}
@@ -378,7 +378,7 @@ function _game()
 
 		// terrain
 		self.drawTerrain();
-		self.drawScenery(SCENERY_PRE, true);
+		self.drawScenery(ENTITY, true);
 
 		// hero
  		for(each in self.currentPlayers) {
@@ -388,7 +388,7 @@ function _game()
 	 	self.checkToAddPlayers();
 
 		//objects in background
-		self.drawScenery(SCENERY_POST, true);
+		self.drawScenery(ENTITY, true);
 	}
 
 	// Moved world around player while moving players actual coords
