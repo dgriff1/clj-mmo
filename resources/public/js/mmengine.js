@@ -33,7 +33,7 @@ function _game()
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
-	self.WORLD_DATA = new Array();
+	self.WORLD_DATA = [];//new Array();
  	self.keyPressed = [];
 
 	self.preloadResources = function() {
@@ -234,16 +234,36 @@ function _game()
 			}
                         return;
 		}
-		else if(data.type == TERRAIN) {
-			self.WORLD_DATA[data._id] = data;
-			self.WORLD_DATA = self.sortByTerrain(self.WORLD_DATA);
-			self.draw(TERRAIN);
+		else if(data.type == ENTITY || data.type == TERRAIN) {
+			if(data.type == TERRAIN) {
+				self.WORLD_DATA.unshift(data);
+			}
+			else {
+				self.WORLD_DATA.push(data);
+			}
+			//sort start
+			sortableTerrain = [];
+			for(each in self.WORLD_DATA) {
+				if(self.WORLD_DATA[each]['type'] == TERRAIN) {
+					sortableTerrain.push(self.WORLD_DATA[each]);
+				}
+			}
+			sortableTerrain = sortableTerrain.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  });
+			sortableTerrain = sortableTerrain.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  });
+
+			sortableEntity = [];
+			for(each in self.WORLD_DATA) {
+				if(self.WORLD_DATA[each]['type'] == ENTITY) {
+					sortableEntity.push(self.WORLD_DATA[each]);
+				}
+			}
+			sortableEntity = sortableEntity.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  });
+			sortableEntity = sortableEntity.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  });
+			self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
+
+			//sort end
+			self.draw(data.type);
 		}
-		else if(data.type == ENTITY) {
-			self.WORLD_DATA[data._id] = data;	
-			self.WORLD_DATA = self.sortByTerrain(self.WORLD_DATA);
-			self.draw(ENTITY);
-                }
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
@@ -265,20 +285,6 @@ function _game()
 	}
 
 
-	self.sortByTerrain = function(data) {
-		sortable = [];
-		for(each in data) {
-			sortable.push([each, data[each]]);
-		}
-		sortable = sortable.sort(function(a, b) { if(a[1]['type'] == TERRAIN) { return -1 }   });
-		toAdd = {};
-		for(each in sortable) {
-			toAdd[sortable[each][0]] = sortable[each][1];
-		}
-		return toAdd;
-
-	};
-
 	self.draw = function(TYPE) {
 		toAdd = self.WORLD_DATA;
 
@@ -293,9 +299,12 @@ function _game()
 	 			self.checkToAddPlayers();
 				addPlayers = false;
 			}
+			if(toAdd[each] === undefined) {
+				continue;
+			}
 			x = toAdd[each]['location']['x'];
 			y = toAdd[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[toAdd[each]['image']]['image'], TYPE, true);
+			self.addWidgetToWorld(x, y, RESOURCES[toAdd[each]['image']]['image'], TYPE, addPlayers);
 		}
 
 	}
