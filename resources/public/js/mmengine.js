@@ -33,7 +33,7 @@ function _game()
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
-	self.WORLD_DATA = {};
+	self.WORLD_DATA = new Array();
 	self.MAP_APPEND = {};
 	self.SCENE_APPEND = {};
  	self.keyPressed = [];
@@ -268,6 +268,8 @@ function _game()
 	self.draw = function(TYPE, ALL) {
 		if(ALL) {
 			toAdd = self.WORLD_DATA;
+			toAdd = toAdd.sort(function(a, b) { if(a.TYPE == ENTITY) { return -1 } return 1  });
+			console.log(toAdd);
 		}
 		else {
 			if(TYPE == TERRAIN) {
@@ -277,6 +279,13 @@ function _game()
 				toAdd = self.SCENE_APPEND;
 			}
 		}
+
+ 		for(each in self.currentPlayers) {
+			world.addChild(self.currentPlayers[each]);
+		}
+		self.addOurHeroToWorld();
+	 	self.checkToAddPlayers();
+
 		for(each in toAdd) {
 			x = toAdd[each]['location']['x'];
 			y = toAdd[each]['location']['y'];
@@ -367,11 +376,6 @@ function _game()
 		world.x = world.y = 0;
 
 		// hero
- 		for(each in self.currentPlayers) {
-			world.addChild(self.currentPlayers[each]);
-		}
-		self.addOurHeroToWorld();
-	 	self.checkToAddPlayers();
 
 		self.draw(TERRAIN, 1);
 
