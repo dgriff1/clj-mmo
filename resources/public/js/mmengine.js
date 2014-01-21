@@ -354,6 +354,7 @@ function _game()
 		world.x = world.y = 0;
 
 		// terrain
+		self.drawTerrain();
 		self.drawScenery(true);
 
 		// hero
