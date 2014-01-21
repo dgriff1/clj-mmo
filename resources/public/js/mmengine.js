@@ -33,8 +33,9 @@ function _game()
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
-	self.MAP_DATA = {};
-	self.SCENE_DATA = {};
+	self.WORLD_DATA = {};
+	self.MAP_APPEND = {};
+	self.SCENE_APPEND = {};
  	self.keyPressed = [];
 
 	self.preloadResources = function() {
@@ -236,12 +237,12 @@ function _game()
                         return;
 		}
 		else if(data.type == TERRAIN) {
-			self.MAP_DATA[data._id] = data;
-			self.drawTerrain();
+			self.MAP_APPEND[data._id] = data;
+			self.draw(TERRAIN);
 		}
 		else if(data.type == ENTITY) {
-			self.SCENE_DATA[data._id] = data;	
-			self.drawScenery(false);
+			self.SCENE_APPEND[data._id] = data;	
+			self.draw(ENTITY);
                 }
 	}
 
@@ -264,23 +265,35 @@ function _game()
 	}
 
 
-	self.drawTerrain = function() {
-		MAP_DATA = self.MAP_DATA;
-		for(each in MAP_DATA) {
-			if(MAP_DATA[each]['type'] == TERRAIN) {
-				x = MAP_DATA[each]['location']['x'];
-				y = MAP_DATA[each]['location']['y'];
-				self.addWidgetToWorld(x, y, RESOURCES[MAP_DATA[each]['image']]['image'], TERRAIN, true);
+	self.draw = function(TYPE, ALL) {
+		if(ALL) {
+			toAdd = self.WORLD_DATA;
+		}
+		else {
+			if(TYPE == TERRAIN) {
+				toAdd = self.MAP_APPEND;
+			}
+			else if(TYPE == ENTITY) {
+				toAdd = self.SCENE_APPEND;
 			}
 		}
-	}
+		for(each in toAdd) {
+			x = toAdd[each]['location']['x'];
+			y = toAdd[each]['location']['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[toAdd[each]['image']]['image'], TYPE, true);
+			if(ALL) {
 
-	self.drawScenery = function(background) {
-		SCENE_DATA = self.SCENE_DATA;
-		for(each in SCENE_DATA) {
-			x = SCENE_DATA[each]['location']['x'];
-			y = SCENE_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[each]['image']]['image'], ENTITY, background);
+			}
+			else {
+				if(TYPE == TERRAIN) {
+					self.WORLD_DATA[each] = self.MAP_APPEND[each];
+					delete self.MAP_APPEND[each];
+				}
+				else if(TYPE == ENTITY) {
+					self.WORLD_DATA[each] = self.SCENE_APPEND[each];
+					delete self.SCENE_APPEND[each];
+				}
+			}
 		}
 	}
 
@@ -353,10 +366,6 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		// terrain
-		self.drawTerrain();
-		self.drawScenery(true);
-
 		// hero
  		for(each in self.currentPlayers) {
 			world.addChild(self.currentPlayers[each]);
@@ -364,8 +373,8 @@ function _game()
 		self.addOurHeroToWorld();
 	 	self.checkToAddPlayers();
 
-		//objects in background
-		self.drawScenery(true);
+		self.draw(TERRAIN, 1);
+
 	}
 
 	// Moved world around player while moving players actual coords
