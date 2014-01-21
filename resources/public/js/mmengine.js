@@ -34,6 +34,7 @@ function _game()
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
 	self.MAP_DATA = {};
+	self.SCENE_DATA = {};
  	self.keyPressed = [];
 
 	self.preloadResources = function() {
@@ -177,8 +178,6 @@ function _game()
                                             "location" : {"x" : self.buffer['location']['x'],
                                                           "y" : self.buffer['location']['y']}
                                            }));;
-		//self.fetchMapData();
-
 		self.reset();
 
 		//Event override
@@ -234,12 +233,16 @@ function _game()
 					self.movePlayers(data);
 				}
 			}
+                        return;
 		}
-		else if(data.type == TERRAIN || data.type == ENTITY) {
-	        	//self.addWidgetToWorld(data.location.x, data.location.y, data.image, data.type);
+		else if(data.type == TERRAIN) {
 			self.MAP_DATA[data._id] = data;
 			self.drawTerrain();
 		}
+		else if(data.type == ENTITY) {
+			self.SCENE_DATA[data._id] = data;	
+			self.drawScenery(false);
+                }
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
@@ -260,30 +263,6 @@ function _game()
 		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
 	}
 
-	self.fetchMapData = function() { 
-		jQuery.ajax({
-			url: "/js/TERRAIN.DAT",
-			async: false,
-			cache: false,
-			success: function(data) {
-				MAP_DATA = jQuery.parseJSON(data);
-			}
-		});
-		tempMapData = {}
-		for(each in MAP_DATA) {
-			if(MAP_DATA[each]['type'] == TERRAIN) {
-				tempMapData[each] = MAP_DATA[each];
-			}
-		}
-		self.MAP_DATA = tempMapData;
-		tempSceneData = {}
-		for(each in MAP_DATA) {
-			if(MAP_DATA[each]['type'] != TERRAIN) {
-				tempSceneData[each] = MAP_DATA[each];
-			}
-		}
-		self.SCENE_DATA = tempSceneData;
-	}
 
 	self.drawTerrain = function() {
 		MAP_DATA = self.MAP_DATA;
@@ -296,14 +275,12 @@ function _game()
 		}
 	}
 
-	self.drawScenery = function(TYPE, preHero) {
+	self.drawScenery = function(background) {
 		SCENE_DATA = self.SCENE_DATA;
 		for(each in SCENE_DATA) {
-			if(SCENE_DATA[parseInt(each)]['type'] == SCENERY_TYPE) {
-				x = SCENE_DATA[parseInt(each)]['location']['x'];
-				y = SCENE_DATA[parseInt(each)]['location']['y'];
-				self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[parseInt(each)]['image']]['image'], TYPE, preHero);
-			}
+			x = SCENE_DATA[each]['location']['x'];
+			y = SCENE_DATA[each]['location']['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[SCENE_DATA[each]['image']]['image'], ENTITY, background);
 		}
 	}
 
@@ -377,8 +354,7 @@ function _game()
 		world.x = world.y = 0;
 
 		// terrain
-		self.drawTerrain();
-		self.drawScenery(ENTITY, true);
+		self.drawScenery(true);
 
 		// hero
  		for(each in self.currentPlayers) {
@@ -388,7 +364,7 @@ function _game()
 	 	self.checkToAddPlayers();
 
 		//objects in background
-		self.drawScenery(ENTITY, true);
+		self.drawScenery(true);
 	}
 
 	// Moved world around player while moving players actual coords
