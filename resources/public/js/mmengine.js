@@ -34,8 +34,6 @@ function _game()
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
 	self.WORLD_DATA = new Array();
-	self.MAP_APPEND = {};
-	self.SCENE_APPEND = {};
  	self.keyPressed = [];
 
 	self.preloadResources = function() {
@@ -237,11 +235,13 @@ function _game()
                         return;
 		}
 		else if(data.type == TERRAIN) {
-			self.MAP_APPEND[data._id] = data;
+			self.WORLD_DATA[data._id] = data;
+			self.WORLD_DATA = self.sortByTerrain(self.WORLD_DATA);
 			self.draw(TERRAIN);
 		}
 		else if(data.type == ENTITY) {
-			self.SCENE_APPEND[data._id] = data;	
+			self.WORLD_DATA[data._id] = data;	
+			self.WORLD_DATA = self.sortByTerrain(self.WORLD_DATA);
 			self.draw(ENTITY);
                 }
 	}
@@ -265,45 +265,39 @@ function _game()
 	}
 
 
-	self.draw = function(TYPE, ALL) {
-		if(ALL) {
-			toAdd = self.WORLD_DATA;
-			toAdd = toAdd.sort(function(a, b) { if(a.TYPE == ENTITY) { return -1 } return 1  });
-			console.log(toAdd);
+	self.sortByTerrain = function(data) {
+		sortable = [];
+		for(each in data) {
+			sortable.push([each, data[each]]);
 		}
-		else {
-			if(TYPE == TERRAIN) {
-				toAdd = self.MAP_APPEND;
-			}
-			else if(TYPE == ENTITY) {
-				toAdd = self.SCENE_APPEND;
-			}
+		sortable = sortable.sort(function(a, b) { if(a[1]['type'] == TERRAIN) { return -1 }   });
+		toAdd = {};
+		for(each in sortable) {
+			toAdd[sortable[each][0]] = sortable[each][1];
 		}
+		return toAdd;
 
- 		for(each in self.currentPlayers) {
-			world.addChild(self.currentPlayers[each]);
-		}
-		self.addOurHeroToWorld();
-	 	self.checkToAddPlayers();
+	};
+
+	self.draw = function(TYPE) {
+		toAdd = self.WORLD_DATA;
+
+		addPlayers = true;
 
 		for(each in toAdd) {
+			if(toAdd[each]['type'] == ENTITY && addPlayers) {
+ 				for(player in self.currentPlayers) {
+					world.addChild(self.currentPlayers[player]);
+				}
+				self.addOurHeroToWorld();
+	 			self.checkToAddPlayers();
+				addPlayers = false;
+			}
 			x = toAdd[each]['location']['x'];
 			y = toAdd[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[toAdd[each]['image']]['image'], TYPE, true);
-			if(ALL) {
-
-			}
-			else {
-				if(TYPE == TERRAIN) {
-					self.WORLD_DATA[each] = self.MAP_APPEND[each];
-					delete self.MAP_APPEND[each];
-				}
-				else if(TYPE == ENTITY) {
-					self.WORLD_DATA[each] = self.SCENE_APPEND[each];
-					delete self.SCENE_APPEND[each];
-				}
-			}
 		}
+
 	}
 
 	self.drawHud = function() {
@@ -377,7 +371,7 @@ function _game()
 
 		// hero
 
-		self.draw(TERRAIN, 1);
+		self.draw(TERRAIN);
 
 	}
 
