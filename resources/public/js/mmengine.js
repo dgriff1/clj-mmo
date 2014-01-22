@@ -351,7 +351,7 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		self.reconcilleMap(self.buffer['location']['x'], self.buffer['location']['y']);
+		//self.reconcilleMap(self.buffer['location']['x'], self.buffer['location']['y']);
 
 		self.drawHud();
 
@@ -409,8 +409,8 @@ function _game()
 
 	// Moved world around player while moving players actual coords
 	self.movePlayer = function(x, y) 
-	{
-		self.reconcilleMap(x, y);
+	{	
+		//self.reconcilleMap(x, y);
 
 		for(count in world.children)
 		{
