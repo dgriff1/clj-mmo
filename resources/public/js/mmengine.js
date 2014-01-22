@@ -104,24 +104,24 @@ function _game()
 	}
 
 	self.onOpen = function(evt) { 
-		console.log("CONNECTED"); 
+		logger("CONNECTED"); 
 	} 
 
 	self.onClose = function(evt) { 
-		console.log("DISCONNECTED"); 
+		logger("DISCONNECTED"); 
 	}  
 
 	self.onMessage = function(evt) { 
-		console.log('RESPONSE: ' + evt.data); 
+		logger('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
 	}  
 
 	self.onError = function(evt) { 
-		console.log('ERROR: ' + evt.data); 
+		logger('ERROR: ' + evt.data); 
 	}  
 
 	self.doSend = function(message) {
-		console.log("Sending " + message + " to " + websocket.url) ;
+		logger("Sending " + message + " to " + websocket.url) ;
 		websocket.send(message); 
 	}  
 
@@ -221,7 +221,7 @@ function _game()
 		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO_IMAGE], true, false, false);
 	}
 
-	self.getWorld = function(type, foreground) {
+	self.getWorldByType = function(type, foreground) {
 		if(!foreground) {
 			foreground = undefined;
 		}
@@ -235,7 +235,7 @@ function _game()
 		return data;
 	}
 
-	self.sortWorld = function(data, type) {
+	self.sortWorldType = function(data, type) {
 		if(type == TERRAIN) {
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  });
 			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  });
@@ -272,14 +272,14 @@ function _game()
 				self.WORLD_DATA.push(data);
 			}
 			//sort start
-			sortableTerrain = self.getWorld(TERRAIN, true);
-			sortableTerrain = self.sortWorld(sortableTerrain, TERRAIN);
+			sortableTerrain = self.getWorldByType(TERRAIN, true);
+			sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
 
-			foregroundEntity = self.getWorld(ENTITY, false);
-			foregroundEntity = self.sortWorld(foregroundEntity, ENTITY);
+			foregroundEntity = self.getWorldByType(ENTITY, false);
+			foregroundEntity = self.sortWorldType(foregroundEntity, ENTITY);
 
-			sortableEntity = self.getWorld(ENTITY, true);
-			sortableEntity = self.sortWorld(sortableEntity, ENTITY);
+			sortableEntity = self.getWorldByType(ENTITY, true);
+			sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
 
 			sortableEntity = sortableEntity.concat(foregroundEntity);
 			self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
@@ -309,12 +309,10 @@ function _game()
 
 
 	self.draw = function(TYPE) {
-		toAdd = self.WORLD_DATA;
-
 		addPlayers = true;
 
-		for(each in toAdd) {
-			if(toAdd[each]['type'] == ENTITY && addPlayers) {
+		for(each in self.WORLD_DATA) {
+			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
  				for(player in self.currentPlayers) {
 					world.addChild(self.currentPlayers[player]);
 				}
@@ -322,13 +320,14 @@ function _game()
 	 			self.checkToAddPlayers();
 				addPlayers = false;
 			}
-			if(toAdd[each] === undefined) {
+			if(self.WORLD_DATA[each] === undefined) {
 				continue;
 			}
-			x = toAdd[each]['location']['x'];
-			y = toAdd[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[toAdd[each]['image']]['image'], TYPE, addPlayers);
+			x = self.WORLD_DATA[each]['location']['x'];
+			y = self.WORLD_DATA[each]['location']['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
 		}
+		stage.update();
 
 	}
 
@@ -490,6 +489,7 @@ function _game()
 
 	self.tick = function(e)
 	{
+		logger(world.children.length);
 		self.calculateFramesPerSecond();
 
                 if(mouseDown)
@@ -517,7 +517,7 @@ function _game()
 
 		ticks++;
 		
-		stage.update();
+		//stage.update();
 	}
 	
 	self.sendPlayerState = function() {

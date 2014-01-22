@@ -19,6 +19,10 @@ RESOURCES = {
 	'BUSH_IMAGE'      : { 'image' : '/assets/bush.png' , 'type' : ENTITY}
 }	
 
+function logger(msg) {
+	console.log(msg);
+}
+
 function loadSettings() {
 	jQuery.ajax({
 		url: "/js/settings.cfg",
