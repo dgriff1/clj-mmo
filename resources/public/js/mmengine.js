@@ -238,8 +238,9 @@ function _game()
 
 	self.sortWorldType = function(data, type) {
 		if(type == TERRAIN) {
-			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  });
-			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  });
+			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  return -1; });
+			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  return -1; });
+			data = data.reverse();
 		}
 		if(type == ENTITY) {
 			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1 });
