@@ -114,6 +114,7 @@ function _game()
 	self.onMessage = function(evt) { 
 		logger('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
+		stage.update();
 	}  
 
 	self.onError = function(evt) { 
