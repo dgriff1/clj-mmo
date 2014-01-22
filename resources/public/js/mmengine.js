@@ -328,7 +328,7 @@ function _game()
 			y = self.WORLD_DATA[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
 		}
-		stage.update();
+		//stage.update();
 
 	}
 
