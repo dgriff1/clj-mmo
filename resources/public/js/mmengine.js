@@ -490,6 +490,8 @@ function _game()
 
 	self.tick = function(e)
 	{
+		self.calculateFramesPerSecond();
+
                 if(mouseDown)
                 { 
 			direction = directionMouse(MOVEMENT_SPEED, hero);
