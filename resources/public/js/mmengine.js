@@ -221,6 +221,33 @@ function _game()
 		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO_IMAGE], true, false, false);
 	}
 
+	self.getWorld = function(type, foreground) {
+		if(!foreground) {
+			foreground = undefined;
+		}
+		data = [];
+		for(each in self.WORLD_DATA) {
+			if(self.WORLD_DATA[each]['type'] == type && 
+                           (RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != foreground )) {
+				data.push(self.WORLD_DATA[each]);
+			}
+		}
+		return data;
+	}
+
+	self.sortWorld = function(data, type) {
+		if(type == TERRAIN) {
+			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  });
+			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  });
+		}
+		if(type == ENTITY) {
+			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1 });
+			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return -1; }  return 1 });
+		}
+		return data
+	}
+
+
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
                 if(data.type == PLAYER) {
@@ -235,6 +262,9 @@ function _game()
                         return;
 		}
 		else if(data.type == ENTITY || data.type == TERRAIN) {
+			world.removeAllChildren();
+			world.x = world.y = 0;
+
 			if(data.type == TERRAIN) {
 				self.WORLD_DATA.unshift(data);
 			}
@@ -242,31 +272,15 @@ function _game()
 				self.WORLD_DATA.push(data);
 			}
 			//sort start
-			sortableTerrain = [];
-			for(each in self.WORLD_DATA) {
-				if(self.WORLD_DATA[each]['type'] == TERRAIN) {
-					sortableTerrain.push(self.WORLD_DATA[each]);
-				}
-			}
-			sortableTerrain = sortableTerrain.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  });
-			sortableTerrain = sortableTerrain.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  });
+			sortableTerrain = self.getWorld(TERRAIN, true);
+			sortableTerrain = self.sortWorld(sortableTerrain, TERRAIN);
 
-			foregroundEntity = [];
-			for(each in self.WORLD_DATA) {
-				if(self.WORLD_DATA[each]['type'] == ENTITY && RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != undefined) {
-					foregroundEntity.push(self.WORLD_DATA[each]);
-				}
-			}
-			foregroundEntity = foregroundEntity.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1  });
-			foregroundEntity = foregroundEntity.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return -1; } return 1  });
-			sortableEntity = [];
-			for(each in self.WORLD_DATA) {
-				if(self.WORLD_DATA[each]['type'] == ENTITY && RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] === undefined) {
-					sortableEntity.push(self.WORLD_DATA[each]);
-				}
-			}
-			sortableEntity = sortableEntity.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1  });
-			sortableEntity = sortableEntity.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return -1; } return 1  });
+			foregroundEntity = self.getWorld(ENTITY, false);
+			foregroundEntity = self.sortWorld(foregroundEntity, ENTITY);
+
+			sortableEntity = self.getWorld(ENTITY, true);
+			sortableEntity = self.sortWorld(sortableEntity, ENTITY);
+
 			sortableEntity = sortableEntity.concat(foregroundEntity);
 			self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
 
@@ -476,8 +490,6 @@ function _game()
 
 	self.tick = function(e)
 	{
-		self.calculateFramesPerSecond();
-
                 if(mouseDown)
                 { 
 			direction = directionMouse(MOVEMENT_SPEED, hero);
