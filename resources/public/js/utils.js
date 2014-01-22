@@ -64,16 +64,20 @@ function findInResources(item) {
 }
 
 function exportMap() {
-	exportDict = {};
+	//exportDict = {};
+	exportStr = "";
 	for(children in window.Game.world.children) {
 		childNode = window.Game.world.children[children];
 		image = childNode.src.split("/")[2];
 		image = findInResources(image);
 		x = -childNode.x + window.Game.width  / 2; 
 		y = -childNode.y + window.Game.height / 2;
-		exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x / window.Game.scale, "y" : y / window.Game.scale}, "image" : image, "type" : RESOURCES[image]['type']};
+		//exportDict[children.toString()] =  {"id" : children.toString(), "location" : {"x" :  x / window.Game.scale, "y" : y / window.Game.scale}, "image" : image, "type" : RESOURCES[image]['type']};
+		exportStr = exportStr + '{:location {:x ' + x / window.Game.scale  + ' :y ' + y/ window.Game.scale  +'} :image "' + image + '" :type "' + RESOURCES[image]['type'] +  '"  }';
 	}
-	exportDict = JSON.stringify(exportDict);
+	//exportDict = JSON.stringify(exportDict);
+	exportStr = "[" + exportStr + "]";
+	exportDict = exportStr;
 	console.log(exportDict);
 	$("#outputarea").text(exportDict);
 }
