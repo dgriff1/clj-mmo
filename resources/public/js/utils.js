@@ -11,8 +11,7 @@ PLAYER = "player";
 RESOURCES = {
 	'HERO_IMAGE'      : { 'image' : '/assets/hero.png' , 'type' : -1},
 	'ROCKS_IMAGE'     : { 'image' : '/assets/rocks.png' , 'type' : ENTITY},
-	'TREE_IMAGE'      : { 'image' : '/assets/tree.png' , 'type' : ENTITY, 'foreground' : true},
-	'TREE_BASE_IMAGE' : { 'image' : '/assets/tree_base.png' , 'type' : ENTITY},
+	'TREE_IMAGE'      : { 'image' : [[0, 0, '/assets/tree.png'], [0, 0, '/assets/tree_base.png']] , 'type' : ENTITY, 'foreground' : true},
 	'GRASS_IMAGE'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
 	'WATER_IMAGE'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
 	'BEACH_IMAGE'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},

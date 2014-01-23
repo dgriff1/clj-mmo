@@ -38,12 +38,21 @@ function _game()
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
-			self.loadImage(RESOURCES[key]['image']);
+			if(!self.isPrefab(RESOURCES[key])) {
+				self.loadImage(RESOURCES[key]['image']);
+			}
 		}
 	}
 
 	self.requestedAssets = 0;
 	self.loadedAssets = 0;
+
+	self.isPrefab = function(obj) {
+		if(typeof(obj['image']) != "string") {
+			return true;
+		}
+		return false;
+	}
 
 	self.loadImage = function(e) {
 		var img = new Image();
@@ -114,7 +123,9 @@ function _game()
 	self.onMessage = function(evt) { 
 		logger('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
-		stage.update();
+		if(stage != undefined) {
+			stage.update();
+		}
 	}  
 
 	self.onError = function(evt) { 
@@ -138,7 +149,9 @@ function _game()
 
 	self.scaleResources = function() {
 		for(key in RESOURCES) {
-			assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
+			if(!self.isPrefab(RESOURCES[key])) {
+				assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
+			}
 		}
 	}
 
@@ -156,7 +169,6 @@ function _game()
 		if(self.testMode) {
 			return;
 		}
-
 		self.scaleResources();
 
 		self.initializeSpriteSheets();
@@ -228,9 +240,11 @@ function _game()
 		}
 		data = [];
 		for(each in self.WORLD_DATA) {
-			if(self.WORLD_DATA[each]['type'] == type && 
-                           (RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != foreground )) {
-				data.push(self.WORLD_DATA[each]);
+			if(!self.isPrefab(self.WORLD_DATA[each])) {
+				if(self.WORLD_DATA[each]['type'] == type && 
+	                           (RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != foreground )) {
+					data.push(self.WORLD_DATA[each]);
+				}
 			}
 		}
 		return data;
@@ -327,7 +341,9 @@ function _game()
 			}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
+			if(!self.isPrefab(self.WORLD_DATA[each])) {
+				self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
+			}
 		}
 		//stage.update();
 
