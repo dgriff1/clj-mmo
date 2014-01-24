@@ -39,11 +39,11 @@ function _game()
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
 			if(!self.isPrefab(RESOURCES[key])) {
-				self.loadImage(RESOURCES[key]['image']);
+				self.loadImage(RESOURCES[key]['resource']);
 			}
 			else {
-				for(fab in RESOURCES[key]['image']) {
-					asset = RESOURCES[key]['image'][fab][2];
+				for(fab in RESOURCES[key]['resource']) {
+					asset = RESOURCES[key]['resource'][fab][2];
 					self.loadImage(asset);
 				}
 			}
@@ -54,7 +54,7 @@ function _game()
 	self.loadedAssets = 0;
 
 	self.isPrefab = function(obj) {
-		if(typeof(obj['image']) != "string") {
+		if(typeof(obj['resource']) != "string") {
 			return true;
 		}
 		return false;
@@ -156,11 +156,11 @@ function _game()
 	self.scaleResources = function() {
 		for(key in RESOURCES) {
 			if(!self.isPrefab(RESOURCES[key])) {
-				assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
+				assets[RESOURCES[key]['resource']] = nearestNeighborScale(assets[RESOURCES[key]['resource']], scale);
 			}
 			else {
-				for(fab in RESOURCES[key]['image']) {
-					asset = RESOURCES[key]['image'][fab][2];
+				for(fab in RESOURCES[key]['resource']) {
+					asset = RESOURCES[key]['resource'][fab][2];
 					assets[asset] = nearestNeighborScale(assets[asset], scale);
 				}
 			}
@@ -168,7 +168,7 @@ function _game()
 	}
 
 	self.initHero = function () { 
-		hero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']['image']]);
+		hero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
 		hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		hero.currentFrame = 1;
 		hero._id = playerID;
@@ -229,7 +229,7 @@ function _game()
 
 	self.initializeSpriteSheets = function() {
 		var heroData = {
-			images: [assets[RESOURCES['HERO_IMAGE']['image']]],
+			images: [assets[RESOURCES['HERO']['resource']]],
 			frames: {
 				width: HERO_WIDTH * scale,
 				height: HERO_HEIGHT * scale
@@ -240,9 +240,9 @@ function _game()
 			}
 		}
 
-		spriteSheets[RESOURCES['HERO_IMAGE']['image']] = new SpriteSheet(heroData);
+		spriteSheets[RESOURCES['HERO']['resource']] = new SpriteSheet(heroData);
 		//Direction flip
-		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO_IMAGE], true, false, false);
+		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO], true, false, false);
 	}
 
 	self.getWorldByType = function(type, foreground) {
@@ -252,7 +252,7 @@ function _game()
 		data = [];
 		for(each in self.WORLD_DATA) {
 			if(self.WORLD_DATA[each]['type'] == type && 
-	                   (RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != foreground )) {
+	                   (RESOURCES[self.WORLD_DATA[each]['resource']]['foreground'] != foreground )) {
 				data.push(self.WORLD_DATA[each]);
 			}
 		}
@@ -363,7 +363,7 @@ function _game()
 			}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
+			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], TYPE, addPlayers);
 		}
 		if(addPlayers) {
 			self.addPlayers();
@@ -469,7 +469,7 @@ function _game()
 
 	// Adds new player to world
 	self.addNewPlayer = function(id, heroLocation) {
-		newHero = new Hero(spriteSheets[RESOURCES['HERO_IMAGE']['image']]);
+		newHero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
 		newHero._id  = id;
 		newHero.type = 'Hero';
 		newHero.currentFrame = 1;

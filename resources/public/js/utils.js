@@ -9,13 +9,13 @@ ENTITY = "entity";
 PLAYER = "player";
 
 RESOURCES = {
-	'HERO_IMAGE'      : { 'image' : '/assets/hero.png' , 'type' : PLAYER},
-	'ROCKS_IMAGE'     : { 'image' : '/assets/rocks.png' , 'type' : ENTITY},
-	'TREE_IMAGE'      : { 'image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
-	'GRASS_IMAGE'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
-	'WATER_IMAGE'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
-	'BEACH_IMAGE'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
-	'BUSH_IMAGE'      : { 'image' : '/assets/bush.png' , 'type' : ENTITY}
+	'HERO'      : { 'resource' : '/assets/hero.png' , 'type' : PLAYER},
+	'ROCKS'     : { 'resource' : '/assets/rocks.png' , 'type' : ENTITY},
+	'TREE'      : { 'resource' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
+	'GRASS'     : { 'resource' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'WATER'     : { 'resource' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'BEACH'     : { 'resource' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
 }	
 
 function logger(msg) {
