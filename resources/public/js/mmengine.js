@@ -228,7 +228,6 @@ function _game()
 	}
 
 	self.initializeSpriteSheets = function() {
-		
 		var heroData = {
 			images: [assets[RESOURCES['HERO_IMAGE']['image']]],
 			frames: {
@@ -342,17 +341,22 @@ function _game()
 	}
 
 
+	self.addPlayers = function() {
+ 		for(player in self.currentPlayers) {
+			world.addChild(self.currentPlayers[player]);
+		}
+		self.addOurHeroToWorld();
+	 	self.checkToAddPlayers();
+
+	}
+
 	self.draw = function(TYPE) {
 		addPlayers = true;
 
 		for(each in self.WORLD_DATA) {
 			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
- 				for(player in self.currentPlayers) {
-					world.addChild(self.currentPlayers[player]);
-				}
-				self.addOurHeroToWorld();
-	 			self.checkToAddPlayers();
 				addPlayers = false;
+				self.addPlayers();
 			}
 			if(self.WORLD_DATA[each] === undefined) {
 				continue;
@@ -360,6 +364,9 @@ function _game()
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
+		}
+		if(addPlayers) {
+			self.addPlayers();
 		}
 		//stage.update();
 

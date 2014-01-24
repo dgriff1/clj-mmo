@@ -9,7 +9,7 @@ ENTITY = "entity";
 PLAYER = "player";
 
 RESOURCES = {
-	'HERO_IMAGE'      : { 'image' : '/assets/hero.png' , 'type' : -1},
+	'HERO_IMAGE'      : { 'image' : '/assets/hero.png' , 'type' : PLAYER},
 	'ROCKS_IMAGE'     : { 'image' : '/assets/rocks.png' , 'type' : ENTITY},
 	'TREE_IMAGE'      : { 'image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
 	'GRASS_IMAGE'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
