@@ -41,6 +41,12 @@ function _game()
 			if(!self.isPrefab(RESOURCES[key])) {
 				self.loadImage(RESOURCES[key]['image']);
 			}
+			else {
+				for(fab in RESOURCES[key]['image']) {
+					asset = RESOURCES[key]['image'][fab][2];
+					self.loadImage(asset);
+				}
+			}
 		}
 	}
 
@@ -152,6 +158,12 @@ function _game()
 			if(!self.isPrefab(RESOURCES[key])) {
 				assets[RESOURCES[key]['image']] = nearestNeighborScale(assets[RESOURCES[key]['image']], scale);
 			}
+			else {
+				for(fab in RESOURCES[key]['image']) {
+					asset = RESOURCES[key]['image'][fab][2];
+					assets[asset] = nearestNeighborScale(assets[asset], scale);
+				}
+			}
 		}
 	}
 
@@ -240,11 +252,9 @@ function _game()
 		}
 		data = [];
 		for(each in self.WORLD_DATA) {
-			if(!self.isPrefab(self.WORLD_DATA[each])) {
-				if(self.WORLD_DATA[each]['type'] == type && 
-	                           (RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != foreground )) {
-					data.push(self.WORLD_DATA[each]);
-				}
+			if(self.WORLD_DATA[each]['type'] == type && 
+	                   (RESOURCES[self.WORLD_DATA[each]['image']]['foreground'] != foreground )) {
+				data.push(self.WORLD_DATA[each]);
 			}
 		}
 		return data;
@@ -320,7 +330,15 @@ function _game()
 		else {
 			pos = self.calculatePosition(hero.x, hero.y, x, y);
 		}
-		self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
+		if(typeof(resource) == "string") {
+			self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
+		}
+		else {
+			for(each in resource) {
+				res = resource[each];
+				self.addWidget(pos[0] + res[0], pos[1] + res[1], new Bitmap(res[2]), resourceType);
+			}
+		}
 	}
 
 
@@ -341,9 +359,7 @@ function _game()
 			}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
-			if(!self.isPrefab(self.WORLD_DATA[each])) {
-				self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
-			}
+			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['image']]['image'], TYPE, addPlayers);
 		}
 		//stage.update();
 
@@ -507,7 +523,6 @@ function _game()
 
 	self.tick = function(e)
 	{
-		logger(world.children.length);
 		self.calculateFramesPerSecond();
 
                 if(mouseDown)
