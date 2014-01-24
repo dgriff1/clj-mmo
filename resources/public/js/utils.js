@@ -9,7 +9,7 @@ ENTITY = "entity";
 PLAYER = "player";
 
 RESOURCES = {
-	'HERO'      : { 'resource' : '/assets/hero.png' , 'type' : PLAYER},
+	'HERO'      : { 'resource' : '/assets/hero.png' , 'type' : PLAYER, 'width' : 20, 'height' : 42},
 	'ROCKS'     : { 'resource' : '/assets/rocks.png' , 'type' : ENTITY},
 	'TREE'      : { 'resource' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
 	'GRASS'     : { 'resource' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
@@ -17,6 +17,9 @@ RESOURCES = {
 	'BEACH'     : { 'resource' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
 	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
 }	
+
+HERO_WIDTH = RESOURCES['HERO']['width'];
+HERO_HEIGHT = RESOURCES['HERO']['height'];
 
 function logger(msg) {
 	console.log(msg);
@@ -120,6 +123,40 @@ function directionKeys(movementSpeed, hero)
 	return [movementSpeedX, movementSpeedY];
 }
 
+function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
+	tempMovementSpeed = movementSpeed;
+	accel = (clientMouseX - w/2) / 100;
+	if(accel > 0) {
+		movementSpeed = movementSpeed + accel;
+	}
+	else {
+		movementSpeed = movementSpeed - accel;
+	}
+	accel = (clientMouseY - h/2) / 100;
+	if(accel > 0) {
+		movementSpeed = movementSpeed + accel;
+	}
+	else {
+		movementSpeed = movementSpeed - accel;
+	}
+
+	if(movementSpeed > MAX_MOVEMENT_SPEED) {
+		movementSpeed = MAX_MOVEMENT_SPEED;
+	}
+
+	return movementSpeed;
+}
+
+function isMouseNearPlayer(hero) { 
+	if(clientMouseX - w / 2 < HERO_WIDTH && clientMouseX - w / 2 > -HERO_WIDTH && 
+		clientMouseY - h / 2 < HERO_HEIGHT && clientMouseY - h / 2 > -HERO_HEIGHT) {
+       		window.Game.stopHeroAnimations(hero);
+		hero.wasMoving = false;
+		return true;
+	}
+	return false;
+}
+
 function directionMouse(movementSpeed, hero) 
 {
 	scale = window.Game.scale;
@@ -129,14 +166,11 @@ function directionMouse(movementSpeed, hero)
 	h = window.Game.height;
 	f = window.Game.doAnimation;
 
-	accel = (clientMouseX - w/2) / 100;
-	if(accel > 0) {
-		movementSpeed = movementSpeed + accel;
+	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
+	
+	if(isMouseNearPlayer(hero)) {
+		return [0, 0];
 	}
-	else {
-		movementSpeed = movementSpeed - accel;
-	}
-
 
 	// Left
 	if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT

@@ -35,6 +35,7 @@ function _game()
 	self.framesPerSecond = 0;
 	self.WORLD_DATA = [];//new Array();
  	self.keyPressed = [];
+	self.assets = assets;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -65,7 +66,7 @@ function _game()
 		img.onload = self.onLoadedAsset;
 		img.src = e;
 
-		assets[e] = img;
+		self.assets[e] = img;
 
 		++self.requestedAssets;
 	}
@@ -156,12 +157,12 @@ function _game()
 	self.scaleResources = function() {
 		for(key in RESOURCES) {
 			if(!self.isPrefab(RESOURCES[key])) {
-				assets[RESOURCES[key]['resource']] = nearestNeighborScale(assets[RESOURCES[key]['resource']], scale);
+				self.assets[RESOURCES[key]['resource']] = nearestNeighborScale(self.assets[RESOURCES[key]['resource']], scale);
 			}
 			else {
 				for(fab in RESOURCES[key]['resource']) {
 					asset = RESOURCES[key]['resource'][fab][2];
-					assets[asset] = nearestNeighborScale(assets[asset], scale);
+					self.assets[asset] = nearestNeighborScale(self.assets[asset], scale);
 				}
 			}
 		}
@@ -229,7 +230,7 @@ function _game()
 
 	self.initializeSpriteSheets = function() {
 		var heroData = {
-			images: [assets[RESOURCES['HERO']['resource']]],
+			images: [self.assets[RESOURCES['HERO']['resource']]],
 			frames: {
 				width: HERO_WIDTH * scale,
 				height: HERO_HEIGHT * scale
@@ -330,7 +331,7 @@ function _game()
 			pos = self.calculatePosition(hero.x, hero.y, x, y);
 		}
 		if(typeof(resource) == "string") {
-			self.addWidget(pos[0], pos[1], new Bitmap(assets[resource]), resourceType);
+			self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
 		}
 		else {
 			for(each in resource) {
