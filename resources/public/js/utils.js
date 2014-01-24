@@ -128,6 +128,16 @@ function directionMouse(movementSpeed, hero)
 	w = window.Game.width;
 	h = window.Game.height;
 	f = window.Game.doAnimation;
+
+	accel = (clientMouseX - w/2) / 100;
+	if(accel > 0) {
+		movementSpeed = movementSpeed + accel;
+	}
+	else {
+		movementSpeed = movementSpeed - accel;
+	}
+
+
 	// Left
 	if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
 		&& clientMouseX < w/2)
