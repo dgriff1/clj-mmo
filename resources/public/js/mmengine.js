@@ -175,6 +175,14 @@ function _game()
 		hero._id = playerID;
 	}
 
+	self.getMap = function() {
+                // Need map
+		self.doSend(JSON.stringify({"type"     : "proximity", 
+                                            "location" : {"x" : self.buffer['location']['x'],
+                                                          "y" : self.buffer['location']['y']}
+                                           }));;
+	}
+
 	// Set up for game
 	self.initializeGame = function() {
 		self.hideLoader();
@@ -198,11 +206,8 @@ function _game()
 	
 		self.initHero();
 
-                // Need map
-		self.doSend(JSON.stringify({"type"     : "proximity", 
-                                            "location" : {"x" : self.buffer['location']['x'],
-                                                          "y" : self.buffer['location']['y']}
-                                           }));;
+		self.getMap();
+
 		self.reset();
 
 		//Event override
@@ -374,7 +379,7 @@ function _game()
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Project: Mankind v0.0.1", "20px Arial", "#FFFFFF");
+		textInfo = new createjs.Text("Project: Mankraft v0.0.2", "20px Arial", "#FFFFFF");
 		textInfo.onMouseMove = function(e) { alert(1); };
  		textInfo.x = 50;
  		textInfo.y = 50;
