@@ -228,9 +228,9 @@ function _game()
 			document.onmousemove = self.handleMouseMove;
 		}
 		
-		Ticker.addListener(self.tick, self);
-		Ticker.useRAF = true;
-		Ticker.setFPS(FPS_RATE);
+		createjs.Ticker.setFPS(FPS_RATE);
+		createjs.Ticker.addEventListener("tick", function() { self.tick();  });
+		createjs.Ticker.useRAF = true;
 	}
 
 	self.initializeSpriteSheets = function() {
