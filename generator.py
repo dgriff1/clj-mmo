@@ -15,26 +15,24 @@ def spiral(X, Y):
 		x, y = x+dx, y+dy
 
 
-for j in range(0, 2):
-	if j == 1:
-		x1 = 32
-		y1 = 15
+for k in range(0, 2):
+	for j in range(0, 2):
 		image = "GRASS"
-	else:
-		x1 = 0
-		y1 = 0
-		image = "GRASS"
-	s = None
-	s = spiral(1000, 1000)
-	i = 0
-	while i < 20000:
-		(x, y) = s.next()
-		x = (x * 64) + x1
-		y = (y * 32) + y1
-		i = i + 1
-		row = '{:location {:x %f :y %f} :resource "%s" :type "terrain" } ' % (x, y, image)
-		export += row
-	
+		x1 = 32 * j
+		y1 = 16 * j
+		s = None
+		s = spiral(100, 100)
+		i = 0
+		if k == 1:
+			image = "WATER"
+		while i < 100:
+			(x, y) = s.next()
+			x = x * 64 + x1 
+			y = y * 32 + y1 
+			i = i + 1
+			row = '{:location {:x %f :y %f} :resource "%s" :type "terrain" } ' % (x, y, image)
+			export += row
+		
 
 export += ']'
 
