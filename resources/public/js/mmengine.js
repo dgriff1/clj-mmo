@@ -458,7 +458,8 @@ function _game()
 	{	
 		//self.reconcilleMap(x, y);
 
-		for(count in world.children)
+		length = world.children.length;
+		for(var count = 0; count < length; count = count + 1)
 		{
 			obj = world.children[count];
 			if(obj.name != 'Hero' || (obj._id != undefined && obj._id != playerID))
@@ -471,6 +472,15 @@ function _game()
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 
 		self.sendPlayerState();
+
+		if(self.realPlayerCoords['x'] > self.buffer['location']['x'] + 500 ||  
+			self.realPlayerCoords['x'] < self.buffer['location']['x'] - 500 || 
+			self.realPlayerCoords['y'] > self.buffer['location']['y'] + 500 ||
+			self.realPlayerCoords['y'] < self.buffer['location']['y'] - 500) {
+			self.buffer['location']['x'] = self.realPlayerCoords['x']
+			self.buffer['location']['y'] = self.realPlayerCoords['y']
+			self.getMap();
+		} 
 	}
 
 	// Adds new player to world

@@ -15,7 +15,7 @@ def spiral(X, Y):
 		x, y = x+dx, y+dy
 
 
-for k in range(0, 2):
+for k in range(0, 1):
 	for j in range(0, 2):
 		image = "GRASS"
 		x1 = 32 * j
