@@ -30,7 +30,7 @@
 	 	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist-player)  }  ))))
 
 (defn get-close-entities [ fromx fromy ] 
-	(let [ closeby (mc/find-maps "mkentities" { :location { "$near" [ fromx fromy ] "$maxDistance" 400 } } )] 
+	(let [ closeby (mc/find-maps "mkentities" { :location { "$near" [ fromx fromy ] "$maxDistance" 800 } } )] 
 		(prn "Close entities " fromx " - " fromy " = " closeby) closeby  ))
 
 (defn delete-all-entities [ ] 

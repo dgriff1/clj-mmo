@@ -456,18 +456,11 @@ function _game()
 	// Moved world around player while moving players actual coords
 	self.movePlayer = function(x, y) 
 	{	
-		//self.reconcilleMap(x, y);
+		world.x = world.x + x;
+		world.y = world.y + y;
 
-		length = world.children.length;
-		for(var count = 0; count < length; count = count + 1)
-		{
-			obj = world.children[count];
-			if(obj.name != 'Hero' || (obj._id != undefined && obj._id != playerID))
-			{
-				obj.x = obj.x + (x * scale)
-				obj.y = obj.y + (y * scale);
-			}
-		}
+		hero.x = hero.x - x;
+		hero.y = hero.y - y;
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 
