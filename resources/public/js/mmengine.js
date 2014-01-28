@@ -293,8 +293,6 @@ function _game()
                         return;
 		}
 		else if(data.type == ENTITY || data.type == TERRAIN) {
-			world.removeAllChildren();
-			world.x = world.y = 0;
 
 			if(data.type == TERRAIN) {
 				self.WORLD_DATA.unshift(data);
@@ -316,8 +314,8 @@ function _game()
 			self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
 
 			//sort end
-			self.draw(data.type);
 		}
+		self.draw(data.type);
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
@@ -357,16 +355,19 @@ function _game()
 	}
 
 	self.draw = function(TYPE) {
+		world.removeAllChildren();
+		world.x = world.y = 0;
 		addPlayers = true;
 
+
 		for(each in self.WORLD_DATA) {
-			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
-				addPlayers = false;
-				self.addPlayers();
-			}
-			if(self.WORLD_DATA[each] === undefined) {
-				continue;
-			}
+			//if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
+			//	addPlayers = false;
+			//	self.addPlayers();
+			//}
+			//if(self.WORLD_DATA[each] === undefined) {
+			//	continue;
+			//}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], TYPE, addPlayers);
@@ -374,7 +375,7 @@ function _game()
 		if(addPlayers) {
 			self.addPlayers();
 		}
-		//stage.update();
+		stage.update();
 
 	}
 
@@ -456,11 +457,12 @@ function _game()
 	// Moved world around player while moving players actual coords
 	self.movePlayer = function(x, y) 
 	{	
-		world.x = world.x + x;
-		world.y = world.y + y;
+		world.x = world.x + x * scale;
+		world.y = world.y + y * scale;
 
-		hero.x = hero.x - x;
-		hero.y = hero.y - y;
+		hero.x = hero.x - x * scale;
+		hero.y = hero.y - y * scale;
+
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
 
