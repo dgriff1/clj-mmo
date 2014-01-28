@@ -185,12 +185,7 @@ function _game()
 		formerY = self.buffer['location']['y'];
 		self.buffer['location']['x'] = self.realPlayerCoords['x'];
 		self.buffer['location']['y'] = self.realPlayerCoords['y'];
-		for(player in self.currentPlayers) {
-			//newX = self.buffer['location']['x'] - formerX;
-			//newY = self.buffer['location']['y'] - formerY;
-			//pos = self.calculatePosition(hero.x, hero.y, self.currentPlayers[player][x] + newX, self.currentPlayers[player][y] - newY)
-			//self.currentPlayers[player]['x'] = pos[0]
-		}
+
 	}
 
 	// Set up for game
@@ -216,9 +211,9 @@ function _game()
 	
 		self.initHero();
 
-		self.getMap();
-
 		self.reset();
+
+		self.getMap();
 
 		//Event override
 		if ('ontouchstart' in document.documentElement) {
@@ -297,7 +292,7 @@ function _game()
 					self.playersToAdd[data._id] = data.location;	
 				}
 				else {
-					self.movePlayers(data);
+					self.movePlayer(data);
 				}
 			}
                         return;
@@ -374,13 +369,13 @@ function _game()
 
 
 		for(each in self.WORLD_DATA) {
-			//if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
-			//	addPlayers = false;
-			//	self.addPlayers();
-			//}
-			//if(self.WORLD_DATA[each] === undefined) {
-			//	continue;
-			//}
+			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
+				addPlayers = false;
+				self.addPlayers();
+			}
+			if(self.WORLD_DATA[each] === undefined) {
+				continue;
+			}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], addPlayers);
@@ -411,11 +406,10 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		//self.reconcilleMap(self.buffer['location']['x'], self.buffer['location']['y']);
-
 		self.drawHud();
 
 		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
+
 	}
 
 	self.addOurHeroToWorld = function() {
@@ -444,17 +438,17 @@ function _game()
 
 	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
-		for(count in world.children)
-		{
-			obj = world.children[count];
-			if(obj.name != 'Hero' || (obj._id != undefined && obj._id != playerID))
-			{
-				obj.x = obj.x + (x * scale)
-				obj.y = obj.y + (y * scale);
-			}
-		}
-                self.realPlayerCoords['x'] = x ;
-                self.realPlayerCoords['y'] = y ;
+		world.x = world.x + x * scale;
+		world.y = world.y + y * scale;
+
+		hero.x = hero.x - x * scale;
+		hero.y = hero.y - y * scale;
+
+                self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x ;
+                self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y ;
+
+		self.sendPlayerState();
+
 	}
 
 	self.reconcilleMap = function(x, y) {
@@ -468,18 +462,9 @@ function _game()
 	}
 
 	// Moved world around player while moving players actual coords
-	self.movePlayer = function(x, y) 
+	self.moveHero = function(x, y) 
 	{	
-		world.x = world.x + x * scale;
-		world.y = world.y + y * scale;
-
-		hero.x = hero.x - x * scale;
-		hero.y = hero.y - y * scale;
-
-                self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x;
-                self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y;
-
-		self.sendPlayerState();
+		self.initPlayerPosition(x, y);
 
 		if(self.realPlayerCoords['x'] > self.buffer['location']['x'] + 500 ||  
 			self.realPlayerCoords['x'] < self.buffer['location']['x'] - 500 || 
@@ -493,10 +478,11 @@ function _game()
 	self.addNewPlayer = function(id, heroLocation) {
 		newHero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
 		newHero._id  = id;
-		newHero.type = 'Hero';
+		newHero.type = PLAYER;
 		newHero.currentFrame = 1;
-		newHero.x = hero.x + ((self.realPlayerCoords['x'] - heroLocation.x )  * scale);
-		newHero.y = hero.y + ((self.realPlayerCoords['y'] - heroLocation.y )  * scale);
+		loc = self.calculatePosition(hero.x, hero.y, heroLocation.x, heroLocation.y);
+		newHero.x = loc[0]
+		newHero.y = loc[1]
              	newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		newHero.reset();
 		self.currentPlayers[id] = newHero;
@@ -513,15 +499,17 @@ function _game()
 		self.playersToAdd = {};
 	}
 
-	self.movePlayers = function(msg) {
+	self.movePlayer = function(msg) {
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
 			        self.doAnimation(obj, "down");
 				loc = msg.location;
 				loc = self.calculatePosition(hero.x, hero.y, loc.x, loc.y);
-				obj.x = loc[0];
+				self.currentPlayers[count].x = loc[0];
+				self.currentPlayers[count].y = loc[1];
 				obj.y = loc[1];
+				break;
 			}
 		}	
 	}
@@ -559,7 +547,7 @@ function _game()
 			direction = directionMouse(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
-			self.movePlayer(xDirection, yDirection);
+			self.moveHero(xDirection, yDirection);
 			
 		}
 		if(self.keyPressed.length != []) {
@@ -567,7 +555,7 @@ function _game()
 			xDirection = direction[0];
 			yDirection = direction[1];
 			if(xDirection != 0 || yDirection != 0) {
-				self.movePlayer(xDirection, yDirection);
+				self.moveHero(xDirection, yDirection);
 			}
 		}
 		if(!mouseDown && self.keyPressed.length < 1)
