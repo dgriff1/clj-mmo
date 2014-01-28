@@ -178,9 +178,19 @@ function _game()
 	self.getMap = function() {
                 // Need map
 		self.doSend(JSON.stringify({"type"     : "proximity", 
-                                            "location" : {"x" : self.buffer['location']['x'],
-                                                          "y" : self.buffer['location']['y']}
-                                           }));;
+                                            "location" : {"x" : self.realPlayerCoords['x'],
+                                                          "y" : self.realPlayerCoords['y']}
+                                           }));
+		formerX = self.buffer['location']['x'];
+		formerY = self.buffer['location']['y'];
+		self.buffer['location']['x'] = self.realPlayerCoords['x'];
+		self.buffer['location']['y'] = self.realPlayerCoords['y'];
+		for(player in self.currentPlayers) {
+			//newX = self.buffer['location']['x'] - formerX;
+			//newY = self.buffer['location']['y'] - formerY;
+			//pos = self.calculatePosition(hero.x, hero.y, self.currentPlayers[player][x] + newX, self.currentPlayers[player][y] - newY)
+			//self.currentPlayers[player]['x'] = pos[0]
+		}
 	}
 
 	// Set up for game
@@ -294,12 +304,14 @@ function _game()
 		}
 		else if(data.type == ENTITY || data.type == TERRAIN) {
 
+
 			if(data.type == TERRAIN) {
 				self.WORLD_DATA.unshift(data);
 			}
 			else {
 				self.WORLD_DATA.push(data);
 			}
+
 			//sort start
 			sortableTerrain = self.getWorldByType(TERRAIN, true);
 			sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
@@ -315,7 +327,7 @@ function _game()
 
 			//sort end
 		}
-		self.draw(data.type);
+		self.draw();
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
@@ -347,14 +359,15 @@ function _game()
 
 	self.addPlayers = function() {
  		for(player in self.currentPlayers) {
-			world.addChild(self.currentPlayers[player]);
+			aPlayer = self.currentPlayers[player];
+			world.addChild(aPlayer);
 		}
 		self.addOurHeroToWorld();
 	 	self.checkToAddPlayers();
 
 	}
 
-	self.draw = function(TYPE) {
+	self.draw = function() {
 		world.removeAllChildren();
 		world.x = world.y = 0;
 		addPlayers = true;
@@ -370,7 +383,7 @@ function _game()
 			//}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], TYPE, addPlayers);
+			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], addPlayers);
 		}
 		if(addPlayers) {
 			self.addPlayers();
@@ -450,7 +463,7 @@ function _game()
 
 		// hero
 
-		self.draw(TERRAIN);
+		self.draw();
 
 	}
 
@@ -472,8 +485,6 @@ function _game()
 			self.realPlayerCoords['x'] < self.buffer['location']['x'] - 500 || 
 			self.realPlayerCoords['y'] > self.buffer['location']['y'] + 500 ||
 			self.realPlayerCoords['y'] < self.buffer['location']['y'] - 500) {
-			self.buffer['location']['x'] = self.realPlayerCoords['x']
-			self.buffer['location']['y'] = self.realPlayerCoords['y']
 			self.getMap();
 		} 
 	}
