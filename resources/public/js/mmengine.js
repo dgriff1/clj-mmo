@@ -25,8 +25,8 @@ function _game()
         self.clientMouseX = 0;
         self.clientMouseY = 0;
         self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
-	self.playersToAdd       = {};
-	self.currentPlayers     = {};
+	self.playersToAdd       = new Array();
+	self.currentPlayers     = new Array();
 	self.lastSentMessage	= new Date() / 1000;
         self.playerID = playerID;
 	self.testMode = false;
@@ -128,7 +128,7 @@ function _game()
 	}  
 
 	self.onMessage = function(evt) { 
-		logger('RESPONSE: ' + evt.data); 
+		//logger('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
 		if(stage != undefined) {
 			stage.update();
@@ -140,7 +140,7 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
-		logger("Sending " + message + " to " + websocket.url) ;
+		//logger("Sending " + message + " to " + websocket.url) ;
 		websocket.send(message); 
 	}  
 
@@ -148,10 +148,16 @@ function _game()
 		return {}
         }
 
+	self.showLoader = function() {
+		document.body.style.backgroundImage = "none";
+		document.body.style.backgroundColor = "#111111";
+		$(document.getElementById("loader")).show();
+	}
+
 	self.hideLoader = function() {
 		document.body.style.backgroundImage = "none";
 		document.body.style.backgroundColor = "#111111";
-		document.getElementById("loader").style.display = "None";
+		$(document.getElementById("loader")).hide();
 	}
 
 	self.scaleResources = function() {
@@ -177,20 +183,17 @@ function _game()
 
 	self.getMap = function() {
                 // Need map
+
 		self.doSend(JSON.stringify({"type"     : "proximity", 
                                             "location" : {"x" : self.realPlayerCoords['x'],
                                                           "y" : self.realPlayerCoords['y']}
                                            }));
-		formerX = self.buffer['location']['x'];
-		formerY = self.buffer['location']['y'];
 		self.buffer['location']['x'] = self.realPlayerCoords['x'];
 		self.buffer['location']['y'] = self.realPlayerCoords['y'];
-
 	}
 
 	// Set up for game
 	self.initializeGame = function() {
-		self.hideLoader();
 
 		if(self.testMode) {
 			return;
@@ -289,7 +292,7 @@ function _game()
                 if(data.type == PLAYER) {
 			if(data._id != playerID) {
 				if(self.currentPlayers[data._id] === undefined) {
-					self.playersToAdd[data._id] = data.location;	
+					self.playersToAdd[data._id] = data;	
 				}
 				else {
 					self.movePlayer(data);
@@ -355,6 +358,9 @@ function _game()
 	self.addPlayers = function() {
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
+			loc = self.calculatePosition(hero.x, hero.y, aPlayer.realX, aPlayer.realY);
+			aPlayer.x = loc[0];
+			aPlayer.y = loc[1];
 			world.addChild(aPlayer);
 		}
 		self.addOurHeroToWorld();
@@ -363,10 +369,11 @@ function _game()
 	}
 
 	self.draw = function() {
+		self.showLoader();
 		world.removeAllChildren();
 		world.x = world.y = 0;
-		addPlayers = true;
 
+		addPlayers = true;
 
 		for(each in self.WORLD_DATA) {
 			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
@@ -383,6 +390,7 @@ function _game()
 		if(addPlayers) {
 			self.addPlayers();
 		}
+		self.hideLoader();
 		stage.update();
 
 	}
@@ -483,6 +491,8 @@ function _game()
 		loc = self.calculatePosition(hero.x, hero.y, heroLocation.x, heroLocation.y);
 		newHero.x = loc[0]
 		newHero.y = loc[1]
+		newHero.realX = heroLocation.x;
+		newHero.realY = heroLocation.y;
              	newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		newHero.reset();
 		self.currentPlayers[id] = newHero;
@@ -493,10 +503,10 @@ function _game()
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
 			if(self.currentPlayers[each] === undefined) {
-				self.addNewPlayer(each, self.playersToAdd[each]);
+				self.addNewPlayer(each, self.playersToAdd[each]['location']);
+				self.playersToAdd.splice(each);
 			}
 		}
-		self.playersToAdd = {};
 	}
 
 	self.movePlayer = function(msg) {
