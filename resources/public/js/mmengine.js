@@ -162,14 +162,11 @@ function _game()
 
 	self.scaleResources = function() {
 		for(key in RESOURCES) {
-			if(!self.isPrefab(RESOURCES[key])) {
-				self.assets[RESOURCES[key]['resource']] = nearestNeighborScale(self.assets[RESOURCES[key]['resource']], scale);
-			}
-			else {
-				for(fab in RESOURCES[key]['resource']) {
-					asset = RESOURCES[key]['resource'][fab][2];
-					self.assets[asset] = nearestNeighborScale(self.assets[asset], scale);
-				}
+			if(key == 'HERO') {
+				logger(RESOURCES[key]['width']);
+				RESOURCES[key]['width'] = RESOURCES[key]['width'] * (getWidth() / BASE_WIDTH);
+				RESOURCES[key]['height'] = RESOURCES[key]['height'] * (getHeight() / BASE_HEIGHT);
+				logger(RESOURCES[key]['width']);
 			}
 		}
 	}
@@ -200,6 +197,8 @@ function _game()
 			return;
 		}
 		self.initializeSpriteSheets();
+
+		self.scaleResources();
 
 		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
 		canvas.width = BASE_WIDTH;
@@ -244,8 +243,8 @@ function _game()
 		var heroData = {
 			images: [self.assets[RESOURCES['HERO']['resource']]],
 			frames: {
-				width: HERO_WIDTH * scale,
-				height: HERO_HEIGHT * scale
+				width: RESOURCES['HERO']['width'],
+				height: RESOURCES['HERO']['height']
 			},
 			animations: {
 				down: [0,17,true,1],
@@ -328,15 +327,15 @@ function _game()
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
-		self.wx = heroX + ((self.realPlayerCoords['x'] - objX )  * scale);
-		self.wy = heroY + ((self.realPlayerCoords['y'] - objY )  * scale);
+		self.wx = heroX + ((self.realPlayerCoords['x'] - objX ));
+		self.wy = heroY + ((self.realPlayerCoords['y'] - objY ));
 		return [self.wx, self.wy]
 	}
 
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
-			hx = w/2 - ((HERO_WIDTH*scale)/2);
-			hy = h/2 - ((HERO_HEIGHT*scale)/2);
+			hx = w/2 - ((RESOURCES['HERO']['width']*scale)/2);
+			hy = h/2 - ((RESOURCES['HERO']['height']*scale)/2);
 			pos = self.calculatePosition(hx, hy, x, y);
 		}
 		else {
@@ -420,8 +419,8 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		hero.x = w/2 - ((HERO_WIDTH*scale)/2);
-		hero.y = h/2 - ((HERO_HEIGHT*scale)/2);
+		hero.x = w/2 - ((RESOURCES['HERO']['width']*scale)/2);
+		hero.y = h/2 - ((RESOURCES['HERO']['height']*scale)/2);
 		hero.reset();
 		hero.wasMoving = true;
 		world.addChild(hero);
@@ -445,11 +444,11 @@ function _game()
 
 	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
-		world.x = world.x + x * scale;
-		world.y = world.y + y * scale;
+		world.x = world.x + x;
+		world.y = world.y + y;
 
-		hero.x = hero.x - x * scale;
-		hero.y = hero.y - y * scale;
+		hero.x = hero.x - x;
+		hero.y = hero.y - y;
 
                 self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x ;
                 self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y ;
@@ -601,9 +600,9 @@ function _game()
                 img.type = type;
 
 		world.addChild(img);
-		//if(type) {
-             	//   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
-		//}
+		if(type) {
+             	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
+		}
 	}
 
         self.handleMouseMove = function(e)

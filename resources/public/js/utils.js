@@ -20,9 +20,6 @@ RESOURCES = {
 	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
 }	
 
-HERO_WIDTH = RESOURCES['HERO']['width'];
-HERO_HEIGHT = RESOURCES['HERO']['height'];
-
 function logger(msg) {
 	console.log(msg);
 }
@@ -155,8 +152,8 @@ function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
 function isMouseNearPlayer(hero) { 
 	cW = getWidth();
 	cH = getHeight();
-	if(clientMouseX - cW / 2 < HERO_WIDTH && clientMouseX - cW / 2 > -HERO_WIDTH && 
-		clientMouseY - cH / 2 < HERO_HEIGHT && clientMouseY - cH / 2 > -HERO_HEIGHT) {
+	if(clientMouseX - cW / 2 < RESOURCES['HERO']['width'] && clientMouseX - cW / 2 > -RESOURCES['HERO']['width'] && 
+		clientMouseY - cH / 2 < RESOURCES['HERO']['height'] && clientMouseY - cH / 2 > -RESOURCES['HERO']['height']) {
        		window.Game.stopHeroAnimations(hero);
 		hero.wasMoving = false;
 		return true;
@@ -165,13 +162,10 @@ function isMouseNearPlayer(hero) {
 }
 
 function directionMouse(movementSpeed, hero) {
-	cW = getWidth();
-	cH = getHeight();
-	scale = window.Game.scale;
 	clientMouseX = self.Game.clientMouseX;
 	clientMouseY = self.Game.clientMouseY;
-	w = cW;//window.Game.width;
-	h = cH;//window.Game.height;
+	w = getWidth();//window.Game.width;
+	h = getHeight();//window.Game.height;
 	f = window.Game.doAnimation;
 
 	//movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
@@ -181,7 +175,7 @@ function directionMouse(movementSpeed, hero) {
 //	}
 
 	// Left
-	if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
+	if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
 		&& clientMouseX < w/2)
         {
 		if(hero) {
@@ -190,7 +184,7 @@ function directionMouse(movementSpeed, hero) {
 		return [movementSpeed, 0];
         }
 	// Right
-	else if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
+	else if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
 		&& clientMouseX > w/2)
         {
 		if(hero) {
@@ -199,7 +193,7 @@ function directionMouse(movementSpeed, hero) {
 		return [-movementSpeed, 0];
         }
 	// Up
-	else if(clientMouseX > w/2 - HERO_WIDTH * scale && clientMouseX < w/2 + HERO_WIDTH
+	else if(clientMouseX > w/2 - RESOURCES['HERO']['width']  && clientMouseX < w/2 + RESOURCES['HERO']['width']
 		&& clientMouseY > h/2)
         {
 		if(hero) {
@@ -208,7 +202,7 @@ function directionMouse(movementSpeed, hero) {
 		return [0, -movementSpeed];
         }
 	// Down
-	else if(clientMouseX + HERO_WIDTH > w/2 - HERO_WIDTH * scale && clientMouseX < w/2
+	else if(clientMouseX + RESOURCES['HERO']['width'] > w/2 - RESOURCES['HERO']['width']  && clientMouseX < w/2
 		&& clientMouseY < h/2)
         {	
 		if(hero) {

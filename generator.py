@@ -14,24 +14,30 @@ def spiral(X, Y):
 			dx, dy = -dy, dx
 		x, y = x+dx, y+dy
 
-
-for k in range(0, 1):
+r = 100
+for k in range(0, 2):
 	for j in range(0, 2):
+		type = "terrain"
 		image = "GRASS"
+		if k:
+			image = "TREE"
+			type = "entity"
 		x1 = 32 * j
 		y1 = 16 * j
 		s = None
-		s = spiral(100, 100)
+		s = spiral(1000, 1000)
 		i = 0
-		if k == 1:
-			image = "WATER"
-		while i < 100:
+		while i < 1000:
+			if k:
+				import random
+				r = random.randrange(0, 100)
 			(x, y) = s.next()
 			x = x * 64 + x1 
 			y = y * 32 + y1 
 			i = i + 1
-			row = '{:location {:x %f :y %f} :resource "%s" :type "terrain" } ' % (x, y, image)
-			export += row
+			if r > 94:
+				row = '{:location {:x %f :y %f} :resource "%s" :type %s } ' % (x, y, image, type)
+				export += row
 		
 
 export += ']'
