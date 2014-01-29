@@ -230,9 +230,9 @@ function _game()
 
 			document.onkeydown = self.handleKeyDown;
 			document.onkeyup = self.handleKeyUp;
-			document.onmousedown = self.handleMouseDown;
-			document.onmouseup = self.handleMouseUp;
-			document.onmousemove = self.handleMouseMove;
+			canvas.onmousedown = self.handleMouseDown;
+			canvas.onmouseup = self.handleMouseUp;
+			canvas.onmousemove = self.handleMouseMove;
 		}
 		
 		createjs.Ticker.setFPS(FPS_RATE);
@@ -608,8 +608,8 @@ function _game()
 
         self.handleMouseMove = function(e)
 	{
-                self.clientMouseX = e.clientX;
-                self.clientMouseY = e.clientY;
+                self.clientMouseX = e.layerX;
+                self.clientMouseY = e.layerY;
 	}
 
         self.handleMouseDown = function(e)
