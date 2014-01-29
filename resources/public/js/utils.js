@@ -20,13 +20,6 @@ RESOURCES = {
 	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
 }	
 
-BITMAPS = {};
-
-for(res in RESOURCES) {
-	//BITMAPS[res] = {'image' : new Bitmap()}
-	//		self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
-}
-
 HERO_WIDTH = RESOURCES['HERO']['width'];
 HERO_HEIGHT = RESOURCES['HERO']['height'];
 
@@ -134,14 +127,14 @@ function directionKeys(movementSpeed, hero)
 
 function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
 	tempMovementSpeed = movementSpeed;
-	accel = (clientMouseX - w/2) / 100;
+	accel = (clientMouseX - getWidth()/2) / 100;
 	if(accel > 0) {
 		movementSpeed = movementSpeed + accel;
 	}
 	else {
 		movementSpeed = movementSpeed - accel;
 	}
-	accel = (clientMouseY - h/2) / 100;
+	accel = (clientMouseY - getHeight()/2) / 100;
 	if(accel > 0) {
 		movementSpeed = movementSpeed + accel;
 	}
@@ -157,8 +150,8 @@ function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
 }
 
 function isMouseNearPlayer(hero) { 
-	if(clientMouseX - w / 2 < HERO_WIDTH && clientMouseX - w / 2 > -HERO_WIDTH && 
-		clientMouseY - h / 2 < HERO_HEIGHT && clientMouseY - h / 2 > -HERO_HEIGHT) {
+	if(clientMouseX - getWidth() / 2 < HERO_WIDTH && clientMouseX - getWidth() / 2 > -HERO_WIDTH && 
+		clientMouseY - getHeight() / 2 < HERO_HEIGHT && clientMouseY - getHeight() / 2 > -HERO_HEIGHT) {
        		window.Game.stopHeroAnimations(hero);
 		hero.wasMoving = false;
 		return true;
@@ -171,8 +164,8 @@ function directionMouse(movementSpeed, hero)
 	scale = window.Game.scale;
 	clientMouseX = self.Game.clientMouseX;
 	clientMouseY = self.Game.clientMouseY;
-	w = window.Game.width;
-	h = window.Game.height;
+	w = getWidth();//window.Game.width;
+	h = getHeight();//window.Game.height;
 	f = window.Game.doAnimation;
 
 	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
