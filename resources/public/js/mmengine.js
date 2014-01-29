@@ -149,13 +149,13 @@ function _game()
         }
 
 	self.showLoader = function() {
-		document.body.style.backgroundImage = "none";
+		//document.body.style.backgroundImage = "none";
 		document.body.style.backgroundColor = "#111111";
 		$(document.getElementById("loader")).show();
 	}
 
 	self.hideLoader = function() {
-		document.body.style.backgroundImage = "none";
+		//document.body.style.backgroundImage = "none";
 		document.body.style.backgroundColor = "#111111";
 		$(document.getElementById("loader")).hide();
 	}
@@ -395,15 +395,15 @@ function _game()
 	}
 
 	self.drawHud = function() {
-		textInfo = new createjs.Text("Project: Mankraft v0.0.2", "20px Arial", "#FFFFFF");
-		textInfo.onMouseMove = function(e) { alert(1); };
- 		textInfo.x = 50;
- 		textInfo.y = 50;
-		textInfo.textBaseline = "alphabetic";
-		stage.addChild(textInfo);
+		//textInfo = new createjs.Text("Project: Mankraft v0.0.2", "20px Arial", "#FFFFFF");
+		//textInfo.onMouseMove = function(e) { alert(1); };
+ 		//textInfo.x = 50;
+ 		//textInfo.y = 50;
+		//textInfo.textBaseline = "alphabetic";
+		//stage.addChild(textInfo);
 		text = new createjs.Text("FPS: ", "20px Arial", "#FFFFFF");
- 		text.x = 50;
- 		text.y = 80;
+ 		text.x = 5;
+ 		text.y = 30;
 		text.textBaseline = "alphabetic";
 		stage.addChild(text);
 	}
