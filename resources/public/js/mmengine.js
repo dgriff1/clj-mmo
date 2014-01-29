@@ -190,6 +190,7 @@ function _game()
                                            }));
 		self.buffer['location']['x'] = self.realPlayerCoords['x'];
 		self.buffer['location']['y'] = self.realPlayerCoords['y'];
+		self.WORLD_DATA = new Array();
 	}
 
 	// Set up for game
@@ -390,7 +391,7 @@ function _game()
 		if(addPlayers) {
 			self.addPlayers();
 		}
-		self.hideLoader();
+		self.hideLoader();	
 		stage.update();
 
 	}
@@ -474,10 +475,10 @@ function _game()
 	{	
 		self.initPlayerPosition(x, y);
 
-		if(self.realPlayerCoords['x'] > self.buffer['location']['x'] + 500 ||  
-			self.realPlayerCoords['x'] < self.buffer['location']['x'] - 500 || 
-			self.realPlayerCoords['y'] > self.buffer['location']['y'] + 500 ||
-			self.realPlayerCoords['y'] < self.buffer['location']['y'] - 500) {
+		if(self.realPlayerCoords['x'] > self.buffer['location']['x'] + NEW_AREA / scale ||  
+			self.realPlayerCoords['x'] < self.buffer['location']['x'] - NEW_AREA / scale || 
+			self.realPlayerCoords['y'] > self.buffer['location']['y'] + NEW_AREA / scale ||
+			self.realPlayerCoords['y'] < self.buffer['location']['y'] - NEW_AREA / scale) {
 			self.getMap();
 		} 
 	}

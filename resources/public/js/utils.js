@@ -4,6 +4,8 @@ rightKey = 39;
 upKey = 38;
 downKey = 40;
 
+NEW_AREA = 500;
+
 TERRAIN = "terrain";
 ENTITY = "entity";
 PLAYER = "player";
