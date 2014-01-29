@@ -199,8 +199,6 @@ function _game()
 		if(self.testMode) {
 			return;
 		}
-		//self.scaleResources();
-
 		self.initializeSpriteSheets();
 
 		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');

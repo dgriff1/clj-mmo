@@ -125,16 +125,19 @@ function directionKeys(movementSpeed, hero)
 	return [movementSpeedX, movementSpeedY];
 }
 
+
 function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
+	cW = 800;
+	cH = 600;
 	tempMovementSpeed = movementSpeed;
-	accel = (clientMouseX - getWidth()/2) / 100;
+	accel = (clientMouseX - cW/2) / 100;
 	if(accel > 0) {
 		movementSpeed = movementSpeed + accel;
 	}
 	else {
 		movementSpeed = movementSpeed - accel;
 	}
-	accel = (clientMouseY - getHeight()/2) / 100;
+	accel = (clientMouseY - cH/2) / 100;
 	if(accel > 0) {
 		movementSpeed = movementSpeed + accel;
 	}
@@ -150,8 +153,10 @@ function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
 }
 
 function isMouseNearPlayer(hero) { 
-	if(clientMouseX - getWidth() / 2 < HERO_WIDTH && clientMouseX - getWidth() / 2 > -HERO_WIDTH && 
-		clientMouseY - getHeight() / 2 < HERO_HEIGHT && clientMouseY - getHeight() / 2 > -HERO_HEIGHT) {
+	cW = 800;
+	cH = 600;
+	if(clientMouseX - cW / 2 < HERO_WIDTH && clientMouseX - cW / 2 > -HERO_WIDTH && 
+		clientMouseY - cH / 2 < HERO_HEIGHT && clientMouseY - cH / 2 > -HERO_HEIGHT) {
        		window.Game.stopHeroAnimations(hero);
 		hero.wasMoving = false;
 		return true;
@@ -159,20 +164,21 @@ function isMouseNearPlayer(hero) {
 	return false;
 }
 
-function directionMouse(movementSpeed, hero) 
-{
+function directionMouse(movementSpeed, hero) {
+	cW = 800;
+	cH = 600;
 	scale = window.Game.scale;
 	clientMouseX = self.Game.clientMouseX;
 	clientMouseY = self.Game.clientMouseY;
-	w = getWidth();//window.Game.width;
-	h = getHeight();//window.Game.height;
+	w = cW;//window.Game.width;
+	h = cH;//window.Game.height;
 	f = window.Game.doAnimation;
 
-	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
+	//movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 	
-	if(isMouseNearPlayer(hero)) {
-		return [0, 0];
-	}
+//	if(isMouseNearPlayer(hero)) {
+//		return [0, 0];
+//	}
 
 	// Left
 	if(clientMouseY > h/2 - HERO_HEIGHT && clientMouseY < h/2 + HERO_HEIGHT
