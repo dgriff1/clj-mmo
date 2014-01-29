@@ -20,6 +20,13 @@ RESOURCES = {
 	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
 }	
 
+BITMAPS = {};
+
+for(res in RESOURCES) {
+	//BITMAPS[res] = {'image' : new Bitmap()}
+	//		self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
+}
+
 HERO_WIDTH = RESOURCES['HERO']['width'];
 HERO_HEIGHT = RESOURCES['HERO']['height'];
 

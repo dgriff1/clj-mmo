@@ -7,9 +7,9 @@ function _game()
 {
 	window.Game = this;
 	var self = this,
-		w = getWidth(),
-		h = getHeight(),
-		scale = snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
+		w = BASE_WIDTH,
+		h = BASE_HEIGHT,
+		scale = 1,//snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
 		ticks = 0,
 		canvas,ctx,
 		stage,
@@ -199,13 +199,13 @@ function _game()
 		if(self.testMode) {
 			return;
 		}
-		self.scaleResources();
+		//self.scaleResources();
 
 		self.initializeSpriteSheets();
 
-		canvas = document.createElement('canvas');
-		canvas.width = w;
-		canvas.height = h;
+		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
+		canvas.width = BASE_WIDTH;
+		canvas.height = BASE_HEIGHT;
 		document.body.appendChild(canvas);
 
 		stage = new Stage(canvas);
@@ -594,18 +594,18 @@ function _game()
 	}
 
 	self.addWidget = function(x,y,img,type) {
-		x = Math.round(x);
-		y = Math.round(y);
+		//x = Math.round(x);
+		//y = Math.round(y);
 
 		img.x = x;
 		img.y = y;
-		img.snapToPixel = false;
+		img.snapToPixel = true;
                 img.type = type;
 
 		world.addChild(img);
-		if(type) {
-             	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
-		}
+		//if(type) {
+             	//   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
+		//}
 	}
 
         self.handleMouseMove = function(e)
