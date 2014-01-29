@@ -21,11 +21,11 @@
 ;(prn "All Players " @all_players)
 
 ;; this will create a user
-;; (def p-one (mmo/player-rec "45678" [:sword], {:strength 1}, {:building  0}))
-;; (db/persist_player nil nil nil p-one )
-;(db/persist_entity { :location { :x 1 :y 10 } :type "terrain" :resource "terrain1.png" } )
-;(db/persist_entity { :location { :x 4 :y 20 } :type "item" :resource "sword.png" } )
-;(db/persist_entity { :location { :x 0 :y 0 } :type "terrain" :resource "tree.png" } )
+;(def p-one (mmo/player-rec "123" [:sword], {:strength 1}, {:building  0}))
+;(b/persist-player nil nil nil p-one )
+;(db/persist-entity { :location { :x 1 :y 10 } :type "terrain" :resource "terrain1.png" } )
+;(db/persist-entity { :location { :x 4 :y 20 } :type "item" :resource "sword.png" } )
+;(db/persist-entity { :location { :x 0 :y 0 } :type "terrain" :resource "tree.png" } )
 
 (defn message-handler [ ch p msg params ] 
 	(prn "Msg " msg )
