@@ -463,6 +463,7 @@ function _game()
 		console.log(world.children.length);
 		self.initPlayerPosition(x, y);
 
+		// need to make a circle calculation
 		if(self.playerGameCoords['x'] > self.playerAtProximity['location']['x'] + NEW_AREA / scale ||  
 			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA / scale || 
 			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA / scale ||
@@ -539,7 +540,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-		if(now() - self.lastHandleMessage > 1.00 && !self.sorted) {
+		if(now() - self.lastHandleMessage > MESSAGE_INTERVAL && !self.sorted) {
 			self.sortWorldData();	
 			self.draw();
 			self.lastHandleMessage = 0.00;
