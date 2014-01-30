@@ -221,7 +221,7 @@ function _game()
 				self.handleKeyUp();
 			}, false);
 		} else {
-
+			window.onresize = self.handleResize;
 			document.onkeydown = self.handleKeyDown;
 			document.onkeyup = self.handleKeyUp;
 			canvas.onmousedown = self.handleMouseDown;
@@ -460,7 +460,6 @@ function _game()
 	// Moved world around player while moving players actual coords
 	self.moveHero = function(x, y) 
 	{	
-		console.log(world.children.length);
 		self.initPlayerPosition(x, y);
 
 		// need to make a circle calculation
@@ -638,6 +637,11 @@ function _game()
 		else {
 			self.keyPressed.pop(e.keyCode);
 		}
+	}
+
+	self.handleResize = function(e) {
+		self.w  = parseInt($(canvas).css('width').replace("px", ""));
+		self.h = parseInt($(canvas).css('height').replace("px", ""));
 	}
 
 	self.preloadResources();
