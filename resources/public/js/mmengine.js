@@ -539,7 +539,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-		if(now() - self.lastHandleMessage > MESSAGE_INTERVAL && !self.sorted) {
+		if(!self.sorted && now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
 			self.sortWorldData();	
 			self.draw();
 			self.lastHandleMessage = 0.00;
