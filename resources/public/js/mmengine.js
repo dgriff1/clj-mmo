@@ -36,6 +36,7 @@ function _game()
 	self.WORLD_DATA = [];//new Array();
  	self.keyPressed = [];
 	self.assets = assets;
+	self.lastHandleMesssage = 1.00;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -129,6 +130,9 @@ function _game()
 
 	self.onMessage = function(evt) { 
 		//logger('RESPONSE: ' + evt.data); 
+		if(evt._id in self.WORLD_DATA) {
+			return;
+		}
                 self.handleResponse(evt.data);
 		if(stage != undefined) {
 			stage.update();
@@ -187,7 +191,7 @@ function _game()
                                            }));
 		self.buffer['location']['x'] = self.realPlayerCoords['x'];
 		self.buffer['location']['y'] = self.realPlayerCoords['y'];
-		self.WORLD_DATA = new Array();
+		//self.WORLD_DATA = new Array();
 	}
 
 	// Set up for game
@@ -284,6 +288,24 @@ function _game()
 		return data
 	}
 
+	self.sortWorldData = function() {
+
+		//sort start
+		sortableTerrain = self.getWorldByType(TERRAIN, true);
+		sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
+
+		foregroundEntity = self.getWorldByType(ENTITY, false);
+		foregroundEntity = self.sortWorldType(foregroundEntity, ENTITY);
+
+		sortableEntity = self.getWorldByType(ENTITY, true);
+		sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
+
+		sortableEntity = sortableEntity.concat(foregroundEntity);
+		self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
+
+		//sort end
+
+	}
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
@@ -300,30 +322,16 @@ function _game()
 		}
 		else if(data.type == ENTITY || data.type == TERRAIN) {
 
-
 			if(data.type == TERRAIN) {
 				self.WORLD_DATA.unshift(data);
 			}
 			else {
 				self.WORLD_DATA.push(data);
 			}
-
-			//sort start
-			sortableTerrain = self.getWorldByType(TERRAIN, true);
-			sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
-
-			foregroundEntity = self.getWorldByType(ENTITY, false);
-			foregroundEntity = self.sortWorldType(foregroundEntity, ENTITY);
-
-			sortableEntity = self.getWorldByType(ENTITY, true);
-			sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
-
-			sortableEntity = sortableEntity.concat(foregroundEntity);
-			self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
-
-			//sort end
 		}
+		self.lastHandleMessage = new Date() / 1000;
 		self.draw();
+		
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
@@ -367,7 +375,7 @@ function _game()
 	}
 
 	self.draw = function() {
-		self.showLoader();
+		//self.showLoader();
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
@@ -388,7 +396,7 @@ function _game()
 		if(addPlayers) {
 			self.addPlayers();
 		}
-		self.hideLoader();	
+		//self.hideLoader();	
 		stage.update();
 
 	}
@@ -457,19 +465,10 @@ function _game()
 
 	}
 
-	self.reconcilleMap = function(x, y) {
-		world.removeAllChildren();
-		world.x = world.y = 0;
-
-		// hero
-
-		self.draw();
-
-	}
-
 	// Moved world around player while moving players actual coords
 	self.moveHero = function(x, y) 
 	{	
+		console.log(world.children.length);
 		self.initPlayerPosition(x, y);
 
 		if(self.realPlayerCoords['x'] > self.buffer['location']['x'] + NEW_AREA / scale ||  
@@ -548,6 +547,12 @@ function _game()
 
 	self.tick = function(e)
 	{
+		now = new Date() / 1000;
+		if(now - self.lastHandleMessage > 1.00) {
+			self.sortWorldData();	
+			self.draw();
+		}
+
 		self.calculateFramesPerSecond();
 
                 if(mouseDown)

@@ -31,7 +31,7 @@
 
 (defn get-close-entities [ fromx fromy ] 
 	;(let [ closeby (mc/find-maps "mkentities" { :location { "$near" [ fromx fromy ] "$maxDistance" 800 } } )] 
-	(let [ closeby (mc/find-maps "mkentities" { :location { "$geoWithin" { "$center" [[fromx, fromy], 500] } }} )] 
+	(let [ closeby (mc/find-maps "mkentities" { :location { "$within" { "$center" [[fromx, fromy], 400] } }} )] 
 		(prn "Close entities " fromx " - " fromy " = " closeby) closeby  ))
 
 (defn delete-all-entities [ ] 
