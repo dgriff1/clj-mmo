@@ -36,7 +36,8 @@ function _game()
 	self.WORLD_DATA = [];//new Array();
  	self.keyPressed = [];
 	self.assets = assets;
-	self.lastHandleMesssage = 1.00;
+	self.lastHandleMesssage = 0.00;
+	self.sorted = false;
 
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
@@ -130,9 +131,6 @@ function _game()
 
 	self.onMessage = function(evt) { 
 		//logger('RESPONSE: ' + evt.data); 
-		if(evt._id in self.WORLD_DATA) {
-			return;
-		}
                 self.handleResponse(evt.data);
 		if(stage != undefined) {
 			stage.update();
@@ -289,6 +287,8 @@ function _game()
 	}
 
 	self.sortWorldData = function() {
+		now = new Date() / 1000;
+		logger(now);
 
 		//sort start
 		sortableTerrain = self.getWorldByType(TERRAIN, true);
@@ -302,6 +302,8 @@ function _game()
 
 		sortableEntity = sortableEntity.concat(foregroundEntity);
 		self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
+		now = new Date() / 1000;
+		logger(now);
 
 		//sort end
 
@@ -309,6 +311,9 @@ function _game()
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
+		if(data._id in self.WORLD_DATA && data.type != PLAYER) {
+			return;
+		}
                 if(data.type == PLAYER) {
 			if(data._id != playerID) {
 				if(self.currentPlayers[data._id] === undefined) {
@@ -331,7 +336,7 @@ function _game()
 		}
 		self.lastHandleMessage = new Date() / 1000;
 		self.draw();
-		
+		self.sorted = false;
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
@@ -548,9 +553,11 @@ function _game()
 	self.tick = function(e)
 	{
 		now = new Date() / 1000;
-		if(now - self.lastHandleMessage > 1.00) {
+		if(now - self.lastHandleMessage > 1.00 && !self.sorted) {
 			self.sortWorldData();	
 			self.draw();
+			self.lastHandleMessage = 0.00;
+			self.sorted = true;
 		}
 
 		self.calculateFramesPerSecond();
