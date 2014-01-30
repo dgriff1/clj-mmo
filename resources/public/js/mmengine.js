@@ -76,7 +76,7 @@ function _game()
 
 	// Wait until first response fills our buffer
         self.checkAndInit = function() {
-		if(self.buffer != undefined) {
+		if(self.playerAtProximity != undefined) {
 			self.initializeGame();
 			window.clearInterval(self.checkForInit)
 		}
@@ -94,10 +94,10 @@ function _game()
 
 	// Write first response to buffer to invoke init callback
         self.writeToBuffer = function(msg) {
-		if(self.buffer != undefined) { return }
+		if(self.playerAtProximity != undefined) { return }
                 msg = JSON.parse(msg);
                 if(msg._id == self.playerID) { 
-			self.buffer = msg;
+			self.playerAtProximity = msg;
 		}
 	}
 
@@ -176,18 +176,14 @@ function _game()
 	}
 
 	self.getMap = function() {
-                // Need map
-
 		self.doSend(JSON.stringify({"type"     : "proximity", 
                                             "location" : {"x" : self.playerGameCoords['x'],
                                                           "y" : self.playerGameCoords['y']}
                                            }));
-		self.buffer['location']['x'] = self.playerGameCoords['x'];
-		self.buffer['location']['y'] = self.playerGameCoords['y'];
-		//self.WORLD_DATA = new Array();
+		self.playerAtProximity['location']['x'] = self.playerGameCoords['x'];
+		self.playerAtProximity['location']['y'] = self.playerGameCoords['y'];
 	}
 
-	// Set up for game
 	self.initializeGame = function() {
 
 		if(self.testMode) {
@@ -283,7 +279,6 @@ function _game()
 
 	self.sortWorldData = function() {
 
-		//sort start
 		sortableTerrain = self.getWorldByType(TERRAIN, true);
 		sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
 
@@ -295,9 +290,6 @@ function _game()
 
 		sortableEntity = sortableEntity.concat(foregroundEntity);
 		self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
-
-		//sort end
-
 	}
 
 	self.handleResponse = function(data) {
@@ -359,7 +351,7 @@ function _game()
 	}
 
 
-	self.addPlayers = function() {
+	self.addPlayersToWorld = function() {
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
 			loc = self.calculatePosition(hero.x, hero.y, aPlayer.realX, aPlayer.realY);
@@ -382,7 +374,7 @@ function _game()
 		for(each in self.WORLD_DATA) {
 			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
 				addPlayers = false;
-				self.addPlayers();
+				self.addPlayersToWorld();
 			}
 			if(self.WORLD_DATA[each] === undefined) {
 				continue;
@@ -420,7 +412,7 @@ function _game()
 
 		self.drawHud();
 
-		self.initPlayerPosition(self.buffer['location']['x'], self.buffer['location']['y']);
+		self.initPlayerPosition(self.playerAtProximity['location']['x'], self.playerAtProximity['location']['y']);
 
 	}
 
@@ -469,16 +461,16 @@ function _game()
 		console.log(world.children.length);
 		self.initPlayerPosition(x, y);
 
-		if(self.playerGameCoords['x'] > self.buffer['location']['x'] + NEW_AREA / scale ||  
-			self.playerGameCoords['x'] < self.buffer['location']['x'] - NEW_AREA / scale || 
-			self.playerGameCoords['y'] > self.buffer['location']['y'] + NEW_AREA / scale ||
-			self.playerGameCoords['y'] < self.buffer['location']['y'] - NEW_AREA / scale) {
+		if(self.playerGameCoords['x'] > self.playerAtProximity['location']['x'] + NEW_AREA / scale ||  
+			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA / scale || 
+			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA / scale ||
+			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - NEW_AREA / scale) {
 			self.getMap();
 		} 
 	}
 
 	// Adds new player to world
-	self.addNewPlayer = function(id, heroLocation) {
+	self.addNewPlayerToWorld = function(id, heroLocation) {
 		newHero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
 		newHero._id  = id;
 		newHero.type = PLAYER;
@@ -498,7 +490,7 @@ function _game()
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
 			if(self.currentPlayers[each] === undefined) {
-				self.addNewPlayer(each, self.playersToAdd[each]['location']);
+				self.addNewPlayerToWorld(each, self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
 			}
 		}
