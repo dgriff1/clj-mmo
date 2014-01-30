@@ -129,8 +129,8 @@ function directionKeys(movementSpeed, hero)
 
 
 function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
-	cW = getWidth();
-	cH = getHeight();
+	cW = self.Game.w
+	cH = self.Game.h;
 	tempMovementSpeed = movementSpeed;
 	accel = (clientMouseX - cW/2) / 100;
 	if(accel > 0) {
@@ -155,8 +155,8 @@ function calculateAccel(clientMouseX, clientMouseY, movementSpeed) {
 }
 
 function isMouseNearPlayer(hero) { 
-	cW = getWidth();
-	cH = getHeight();
+	cW = self.Game.w
+	cH = self.Game.h;
 	if(clientMouseX - cW / 2 < RESOURCES['HERO']['width'] && clientMouseX - cW / 2 > -RESOURCES['HERO']['width'] && 
 		clientMouseY - cH / 2 < RESOURCES['HERO']['height'] && clientMouseY - cH / 2 > -RESOURCES['HERO']['height']) {
        		window.Game.stopHeroAnimations(hero);
@@ -169,15 +169,15 @@ function isMouseNearPlayer(hero) {
 function directionMouse(movementSpeed, hero) {
 	clientMouseX = self.Game.clientMouseX;
 	clientMouseY = self.Game.clientMouseY;
-	w = getWidth();//window.Game.width;
-	h = getHeight();//window.Game.height;
+	w = self.Game.w;//window.Game.width;
+	h = self.Game.h;//window.Game.height;
 	f = window.Game.doAnimation;
 
-	//movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
+	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 	
-//	if(isMouseNearPlayer(hero)) {
-//		return [0, 0];
-//	}
+	if(isMouseNearPlayer(hero)) {
+		return [0, 0];
+	}
 
 	// Left
 	if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']

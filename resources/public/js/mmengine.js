@@ -160,10 +160,12 @@ function _game()
 	}
 
 	self.scaleResources = function() {
+		width = self.w  = parseInt($(canvas).css('width').replace("px", ""));
+		height = self.h = parseInt($(canvas).css('height').replace("px", ""));
 		for(key in RESOURCES) {
 			if(key == 'HERO') {
-				RESOURCES[key]['width'] = RESOURCES[key]['width'] * (getWidth() / BASE_WIDTH);
-				RESOURCES[key]['height'] = RESOURCES[key]['height'] * (getHeight() / BASE_HEIGHT);
+				RESOURCES[key]['width'] = RESOURCES[key]['width'] * (width / BASE_WIDTH);
+				RESOURCES[key]['height'] = RESOURCES[key]['height'] * (height / BASE_HEIGHT);
 			}
 		}
 	}
@@ -191,12 +193,12 @@ function _game()
 		}
 		self.initializeSpriteSheets();
 
-		self.scaleResources();
-
 		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
 		canvas.width = BASE_WIDTH;
 		canvas.height = BASE_HEIGHT;
 		document.body.appendChild(canvas);
+
+		self.scaleResources();
 
 		stage = new Stage(canvas);
 
