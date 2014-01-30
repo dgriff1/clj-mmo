@@ -132,9 +132,6 @@ function _game()
 	self.onMessage = function(evt) { 
 		//logger('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
-		if(stage != undefined) {
-			stage.update();
-		}
 	}  
 
 	self.onError = function(evt) { 
@@ -323,6 +320,9 @@ function _game()
 					self.movePlayer(data);
 				}
 			}
+			if(stage != undefined) {
+				stage.update();
+			}
                         return;
 		}
 		else if(data.type == ENTITY || data.type == TERRAIN) {
@@ -335,7 +335,6 @@ function _game()
 			}
 		}
 		self.lastHandleMessage = new Date() / 1000;
-		self.draw();
 		self.sorted = false;
 	}
 
@@ -558,6 +557,7 @@ function _game()
 			self.draw();
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
+			stage.update();
 		}
 
 		self.calculateFramesPerSecond();

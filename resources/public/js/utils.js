@@ -4,7 +4,7 @@ rightKey = 39;
 upKey = 38;
 downKey = 40;
 
-NEW_AREA = 500;
+NEW_AREA = 300;
 
 TERRAIN = "terrain";
 ENTITY = "entity";
