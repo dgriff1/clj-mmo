@@ -35,6 +35,11 @@ function loadSettings() {
 	});
 }
 
+function now() {
+	d = new Date() / 1000;
+	return d;
+}
+
 function fetchGetParm(parm) {
     parm = parm + "=";
     return window.location.search.substr(window.location.search.indexOf(parm)+parm.length);

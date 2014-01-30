@@ -27,7 +27,6 @@ function _game()
         self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
 	self.playersToAdd       = new Array();
 	self.currentPlayers     = new Array();
-	self.lastSentMessage	= new Date() / 1000;
         self.playerID = playerID;
 	self.testMode = false;
 	self.frameTimer = undefined;
@@ -36,6 +35,7 @@ function _game()
 	self.WORLD_DATA = [];//new Array();
  	self.keyPressed = [];
 	self.assets = assets;
+	self.lastSentMessage	= 0.00;
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
 
@@ -157,15 +157,14 @@ function _game()
 		//document.body.style.backgroundImage = "none";
 		document.body.style.backgroundColor = "#111111";
 		$(document.getElementById("loader")).hide();
+		$(canvas).css("visibility", "visible");
 	}
 
 	self.scaleResources = function() {
 		for(key in RESOURCES) {
 			if(key == 'HERO') {
-				logger(RESOURCES[key]['width']);
 				RESOURCES[key]['width'] = RESOURCES[key]['width'] * (getWidth() / BASE_WIDTH);
 				RESOURCES[key]['height'] = RESOURCES[key]['height'] * (getHeight() / BASE_HEIGHT);
-				logger(RESOURCES[key]['width']);
 			}
 		}
 	}
@@ -284,8 +283,6 @@ function _game()
 	}
 
 	self.sortWorldData = function() {
-		now = new Date() / 1000;
-		logger(now);
 
 		//sort start
 		sortableTerrain = self.getWorldByType(TERRAIN, true);
@@ -299,8 +296,6 @@ function _game()
 
 		sortableEntity = sortableEntity.concat(foregroundEntity);
 		self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
-		now = new Date() / 1000;
-		logger(now);
 
 		//sort end
 
@@ -334,7 +329,7 @@ function _game()
 				self.WORLD_DATA.push(data);
 			}
 		}
-		self.lastHandleMessage = new Date() / 1000;
+		self.lastHandleMessage = now();
 		self.sorted = false;
 	}
 
@@ -400,7 +395,7 @@ function _game()
 		if(addPlayers) {
 			self.addPlayers();
 		}
-		//self.hideLoader();	
+		self.hideLoader();	
 		stage.update();
 
 	}
@@ -529,9 +524,9 @@ function _game()
 		self.framesPerSecondCounter = self.framesPerSecondCounter + 1;
                 if(self.frameTimer === undefined)
 		{
-                	self.frameTimer = new Date() / 1000;
+                	self.frameTimer = now();
 		}
-		nextTimer= new Date() / 1000;
+		nextTimer = now();
 		if(nextTimer - self.frameTimer > 1)
 		{
                         self.framesPerSecond = self.framesPerSecondCounter - 1;
@@ -551,8 +546,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-		now = new Date() / 1000;
-		if(now - self.lastHandleMessage > 1.00 && !self.sorted) {
+		if(now() - self.lastHandleMessage > 1.00 && !self.sorted) {
 			self.sortWorldData();	
 			self.draw();
 			self.lastHandleMessage = 0.00;
@@ -591,14 +585,13 @@ function _game()
 	}
 	
 	self.sendPlayerState = function() {
-		now = new Date() / 1000;
-		if(now - self.lastSentMessage > UPDATE_RATE) {
+		if(now() - self.lastSentMessage > UPDATE_RATE) {
 			self.doSend(JSON.stringify({    "name"      : "player", 
 							"action"    : "move", 
 							"target_x"  : self.realPlayerCoords['x'], 
 							"target_y"  : self.realPlayerCoords['y'],
                                                         "direction" : 0}));
-			self.lastSentMessage = new Date() / 1000;
+			self.lastSentMessage = now();
 		}
 	}
 
