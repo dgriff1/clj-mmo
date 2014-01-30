@@ -22,19 +22,20 @@ function _game()
 	self.width = w;
 	self.height = h;
 	self.scale = scale;
-        self.clientMouseX = 0;
-        self.clientMouseY = 0;
-        self.realPlayerCoords = {"_id" : playerID, "x" : 0, "y" : 0}
+        self.playerGameCoords = {"_id" : playerID, "x" : 0, "y" : 0}
 	self.playersToAdd       = new Array();
 	self.currentPlayers     = new Array();
+	self.WORLD_DATA = [];
+
+	self.assets = assets;
         self.playerID = playerID;
 	self.testMode = false;
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
-	self.WORLD_DATA = [];//new Array();
  	self.keyPressed = [];
-	self.assets = assets;
+        self.clientMouseX = 0;
+        self.clientMouseY = 0;
 	self.lastSentMessage	= 0.00;
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
@@ -130,7 +131,6 @@ function _game()
 	}  
 
 	self.onMessage = function(evt) { 
-		//logger('RESPONSE: ' + evt.data); 
                 self.handleResponse(evt.data);
 	}  
 
@@ -139,7 +139,6 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
-		//logger("Sending " + message + " to " + websocket.url) ;
 		websocket.send(message); 
 	}  
 
@@ -180,11 +179,11 @@ function _game()
                 // Need map
 
 		self.doSend(JSON.stringify({"type"     : "proximity", 
-                                            "location" : {"x" : self.realPlayerCoords['x'],
-                                                          "y" : self.realPlayerCoords['y']}
+                                            "location" : {"x" : self.playerGameCoords['x'],
+                                                          "y" : self.playerGameCoords['y']}
                                            }));
-		self.buffer['location']['x'] = self.realPlayerCoords['x'];
-		self.buffer['location']['y'] = self.realPlayerCoords['y'];
+		self.buffer['location']['x'] = self.playerGameCoords['x'];
+		self.buffer['location']['y'] = self.playerGameCoords['y'];
 		//self.WORLD_DATA = new Array();
 	}
 
@@ -334,8 +333,8 @@ function _game()
 	}
 
 	self.calculatePosition = function(heroX, heroY, objX, objY) {
-		self.wx = heroX + ((self.realPlayerCoords['x'] - objX ));
-		self.wy = heroY + ((self.realPlayerCoords['y'] - objY ));
+		self.wx = heroX + ((self.playerGameCoords['x'] - objX ));
+		self.wy = heroY + ((self.playerGameCoords['y'] - objY ));
 		return [self.wx, self.wy]
 	}
 
@@ -457,8 +456,8 @@ function _game()
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
 
-                self.realPlayerCoords['x'] = self.realPlayerCoords['x'] + x ;
-                self.realPlayerCoords['y'] = self.realPlayerCoords['y'] + y ;
+                self.playerGameCoords['x'] = self.playerGameCoords['x'] + x ;
+                self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
 
 		self.sendPlayerState();
 
@@ -470,10 +469,10 @@ function _game()
 		console.log(world.children.length);
 		self.initPlayerPosition(x, y);
 
-		if(self.realPlayerCoords['x'] > self.buffer['location']['x'] + NEW_AREA / scale ||  
-			self.realPlayerCoords['x'] < self.buffer['location']['x'] - NEW_AREA / scale || 
-			self.realPlayerCoords['y'] > self.buffer['location']['y'] + NEW_AREA / scale ||
-			self.realPlayerCoords['y'] < self.buffer['location']['y'] - NEW_AREA / scale) {
+		if(self.playerGameCoords['x'] > self.buffer['location']['x'] + NEW_AREA / scale ||  
+			self.playerGameCoords['x'] < self.buffer['location']['x'] - NEW_AREA / scale || 
+			self.playerGameCoords['y'] > self.buffer['location']['y'] + NEW_AREA / scale ||
+			self.playerGameCoords['y'] < self.buffer['location']['y'] - NEW_AREA / scale) {
 			self.getMap();
 		} 
 	}
@@ -551,6 +550,7 @@ function _game()
 			self.draw();
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
+			self.WORLD_DATA = [];
 			stage.update();
 		}
 
@@ -588,8 +588,8 @@ function _game()
 		if(now() - self.lastSentMessage > UPDATE_RATE) {
 			self.doSend(JSON.stringify({    "name"      : "player", 
 							"action"    : "move", 
-							"target_x"  : self.realPlayerCoords['x'], 
-							"target_y"  : self.realPlayerCoords['y'],
+							"target_x"  : self.playerGameCoords['x'], 
+							"target_y"  : self.playerGameCoords['y'],
                                                         "direction" : 0}));
 			self.lastSentMessage = now();
 		}
