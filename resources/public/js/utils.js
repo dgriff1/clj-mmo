@@ -94,6 +94,19 @@ function directionKeys(movementSpeed, hero)
 	movementSpeedX = 0;
 	movementSpeedY = 0;
 
+	if(window.Game.keyDown > 15) {
+		movementSpeed = movementSpeed + 1;
+	}
+	if(window.Game.keyDown > 40) {
+		movementSpeed = movementSpeed + 0.5;
+	}
+	if(window.Game.keyDown > 65) {
+		movementSpeed = movementSpeed + 0.5;
+	}
+	if(window.Game.keyDown > 85) {
+		movementSpeed = movementSpeed + 1;
+	}
+
 	// Left
 	if(self.keyPressed.indexOf(leftKey) != -1) {
 		if(hero) {
@@ -438,22 +451,10 @@ function snapValue(value,snap)
   return roundedSnap * snap;
 }
 
-function getWidth() {
-  if( typeof( window.innerWidth ) == 'number' ) {
-    return window.innerWidth;
-  } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
-    return document.documentElement.clientWidth;
-  } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
-    return document.body.clientWidth;
-  }
+function getWidth(canvas) {
+  return parseInt($(canvas).css('width').replace("px", ""));
 }
 
-function getHeight() {
-  if( typeof( window.innerWidth ) == 'number' ) {
-    return window.innerHeight;
-  } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
-    return document.documentElement.clientHeight;
-  } else if( document.body && ( document.body.clientHeight || document.body.clientHeight ) ) {
-    return document.body.clientHeight;
-  }
+function getHeight(canvas) {
+  return parseInt($(canvas).css('height').replace("px", ""));
 }

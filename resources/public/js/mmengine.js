@@ -33,7 +33,8 @@ function _game()
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
- 	self.keyPressed = [];
+	self.keyDown = 0; 
+	self.keyPressed = [];
         self.clientMouseX = 0;
         self.clientMouseY = 0;
 	self.lastSentMessage	= 0.00;
@@ -160,8 +161,8 @@ function _game()
 	}
 
 	self.scaleResources = function() {
-		width = self.w  = parseInt($(canvas).css('width').replace("px", ""));
-		height = self.h = parseInt($(canvas).css('height').replace("px", ""));
+		width = self.w  = getWidth(canvas);
+		height = self.h  = getHeight(canvas);
 		for(key in RESOURCES) {
 			if(key == 'HERO') {
 				RESOURCES[key]['width'] = RESOURCES[key]['width'] * (width / BASE_WIDTH);
@@ -632,6 +633,7 @@ function _game()
 
 	self.handleKeyDown = function(e)
 	{
+		self.keyDown = self.keyDown + 1;
 		if(self.keyPressed.indexOf(e.keyCode) == -1) {
 			self.keyPressed.push(e.keyCode);
 		}
@@ -639,6 +641,7 @@ function _game()
 
 	self.handleKeyUp = function(e)
 	{
+		self.keyDown = 0;
 		if(self.keyPressed.length > 1) {
 			self.keyPressed = [];
 		}
@@ -648,8 +651,8 @@ function _game()
 	}
 
 	self.handleResize = function(e) {
-		self.w  = parseInt($(canvas).css('width').replace("px", ""));
-		self.h = parseInt($(canvas).css('height').replace("px", ""));
+		self.w  = getWidth(canvas);
+		self.h  = getHeight(canvas);
 	}
 
 	self.preloadResources();
