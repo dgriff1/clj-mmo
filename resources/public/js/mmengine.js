@@ -599,16 +599,16 @@ function _game()
 	}
 
 	self.addWidget = function(x,y,img,type) {
-		//x = Math.round(x);
-		//y = Math.round(y);
+		x = Math.round(x);
+		y = Math.round(y);
 
 		img.x = x;
 		img.y = y;
-		img.snapToPixel = true;
+		img.snapToPixel = false;
                 img.type = type;
 
 		world.addChild(img);
-		if(type) {
+		if(type == ENTITY) {
              	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
 		}
 	}
