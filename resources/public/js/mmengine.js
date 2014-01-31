@@ -465,10 +465,10 @@ function _game()
 		self.initPlayerPosition(x, y);
 
 		// need to make a circle calculation
-		if(self.playerGameCoords['x'] > self.playerAtProximity['location']['x'] + NEW_AREA / scale ||  
-			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA / scale || 
-			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA / scale ||
-			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - NEW_AREA / scale) {
+		if(self.playerGameCoords['x'] > self.playerAtProximity['location']['x'] + NEW_AREA ||  
+			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA  || 
+			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA  ||
+			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - NEW_AREA ) {
 			self.getMap();
 		} 
 	}
