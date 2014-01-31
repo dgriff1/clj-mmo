@@ -187,6 +187,14 @@ function _game()
 		self.playerAtProximity['location']['y'] = self.playerGameCoords['y'];
 	}
 
+
+	self.initCanvas = function() {
+		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
+		canvas.width = BASE_WIDTH;
+		canvas.height = BASE_HEIGHT;
+		document.body.appendChild(canvas);
+	}
+	
 	self.initializeGame = function() {
 
 		if(self.testMode) {
@@ -194,10 +202,7 @@ function _game()
 		}
 		self.initializeSpriteSheets();
 
-		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
-		canvas.width = BASE_WIDTH;
-		canvas.height = BASE_HEIGHT;
-		document.body.appendChild(canvas);
+		self.initCanvas();
 
 		self.scaleResources();
 
@@ -296,6 +301,7 @@ function _game()
 	}
 
 	self.handleResponse = function(data) {
+		logger(data);
 		data = JSON.parse(data);
 		if(data._id in self.WORLD_DATA && data.type != PLAYER) {
 			return;
@@ -314,14 +320,12 @@ function _game()
 			}
                         return;
 		}
-		else if(data.type == ENTITY || data.type == TERRAIN) {
+		else if(data.type == ENTITY) {
+			self.WORLD_DATA.unshift(data);
+		}
+		else if(data.type == TERRAIN) {
+			self.WORLD_DATA.push(data);
 
-			if(data.type == TERRAIN) {
-				self.WORLD_DATA.unshift(data);
-			}
-			else {
-				self.WORLD_DATA.push(data);
-			}
 		}
 		self.lastHandleMessage = now();
 		self.sorted = false;
@@ -376,7 +380,8 @@ function _game()
 
 		addPlayers = true;
 
-		for(each in self.WORLD_DATA) {
+		for(var each = 0; each < self.WORLD_DATA.length; each++) {
+		//for(each in self.WORLD_DATA) {
 			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
 				addPlayers = false;
 				self.addPlayersToWorld();
