@@ -6,7 +6,7 @@
 (prn "Connecting to Mongo " (System/getenv "MONGOLAB_URI"))
 (mg/connect-via-uri! (System/getenv "MONGOLAB_URI" ) )
 
-(mc/ensure-index "mkentities" (array-map "location" "2d") { :min -5000 :max 5000 } ) 
+(mc/ensure-index "mkentities" (array-map "location" "2d") { :min -500000 :max 500000 } ) 
 
 (defn get-player [ all_players id ] 
 	(get @all_players id))

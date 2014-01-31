@@ -25,9 +25,9 @@ for k in range(0, 2):
 		x1 = 32 * j
 		y1 = 16 * j
 		s = None
-		s = spiral(1000, 1000)
+		s = spiral(10000, 10000)
 		i = 0
-		while i < 1000:
+		while i < 10000:
 			if k:
 				import random
 				r = random.randrange(0, 100)
