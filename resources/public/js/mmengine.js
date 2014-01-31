@@ -403,11 +403,11 @@ function _game()
  		//textInfo.y = 50;
 		//textInfo.textBaseline = "alphabetic";
 		//stage.addChild(textInfo);
-		text = new createjs.Text("FPS: ", "20px Arial", "#FFFFFF");
- 		text.x = 5;
- 		text.y = 30;
-		text.textBaseline = "alphabetic";
-		stage.addChild(text);
+		//text = new createjs.Text("FPS: ", "20px Arial", "#FFFFFF");
+ 		//text.x = 5;
+ 		//text.y = 30;
+		//text.textBaseline = "alphabetic";
+		//stage.addChild(text);
 	}
 
 	// Sets up world and widgets, called first before tick
@@ -555,7 +555,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-		self.calculateFramesPerSecond();
+		//self.calculateFramesPerSecond();
 
 		self.drawWorldData();
 
