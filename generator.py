@@ -1,4 +1,6 @@
 
+import random
+
 export = ''
 export += '['
 
@@ -15,6 +17,9 @@ def spiral(X, Y):
 		x, y = x+dx, y+dy
 
 r = 100
+sand = 0
+sand_flag = 0
+
 for k in range(0, 2):
 	for j in range(0, 2):
 		type = "terrain"
@@ -29,8 +34,19 @@ for k in range(0, 2):
 		i = 0
 		while i < 10000:
 			if k:
-				import random
 				r = random.randrange(0, 100)
+			else:
+				if sand_flag:
+					image = "BEACH"
+					sand = sand + 1
+					if sand > 10:
+						sand = 0
+						sand_flag = 0
+				else:
+					image = "GRASS"
+					sand_rand = random.randrange(0, 100)
+					if sand_rand >= 99:
+						sand_flag = 1
 			(x, y) = s.next()
 			x = x * 64 + x1 
 			y = y * 32 + y1 
