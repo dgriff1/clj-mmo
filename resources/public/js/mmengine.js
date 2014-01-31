@@ -326,7 +326,9 @@ function _game()
 		self.sorted = false;
 	}
 
-	self.calculatePosition = function(heroX, heroY, objX, objY) {
+	self.calculatePosition = function(objX, objY) {
+		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
+		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
 		self.wx = heroX + ((self.playerGameCoords['x'] - objX ));
 		self.wy = heroY + ((self.playerGameCoords['y'] - objY ));
 		return [self.wx, self.wy]
@@ -336,10 +338,10 @@ function _game()
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((RESOURCES['HERO']['width']*scale)/2);
 			hy = h/2 - ((RESOURCES['HERO']['height']*scale)/2);
-			pos = self.calculatePosition(hx, hy, x, y);
+			pos = self.calculatePosition(x, y);
 		}
 		else {
-			pos = self.calculatePosition(hero.x, hero.y, x, y);
+			pos = self.calculatePosition(x, y);
 		}
 		if(typeof(resource) == "string") {
 			self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
@@ -356,7 +358,7 @@ function _game()
 	self.addPlayersToWorld = function() {
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
-			loc = self.calculatePosition(hero.x, hero.y, aPlayer.realX, aPlayer.realY);
+			loc = self.calculatePosition(aPlayer.realX, aPlayer.realY);
 			aPlayer.x = loc[0];
 			aPlayer.y = loc[1];
 			world.addChild(aPlayer);
@@ -386,7 +388,7 @@ function _game()
 			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], addPlayers);
 		}
 		if(addPlayers) {
-			self.addPlayers();
+			self.addPlayersToWorld();
 		}
 		self.hideLoader();	
 		stage.update();
@@ -419,8 +421,8 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		hero.x = w/2 - ((RESOURCES['HERO']['width']*scale)/2);
-		hero.y = h/2 - ((RESOURCES['HERO']['height']*scale)/2);
+		hero.x = w/2 - ((RESOURCES['HERO']['width'])/2);
+		hero.y = h/2 - ((RESOURCES['HERO']['height'])/2);
 		hero.reset();
 		hero.wasMoving = true;
 		world.addChild(hero);
@@ -477,7 +479,7 @@ function _game()
 		newHero._id  = id;
 		newHero.type = PLAYER;
 		newHero.currentFrame = 1;
-		loc = self.calculatePosition(hero.x, hero.y, heroLocation.x, heroLocation.y);
+		loc = self.calculatePosition(heroLocation.x, heroLocation.y);
 		newHero.x = loc[0]
 		newHero.y = loc[1]
 		newHero.realX = heroLocation.x;
@@ -504,9 +506,11 @@ function _game()
 			if(obj._id != undefined && obj._id == msg._id) {
 			        self.doAnimation(obj, "down");
 				loc = msg.location;
-				loc = self.calculatePosition(hero.x, hero.y, loc.x, loc.y);
+				loc = self.calculatePosition(loc.x, loc.y);
 				self.currentPlayers[count].x = loc[0];
 				self.currentPlayers[count].y = loc[1];
+				self.currentPlayers[count].realX = msg.location.x;
+				self.currentPlayers[count].realY = msg.location.y;
 				obj.y = loc[1];
 				break;
 			}
@@ -537,8 +541,7 @@ function _game()
 		return self.framesPerSecondCounter;
 	}
 
-	self.tick = function(e)
-	{
+	self.drawWorldData = function() {
 		if(!self.sorted && now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
 			self.sortWorldData();	
 			self.draw();
@@ -547,8 +550,13 @@ function _game()
 			self.WORLD_DATA = [];
 			stage.update();
 		}
+	}
 
+	self.tick = function(e)
+	{
 		self.calculateFramesPerSecond();
+
+		self.drawWorldData();
 
                 if(mouseDown)
                 { 
