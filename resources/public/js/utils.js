@@ -9,7 +9,7 @@ ENTITY = "entity";
 PLAYER = "player";
 
 RESOURCES = {
-	'HERO'      : { 'resource' : '/assets/hero.png' , 'type' : PLAYER, 'width' : 20, 'height' : 42},
+	'HERO'      : { 'resource' : '/assets/hero3.png' , 'type' : PLAYER, 'width' : 64, 'height' : 64},
 	'ROCKS'     : { 'resource' : '/assets/rocks.png' , 'type' : ENTITY},
 	'TREE'      : { 'resource' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
 	'GRASS'     : { 'resource' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
@@ -110,14 +110,14 @@ function directionKeys(movementSpeed, hero)
 	// Left
 	if(self.keyPressed.indexOf(leftKey) != -1) {
 		if(hero) {
-			f(hero, "down");
+			f(hero, "left");
 		}
 		movementSpeedX += movementSpeed;
 	}	
 	// Right
 	if(self.keyPressed.indexOf(rightKey) != -1) {
 		if(hero) {
-			f(hero, "down");
+			f(hero, "right");
 		}
 		movementSpeedX -= movementSpeed;
 	}	
@@ -195,7 +195,7 @@ function directionMouse(movementSpeed, hero) {
 		&& clientMouseX < w/2)
         {
 		if(hero) {
-			f(hero, "down");
+			f(hero, "left");
 		}
 		return [movementSpeed, 0];
         }
@@ -204,7 +204,7 @@ function directionMouse(movementSpeed, hero) {
 		&& clientMouseX > w/2)
         {
 		if(hero) {
-			f(hero, "down");
+			f(hero, "right");
 		}
 		return [-movementSpeed, 0];
         }
@@ -229,28 +229,28 @@ function directionMouse(movementSpeed, hero) {
 	else if(clientMouseX < w/2 && clientMouseY < h/2)
         {
 		if(hero) {
-			f(hero, "up");
+			f(hero, "upleft");
 		}
 		return [movementSpeed, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY > h/2)
         {
 		if(hero) {
-			f(hero, "down");	
+			f(hero, "downright");	
 		}
 		return [movementSpeed, -movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY < h/2)
         {
 		if(hero) {
-			f(hero, "up");
+			f(hero, "upright");
 		}
 		return [-movementSpeed, movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY > h/2)
         {
 		if(hero) {
-			f(hero, "down");
+			f(hero, "downleft");
 		}
 		return [-movementSpeed, -movementSpeed];
         }

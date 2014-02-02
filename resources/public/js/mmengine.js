@@ -178,6 +178,7 @@ function _game()
 		}
 		hero.currentFrame = 1;
 		hero._id = playerID;
+		self.stopHeroAnimations(hero);
 	}
 
 	self.getMap = function() {
@@ -250,8 +251,14 @@ function _game()
 				height: RESOURCES['HERO']['height']
 			},
 			animations: {
-				down: [0,17,true,1],
-				up: [18,34,true,1]
+				left: [0,7,true,0.5],
+				right: [32, 39, true, 0.5],
+				down: [48,55,true,0.5],
+				up: [16,23,true,0.5],
+				upleft: [8,15,true,0.5],
+				upright: [24,31,true,0.5],
+				downleft: [40,47,true,0.5],
+				downright: [56,63,true,0.5],
 			}
 		}
 
@@ -449,7 +456,7 @@ function _game()
 	{
 		hero.gotoAndStop('up');
 		hero.gotoAndStop('down');
-		hero.currentFrame = 1;
+		hero.currentFrame = 48;
 	}
 
 	// sets up initial location based on first message
@@ -584,7 +591,7 @@ function _game()
 				self.moveHero(xDirection, yDirection);
 			}
 		}
-		if(!mouseDown && self.keyPressed.length < 1)
+		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
 		{
 			self.stopHeroAnimations(hero);
 			hero.wasMoving = false;
