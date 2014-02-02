@@ -173,7 +173,9 @@ function _game()
 
 	self.initHero = function () { 
 		hero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
-		hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
+		if(ENABLE_SHADOWS) {
+			hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
+		}
 		hero.currentFrame = 1;
 		hero._id = playerID;
 	}
@@ -490,7 +492,9 @@ function _game()
 		newHero.y = loc[1]
 		newHero.realX = heroLocation.x;
 		newHero.realY = heroLocation.y;
-             	newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
+		if(ENABLE_SHADOWS) {
+             		newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);	
+		}
 		newHero.reset();
 		self.currentPlayers[id] = newHero;
 		world.addChild(newHero);
@@ -613,8 +617,10 @@ function _game()
                 img.type = type;
 
 		world.addChild(img);
-		if(type == ENTITY) {
-             	   img.shadow = new createjs.Shadow("#000000", 1, 2, 10);
+		if(type == ENTITY) {	
+			if(ENABLE_SHADOWS) {
+             	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	
+			}
 		}
 	}
 
