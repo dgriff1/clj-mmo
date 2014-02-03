@@ -8,7 +8,7 @@
 				border: 0px;
 				margin: 0px;
 			}
-			.loader {
+			.loader, .error {
 				background-color: #FFFFFF;
 				border: 2px solid #454545;
 				width: 200px;
@@ -54,6 +54,10 @@
 	<div class="loader" id="loader">
 		<h1>Loading...</h1><br>
 		<img src="/assets/loader.gif"/>
+	</div>
+
+	<div class="error" id="error" style="visibility: hidden;display: none;">
+		<h1>You have been disconnected!</h1><br>
 	</div>
 
 </html>

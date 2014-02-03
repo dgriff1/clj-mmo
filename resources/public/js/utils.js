@@ -108,6 +108,11 @@ function directionKeys(movementSpeed, hero)
 		movementSpeed = movementSpeed + 1;
 	}
 
+	if(movementSpeed > MAX_MOVEMENT_SPEED) {
+		movementSpeed = MAX_MOVEMENT_SPEED;
+	}
+	
+
 	// Left
 	if(self.keyPressed.indexOf(leftKey) != -1) {
 		if(hero) {

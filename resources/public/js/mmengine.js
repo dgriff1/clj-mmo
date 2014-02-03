@@ -119,6 +119,7 @@ function _game()
 		}; 
 
 		websocket.onerror = function(evt) { 
+			self.showError();
 			self.onError(evt);
 		}; 
 	}
@@ -146,6 +147,13 @@ function _game()
 	self.formatMessage = function(message) {
 		return {}
         }
+
+	self.showError = function() {
+		//document.body.style.backgroundImage = "none";
+		document.body.style.backgroundColor = "#111111";
+		$(canvas).css("visibility", "hidden");
+		$(document.getElementById("error")).show();
+	}
 
 	self.showLoader = function() {
 		//document.body.style.backgroundImage = "none";
