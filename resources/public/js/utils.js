@@ -8,6 +8,7 @@ TERRAIN = "terrain";
 ENTITY = "entity";
 PLAYER = "player";
 
+
 RESOURCES = {
 	'HERO'      : { 'resource' : '/assets/hero3.png' , 'type' : PLAYER, 'width' : 64, 'height' : 64},
 	'ROCKS'     : { 'resource' : '/assets/rocks.png' , 'type' : ENTITY},
@@ -18,6 +19,30 @@ RESOURCES = {
 	'BEACH'     : { 'resource' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
 	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
 }	
+
+
+function initializeSpriteSheets() {
+	var heroSpriteData = {
+		images: [window.Game.assets[RESOURCES['HERO']['resource']]],
+		frames: {
+			width: RESOURCES['HERO']['width'],
+			height: RESOURCES['HERO']['height']
+		},
+		animations: {
+			left: [0,7,true,0.5],
+			right: [32, 39, true, 0.5],
+			down: [48,55,true,0.5],
+			up: [16,23,true,0.5],
+			upleft: [8,15,true,0.5],
+			upright: [24,31,true,0.5],
+			downleft: [40,47,true,0.5],
+			downright: [56,63,true,0.5],
+			idle: [48,49,true,0.5]
+		}
+	}
+	RESOURCES['HERO']['spriteSheet'] = new SpriteSheet(heroSpriteData);
+}
+
 
 function logger(msg) {
 	console.log(msg);

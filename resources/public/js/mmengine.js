@@ -169,7 +169,7 @@ function _game()
 	}
 
 	self.initHero = function () { 
-		hero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
+		hero = new Hero(RESOURCES['HERO']['spriteSheet']);
 		if(ENABLE_SHADOWS) {
 			hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		}
@@ -202,7 +202,6 @@ function _game()
 		if(self.testMode) {
 			return;
 		}
-		self.initializeSpriteSheets();
 
 		self.initCanvas();
 
@@ -211,6 +210,8 @@ function _game()
 		world = new Container();
 		stage.addChild(world);
 	
+		initializeSpriteSheets();
+
 		self.initHero();
 
 		self.reset();
@@ -238,31 +239,6 @@ function _game()
 		createjs.Ticker.setFPS(FPS_RATE);
 		createjs.Ticker.addEventListener("tick", function() { self.tick();  });
 		createjs.Ticker.useRAF = true;
-	}
-
-	self.initializeSpriteSheets = function() {
-		var heroData = {
-			images: [self.assets[RESOURCES['HERO']['resource']]],
-			frames: {
-				width: RESOURCES['HERO']['width'],
-				height: RESOURCES['HERO']['height']
-			},
-			animations: {
-				left: [0,7,true,0.5],
-				right: [32, 39, true, 0.5],
-				down: [48,55,true,0.5],
-				up: [16,23,true,0.5],
-				upleft: [8,15,true,0.5],
-				upright: [24,31,true,0.5],
-				downleft: [40,47,true,0.5],
-				downright: [56,63,true,0.5],
-				idle: [48,49,true,0.5]
-			}
-		}
-
-		spriteSheets[RESOURCES['HERO']['resource']] = new SpriteSheet(heroData);
-		//Direction flip
-		//SpriteSheetUtils.addFlippedFrames(spriteSheets[HERO], true, false, false);
 	}
 
 	self.getWorldByType = function(type, foreground) {
@@ -441,11 +417,11 @@ function _game()
 		world.addChild(hero);
 	}
 
-	self.doAnimation = function(hero, spriteSheet)
+	self.doAnimation = function(hero, animation)
 	{
 		if(!hero.wasMoving)
 		{
-			hero.gotoAndPlay(spriteSheet);
+			hero.gotoAndPlay(animation);
 			hero.wasMoving = true;
 		}
 	}
@@ -489,7 +465,7 @@ function _game()
 
 	// Adds new player to world
 	self.addNewPlayerToWorld = function(id, heroLocation) {
-		newHero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
+		newHero = new Hero(RESOURCES['HERO']['spriteSheet']);
 		newHero._id  = id;
 		newHero.type = PLAYER;
 		newHero.currentFrame = 1;
