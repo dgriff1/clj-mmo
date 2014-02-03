@@ -160,17 +160,6 @@ function _game()
 		$(canvas).css("visibility", "visible");
 	}
 
-	//self.scaleResources = function() {
-	//	width = self.w  = getWidth(canvas);
-	//	height = self.h  = getHeight(canvas);
-	//	for(key in RESOURCES) {
-	//		if(key == 'HERO') {
-	//			RESOURCES[key]['width'] = RESOURCES[key]['width'] * (width / BASE_WIDTH);
-	//			RESOURCES[key]['height'] = RESOURCES[key]['height'] * (height / BASE_HEIGHT);
-	//		}
-	//	}
-	//}
-
 	self.initHero = function () { 
 		hero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
 		if(ENABLE_SHADOWS) {
@@ -259,6 +248,7 @@ function _game()
 				upright: [24,31,true,0.5],
 				downleft: [40,47,true,0.5],
 				downright: [56,63,true,0.5],
+				idle: [48,49,true,0.5]
 			}
 		}
 
@@ -454,9 +444,10 @@ function _game()
 
        self.stopHeroAnimations = function(hero) 
 	{
-		hero.gotoAndStop('up');
-		hero.gotoAndStop('down');
 		hero.currentFrame = 48;
+		hero.gotoAndStop('down');
+		hero.gotoAndPlay('idle');
+		stage.update();
 	}
 
 	// sets up initial location based on first message
@@ -580,6 +571,7 @@ function _game()
 			direction = directionMouse(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
+			hero.wasMoving = true;
 			self.moveHero(xDirection, yDirection);
 			
 		}
@@ -592,10 +584,9 @@ function _game()
 			}
 		}
 		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
-		{
-			self.stopHeroAnimations(hero);
+		{	
 			hero.wasMoving = false;
-
+			self.stopHeroAnimations(hero);
 		}
 
 		ticks++;
