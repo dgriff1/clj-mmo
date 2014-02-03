@@ -1,8 +1,6 @@
 
 import random
 
-export = ''
-export += '['
 
 def spiral(X, Y):
 	x = y = 0
@@ -19,6 +17,8 @@ def spiral(X, Y):
 r = 100
 sand = 0
 sand_flag = 0
+
+exportList = []
 
 for k in range(0, 2):
 	for j in range(0, 2):
@@ -52,10 +52,13 @@ for k in range(0, 2):
 			y = y * 32 + y1 
 			i = i + 1
 			if r > 94:
-				row = '{:location {:x %f :y %f} :resource "%s" :type %s } ' % (x, y, image, type)
-				export += row
-		
+				exportList.append({"location" : {"x" : x, "y" : y}, "resource" : image, "type" : type})
 
+export = '['
+for e in exportList:
+	print e
+	row = '{:location {:x %f :y %f} :resource "%s" :type %s } ' % (e['location']['x'], e['location']['y'], e['image'], e['type'])
+	export += row
 export += ']'
 
 f = open('doc/data.dat', 'w')
