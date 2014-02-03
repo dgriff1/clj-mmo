@@ -160,16 +160,16 @@ function _game()
 		$(canvas).css("visibility", "visible");
 	}
 
-	self.scaleResources = function() {
-		width = self.w  = getWidth(canvas);
-		height = self.h  = getHeight(canvas);
-		for(key in RESOURCES) {
-			if(key == 'HERO') {
-				RESOURCES[key]['width'] = RESOURCES[key]['width'] * (width / BASE_WIDTH);
-				RESOURCES[key]['height'] = RESOURCES[key]['height'] * (height / BASE_HEIGHT);
-			}
-		}
-	}
+	//self.scaleResources = function() {
+	//	width = self.w  = getWidth(canvas);
+	//	height = self.h  = getHeight(canvas);
+	//	for(key in RESOURCES) {
+	//		if(key == 'HERO') {
+	//			RESOURCES[key]['width'] = RESOURCES[key]['width'] * (width / BASE_WIDTH);
+	//			RESOURCES[key]['height'] = RESOURCES[key]['height'] * (height / BASE_HEIGHT);
+	//		}
+	//	}
+	//}
 
 	self.initHero = function () { 
 		hero = new Hero(spriteSheets[RESOURCES['HERO']['resource']]);
@@ -196,6 +196,8 @@ function _game()
 		canvas.width = BASE_WIDTH;
 		canvas.height = BASE_HEIGHT;
 		document.body.appendChild(canvas);
+		self.w  = getWidth(canvas);
+		self.h  = getHeight(canvas);
 	}
 	
 	self.initializeGame = function() {
@@ -206,8 +208,6 @@ function _game()
 		self.initializeSpriteSheets();
 
 		self.initCanvas();
-
-		self.scaleResources();
 
 		stage = new Stage(canvas);
 
