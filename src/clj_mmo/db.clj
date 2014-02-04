@@ -8,6 +8,10 @@
 
 (mc/ensure-index "mkentities" (array-map "location" "2d") { :min -500000 :max 500000 } ) 
 
+(defn -main []
+	(mc/drop-indexes "mkentities"))
+
+
 (defn get-player [ all_players id ] 
 	(get @all_players id))
 
