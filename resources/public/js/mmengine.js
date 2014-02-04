@@ -564,6 +564,7 @@ function _game()
 		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
 		{	
 			hero.wasMoving = false;
+			self.previousAnimation = undefined;
 			self.stopHeroAnimations(hero);
 		}
 

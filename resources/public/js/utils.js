@@ -115,7 +115,7 @@ function exportMap() {
 function directionKeys(movementSpeed, hero) 
 {
 	keyPressed = self.Game.keyPressed;
-	f = window.Game.doAnimation;
+	f = directionAnimation;
 
 	movementSpeedX = 0;
 	movementSpeedY = 0;
@@ -140,32 +140,44 @@ function directionKeys(movementSpeed, hero)
 
 	// Left
 	if(self.keyPressed.indexOf(leftKey) != -1) {
-		if(hero) {
+		if(self.keyPressed.length == 1) {
 			f(hero, "left");
 		}
 		movementSpeedX += movementSpeed;
 	}	
 	// Right
 	if(self.keyPressed.indexOf(rightKey) != -1) {
-		if(hero) {
+		if(self.keyPressed.length == 1) {
 			f(hero, "right");
 		}
 		movementSpeedX -= movementSpeed;
 	}	
 	// Top
 	if(self.keyPressed.indexOf(upKey) != -1) {
-		if(hero) {
+		if(self.keyPressed.indexOf(leftKey) != -1) {
+			f(hero, "upleft");
+		}
+		else if(self.keyPressed.indexOf(rightKey) != -1) {
+			f(hero, "upright");
+		}
+		else {
 			f(hero, "up");
 		}
 		movementSpeedY += movementSpeed;
 	}	
 	// Down
 	if(self.keyPressed.indexOf(downKey) != -1) {
-		if(hero) {
+		if(self.keyPressed.indexOf(leftKey) != -1) {
+			f(hero, "downright");
+		}
+		else if(self.keyPressed.indexOf(rightKey) != -1) {
+			f(hero, "downleft");
+		}
+		else {
 			f(hero, "down");
 		}
 		movementSpeedY -= movementSpeed;
-	}	
+	}
 	return [movementSpeedX, movementSpeedY];
 }
 
