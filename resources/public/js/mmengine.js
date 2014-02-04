@@ -359,17 +359,20 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
+		added = false;
+
 		for(var each = 0; each < self.WORLD_DATA.length; each++) {
 			if(self.WORLD_DATA[each] === undefined) {
 				continue;
 			}
-			else {
-				x = self.WORLD_DATA[each]['location']['x'];
-				y = self.WORLD_DATA[each]['location']['y'];
-				self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], false);
+			else if(self.WORLD_DATA[each]['type'] != TERRAIN && !added) {
+				self.addPlayersToWorld();
+				added = true;
 			}
+			x = self.WORLD_DATA[each]['location']['x'];
+			y = self.WORLD_DATA[each]['location']['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], false);
 		}
-		self.addPlayersToWorld();
 		self.hideLoader();	
 		stage.update();
 

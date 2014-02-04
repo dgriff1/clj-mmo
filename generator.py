@@ -1,6 +1,7 @@
 
 import random
 
+MAX_ITER = 5000
 
 def spiral(X, Y):
 	x = y = 0
@@ -44,7 +45,6 @@ def writeToFile(exportList):
 	f.write(export)
 	f.close()
 
-MAX_ITER = 15000
 exportList = generator_base(MAX_ITER, "GRASS", "terrain")
 exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
 
