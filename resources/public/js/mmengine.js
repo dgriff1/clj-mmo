@@ -323,8 +323,8 @@ function _game()
 
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
-			hx = w/2 - ((RESOURCES['HERO']['width']*scale)/2);
-			hy = h/2 - ((RESOURCES['HERO']['height']*scale)/2);
+			hx = w/2 - ((RESOURCES['HERO']['width'])/2);
+			hy = h/2 - ((RESOURCES['HERO']['height'])/2);
 			pos = self.calculatePosition(x, y);
 		}
 		else {
@@ -547,6 +547,7 @@ function _game()
                 if(mouseDown)
                 { 
 			direction = directionMouse(MOVEMENT_SPEED, hero);
+			self.logPlayerClick(direction);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			hero.wasMoving = true;
@@ -563,6 +564,7 @@ function _game()
 		}
 		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
 		{	
+			self.didPlayerArrive();
 			hero.wasMoving = false;
 			self.previousAnimation = undefined;
 			self.stopHeroAnimations(hero);
@@ -570,7 +572,19 @@ function _game()
 
 		ticks++;
 		
-		//stage.update();
+	}
+
+	self.didPlayerArrive = function() {
+		destinationX = self.clickedAt[0];
+		destinationY = self.clickedAt[1];
+		directionX = self.clickedAt[2];
+		directionY = self.clickedAt[3];
+		self.moveHero(directionX, directionY);
+		self.wasMoving = true;
+	}
+
+	self.logPlayerClick = function(direction) {
+		self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
 	}
 	
 	self.sendPlayerState = function() {
