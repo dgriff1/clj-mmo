@@ -213,7 +213,6 @@ function directionMouse(movementSpeed, hero) {
 	clientMouseY = self.Game.clientMouseY;
 	h = window.Game.h;
 	w = window.Game.w;
-	logger(w);
 	f = window.Game.doAnimation;
 
 	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);

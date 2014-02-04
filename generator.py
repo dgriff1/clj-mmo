@@ -1,6 +1,7 @@
 
 import random
 
+MAX_ITER = 5000
 
 def spiral(X, Y):
 	x = y = 0
@@ -14,53 +15,37 @@ def spiral(X, Y):
 			dx, dy = -dy, dx
 		x, y = x+dx, y+dy
 
-r = 100
-sand = 0
-sand_flag = 0
-
-exportList = []
-
-for k in range(0, 2):
-	for j in range(0, 2):
-		type = "terrain"
-		image = "GRASS"
-		if k:
-			image = "TREE"
-			type = "entity"
-		x1 = 32 * j
-		y1 = 16 * j
-		s = None
-		s = spiral(10000, 10000)
+def generator_base(MAX_ITER, image, type, chance=100):
+	exportList = []
+	for square_shift in range(0, 2):
+		x1 = 32 * square_shift
+		y1 = 16 * square_shift
+		s = spiral(MAX_ITER, MAX_ITER)
 		i = 0
-		while i < 10000:
-			if k:
-				r = random.randrange(0, 100)
-			else:
-				if sand_flag:
-					image = "BEACH"
-					sand = sand + 1
-					if sand > 10:
-						sand = 0
-						sand_flag = 0
-				else:
-					image = "GRASS"
-					sand_rand = random.randrange(0, 100)
-					if sand_rand >= 99:
-						sand_flag = 1
+		while i < MAX_ITER:
+			r = random.randrange(0, 100)
 			(x, y) = s.next()
-			x = x * 64 + x1 
-			y = y * 32 + y1 
 			i = i + 1
-			if r > 94:
+			if r <= chance:
+				x = x * 64 + x1 
+				y = y * 32 + y1 
 				exportList.append({"location" : {"x" : x, "y" : y}, "resource" : image, "type" : type})
+		
+	s = None
+	return exportList	
 
-export = '['
-for e in exportList:
-	print e
-	row = '{:location {:x %f :y %f} :resource "%s" :type %s } ' % (e['location']['x'], e['location']['y'], e['image'], e['type'])
-	export += row
-export += ']'
+def writeToFile(exportList):
+	export = '['
+	for e in exportList:
+		row = '{:location {:x %f :y %f} :resource "%s" :type %s } ' % (e['location']['x'], e['location']['y'], e['resource'], e['type'])
+		export += row
+	export += ']'
+	
+	f = open('doc/data.dat', 'w')
+	f.write(export)
+	f.close()
 
-f = open('doc/data.dat', 'w')
-f.write(export)
-f.close()
+exportList = generator_base(MAX_ITER, "GRASS", "terrain")
+exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
+
+writeToFile(exportList)

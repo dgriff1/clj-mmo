@@ -284,7 +284,6 @@ function _game()
 	}
 
 	self.handleResponse = function(data) {
-		logger(data);
 		data = JSON.parse(data);
 		if(data._id in self.WORLD_DATA && data.type != PLAYER) {
 			return;
@@ -357,27 +356,22 @@ function _game()
 	}
 
 	self.draw = function() {
-		//self.showLoader();
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		addPlayers = true;
+		added = false;
 
 		for(var each = 0; each < self.WORLD_DATA.length; each++) {
-		//for(each in self.WORLD_DATA) {
-			if(self.WORLD_DATA[each]['type'] == ENTITY && addPlayers) {
-				addPlayers = false;
-				self.addPlayersToWorld();
-			}
 			if(self.WORLD_DATA[each] === undefined) {
 				continue;
 			}
+			else if(self.WORLD_DATA[each]['type'] != TERRAIN && !added) {
+				self.addPlayersToWorld();
+				added = true;
+			}
 			x = self.WORLD_DATA[each]['location']['x'];
 			y = self.WORLD_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], addPlayers);
-		}
-		if(addPlayers) {
-			self.addPlayersToWorld();
+			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], false);
 		}
 		self.hideLoader();	
 		stage.update();
