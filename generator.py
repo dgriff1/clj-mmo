@@ -46,6 +46,6 @@ def writeToFile(exportList):
 
 MAX_ITER = 10000
 exportList = generator_base(MAX_ITER, "GRASS", "terrain")
-exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 5)
+exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
 
 writeToFile(exportList)
