@@ -208,12 +208,22 @@ function isMouseNearPlayer(hero) {
 	return false;
 }
 
+function directionAnimation(hero, direction) {
+	if(window.Game.previousAnimation === undefined || window.Game.previousAnimation == direction) {
+	}
+	else {
+		hero.gotoAndPlay(direction);
+	}
+	window.Game.previousAnimation = direction;
+	window.Game.doAnimation(hero, direction);
+}
+
 function directionMouse(movementSpeed, hero) {
 	clientMouseX = self.Game.clientMouseX;
 	clientMouseY = self.Game.clientMouseY;
 	h = window.Game.h;
 	w = window.Game.w;
-	f = window.Game.doAnimation;
+	f = directionAnimation;
 
 	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 	
@@ -225,64 +235,48 @@ function directionMouse(movementSpeed, hero) {
 	if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
 		&& clientMouseX < w/2)
         {
-		if(hero) {
-			f(hero, "left");
-		}
+		f(hero, "left");
 		return [movementSpeed, 0];
         }
 	// Right
 	else if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
 		&& clientMouseX > w/2)
         {
-		if(hero) {
-			f(hero, "right");
-		}
+		f(hero, "right");
 		return [-movementSpeed, 0];
         }
 	// Up
 	else if(clientMouseX > w/2 - RESOURCES['HERO']['width']  && clientMouseX < w/2 + RESOURCES['HERO']['width']
 		&& clientMouseY > h/2)
         {
-		if(hero) {
-			f(hero, "down");
-		}
+		f(hero, "down");
 		return [0, -movementSpeed];
         }
 	// Down
 	else if(clientMouseX + RESOURCES['HERO']['width'] > w/2 - RESOURCES['HERO']['width']  && clientMouseX < w/2
 		&& clientMouseY < h/2)
         {	
-		if(hero) {
-			f(hero, "up");
-		}
+		f(hero, "up");
 		return [0, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY < h/2)
         {
-		if(hero) {
-			f(hero, "upleft");
-		}
+		f(hero, "upleft");
 		return [movementSpeed, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY > h/2)
         {
-		if(hero) {
-			f(hero, "downright");	
-		}
+		f(hero, "downright");	
 		return [movementSpeed, -movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY < h/2)
         {
-		if(hero) {
-			f(hero, "upright");
-		}
+		f(hero, "upright");
 		return [-movementSpeed, movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY > h/2)
         {
-		if(hero) {
-			f(hero, "downleft");
-		}
+		f(hero, "downleft");
 		return [-movementSpeed, -movementSpeed];
         }
 	return [0, 0];
