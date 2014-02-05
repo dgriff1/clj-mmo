@@ -36,8 +36,11 @@ function _game()
 	self.keyDown = 0; 
 	self.keyPressed = [];
 	self.clickedAt = [];
+	self.autoMove = false;
         self.clientMouseX = 0;
         self.clientMouseY = 0;
+	self.mouseModX = 0;
+	self.mouseModY = 0;
 	self.lastSentMessage	= 0.00;
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
@@ -234,11 +237,13 @@ function _game()
 			document.onkeyup = self.handleKeyUp;
 			canvas.onmousedown = self.handleMouseDown;
 			canvas.onmouseup = self.handleMouseUp;
-			canvas.onmousemove = self.handleMouseMove;
+			//canvas.onmousemove = self.handleMouseMove;
 		}
+		
 		
 		createjs.Ticker.setFPS(FPS_RATE);
 		createjs.Ticker.addEventListener("tick", function() { self.tick();  });
+		canvas.addEventListener("mousemove", function(e) { self.handleMouseMove(e);  });
 		createjs.Ticker.useRAF = true;
 	}
 
@@ -360,6 +365,11 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
+		self.mouseModX = 0;
+		self.mouseModY = 0;
+		self.autoMove = false;
+		self.clickedAt = [];
+
 		added = false;
 
 		for(var each = 0; each < self.WORLD_DATA.length; each++) {
@@ -436,6 +446,9 @@ function _game()
 
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
+
+		self.mouseModX = self.mouseModX - x;
+		self.mouseModY = self.mouseModY - y;
 
                 self.playerGameCoords['x'] = self.playerGameCoords['x'] + x ;
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
@@ -545,10 +558,9 @@ function _game()
 
 		self.drawWorldData();
 
-                if(mouseDown)
+                if(mouseDown && self.clickedAt.length == 0)
                 { 
 			direction = directionMouse(MOVEMENT_SPEED, hero);
-			self.logPlayerClick(direction);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			hero.wasMoving = true;
@@ -565,6 +577,9 @@ function _game()
 		}
 		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
 		{	
+			if(self.clickedAt.length == 0) {
+				self.logPlayerClick(direction);
+			}
 			self.didPlayerArrive();
 		}
 
@@ -573,34 +588,49 @@ function _game()
 	}
 
 	self.didPlayerArrive = function() {
-		if(self.clickedAt == []) {
-			return;
-		}
+
 		ratioW = self.w / BASE_WIDTH;
 		ratioH = self.h / BASE_HEIGHT;	
-		destinationX = self.clickedAt[0] / ratioW;
-		destinationY = self.clickedAt[1] / ratioH;
+
+		if(!self.autoMove) {
+			self.autoMove = true;
+			destinationX = parseInt((parseInt(self.clickedAt[0]) / ratioW) - 27 + self.mouseModX);
+			destinationY = parseInt((parseInt(self.clickedAt[1]) / ratioH) - 45 + self.mouseModY);
+			circle = new createjs.Shape();
+			circle.graphics.beginFill("black").drawCircle(0, 0, 10);
+    			circle.x = destinationX;
+    			circle.y = destinationY;
+    			world.addChild(circle);
+    			stage.update();
+		}
+		else {
+			destinationX = parseInt((parseInt(self.clickedAt[0]) / ratioW) - 27 );
+			destinationY = parseInt((parseInt(self.clickedAt[1]) / ratioH) - 45 );
+		}
+
 		directionX = self.clickedAt[2];
 		directionY = self.clickedAt[3];
 		moved = false;
-		playerX = BASE_WIDTH / 2;
-		playerY = BASE_HEIGHT / 2;
-		if(destinationX < playerX + 32) {
+	
+		playerX = hero.x
+		playerY = hero.y
+		
+		if(destinationX < playerX - 1) {
 			self.moveHero(1, 0);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationX > playerX - 32) {
+		if(destinationX > playerX + 1) {
 			self.moveHero(-1, 0);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationY < playerY - 32) {
+		if(destinationY < playerY) {
 			self.moveHero(0, 1);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationY > playerY + 32) {
+		if(destinationY > playerY) {
 			self.moveHero(0, -1);
 			hero.wasMoving = true;
 			moved = true;
@@ -610,6 +640,7 @@ function _game()
 			self.previousAnimation = undefined;
 			self.stopHeroAnimations(hero);
 			self.clickedAt = [];
+			self.autoMove = false;
 		}
 	}
 
@@ -648,7 +679,7 @@ function _game()
         self.handleMouseMove = function(e)
 	{
                 self.clientMouseX = e.layerX;
-                self.clientMouseY = e.layerY;
+                self.clientMouseY = e.layerY;	
 	}
 
         self.handleMouseDown = function(e)
