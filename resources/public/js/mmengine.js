@@ -319,7 +319,7 @@ function _game()
 		self.sorted = false;
 	}
 
-	self.calculatePosition = function(objX, objY) {
+	self.gameToWorldPosition = function(objX, objY) {
 		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
 		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
 		self.wx = heroX + ((self.playerGameCoords['x'] - objX ));
@@ -327,14 +327,24 @@ function _game()
 		return [self.wx, self.wy]
 	}
 
+	self.worldToGamePosition = function(X, Y) {
+		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
+		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
+		wx = X - heroX;
+		wy = Y - heroY;
+		rx = self.playerGameCoords['x'] - wx;
+		ry = self.playerGameCoords['y'] - wy;
+		return [rx, ry]
+	}
+
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((RESOURCES['HERO']['width'])/2);
 			hy = h/2 - ((RESOURCES['HERO']['height'])/2);
-			pos = self.calculatePosition(x, y);
+			pos = self.gameToWorldPosition(x, y);
 		}
 		else {
-			pos = self.calculatePosition(x, y);
+			pos = self.gameToWorldPosition(x, y);
 		}
 		if(typeof(resource) == "string") {
 			self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
@@ -351,7 +361,7 @@ function _game()
 	self.addPlayersToWorld = function() {
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
-			loc = self.calculatePosition(aPlayer.realX, aPlayer.realY);
+			loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
 			aPlayer.x = loc[0];
 			aPlayer.y = loc[1];
 			world.addChild(aPlayer);
@@ -415,8 +425,8 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		hero.x = w/2 - ((RESOURCES['HERO']['width'])/2);
-		hero.y = h/2 - ((RESOURCES['HERO']['height'])/2);
+		hero.x = BASE_WIDTH/2 - ((RESOURCES['HERO']['width'])/2);
+		hero.y = BASE_HEIGHT/2 - ((RESOURCES['HERO']['height'])/2);
 		hero.reset();
 		hero.wasMoving = false;
 		world.addChild(hero);
@@ -477,7 +487,7 @@ function _game()
 		newHero._id  = id;
 		newHero.type = PLAYER;
 		newHero.currentFrame = 1;
-		loc = self.calculatePosition(heroLocation.x, heroLocation.y);
+		loc = self.gameToWorldPosition(heroLocation.x, heroLocation.y);
 		newHero.x = loc[0]
 		newHero.y = loc[1]
 		newHero.realX = heroLocation.x;
@@ -506,7 +516,7 @@ function _game()
 			if(obj._id != undefined && obj._id == msg._id) {
 			        self.doAnimation(obj, "down");
 				loc = msg.location;
-				loc = self.calculatePosition(loc.x, loc.y);
+				loc = self.gameToWorldPosition(loc.x, loc.y);
 				self.currentPlayers[count].x = loc[0];
 				self.currentPlayers[count].y = loc[1];
 				self.currentPlayers[count].realX = msg.location.x;
@@ -610,28 +620,48 @@ function _game()
 
 		directionX = self.clickedAt[2];
 		directionY = self.clickedAt[3];
+		if(directionX < 0) {
+			directionX = directionX * -1;
+		} 		
+		if(directionY < 0) {
+			directionY = directionY * -1;
+		} 		
+		directionX = parseInt(directionX);
+		directionY = parseInt(directionY);
+
 		moved = false;
 	
-		playerX = hero.x
-		playerY = hero.y
+		playerX = parseInt(hero.x) + 32;
+		playerY = parseInt(hero.y) + 32;
+
+
+		logger(playerX);
+		logger(destinationX);
+
+		circle = new createjs.Shape();
+		circle.graphics.beginFill("blue").drawCircle(0, 0, 10);
+    		circle.x = playerX;
+    		circle.y = playerY;
+    		world.addChild(circle);
+    		stage.update();
 		
-		if(destinationX < playerX - 1) {
-			self.moveHero(1, 0);
+		if(destinationX < playerX ) {
+			self.moveHero(directionX, 0);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationX > playerX + 1) {
-			self.moveHero(-1, 0);
+		if(destinationX > playerX ) {
+			self.moveHero(-directionX, 0);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationY < playerY) {
-			self.moveHero(0, 1);
+		if(destinationY < playerY ) {
+			self.moveHero(0, directionY);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationY > playerY) {
-			self.moveHero(0, -1);
+		if(destinationY > playerY ) {
+			self.moveHero(0, -directionY);
 			hero.wasMoving = true;
 			moved = true;
 		}
@@ -684,6 +714,10 @@ function _game()
 
         self.handleMouseDown = function(e)
 	{
+		if(self.autoMove) {
+			self.autoMove = false;
+			self.clickedAt = [];
+		}
 		if ( !mouseDown ) {
 			mouseDown = true;
 		}
