@@ -583,22 +583,24 @@ function _game()
 		directionX = self.clickedAt[2];
 		directionY = self.clickedAt[3];
 		moved = false;
-		if(destinationX < hero.x - 32) {
+		playerX = BASE_WIDTH / 2;
+		playerY = BASE_HEIGHT / 2;
+		if(destinationX < playerX + 32) {
 			self.moveHero(1, 0);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationX > hero.x + 32) {
+		if(destinationX > playerX - 32) {
 			self.moveHero(-1, 0);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationY < hero.y - 32) {
+		if(destinationY < playerY - 32) {
 			self.moveHero(0, 1);
 			hero.wasMoving = true;
 			moved = true;
 		}
-		if(destinationY > hero.y + 32) {
+		if(destinationY > playerY + 32) {
 			self.moveHero(0, -1);
 			hero.wasMoving = true;
 			moved = true;
