@@ -199,6 +199,8 @@ function _game()
 		document.body.appendChild(canvas);
 		self.w  = getWidth(canvas);
 		self.h  = getHeight(canvas);
+		self.ratioW = self.w / BASE_WIDTH;
+		self.ratioH = self.h / BASE_HEIGHT;	
 	}
 	
 	self.initializeGame = function() {
@@ -322,9 +324,9 @@ function _game()
 	self.gameToWorldPosition = function(objX, objY) {
 		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
 		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
-		self.wx = heroX + ((self.playerGameCoords['x'] - objX ));
-		self.wy = heroY + ((self.playerGameCoords['y'] - objY ));
-		return [self.wx, self.wy]
+		wx = heroX + ((self.playerGameCoords['x'] - objX ));
+		wy = heroY + ((self.playerGameCoords['y'] - objY ));
+		return [wx, wy]
 	}
 
 	self.worldToGamePosition = function(X, Y) {
@@ -335,6 +337,14 @@ function _game()
 		rx = self.playerGameCoords['x'] - wx;
 		ry = self.playerGameCoords['y'] - wy;
 		return [rx, ry]
+	}
+
+	self.pixelToGame = function(X, Y) {
+		self.ratioW = self.w / BASE_WIDTH;
+		self.ratioH = self.h / BASE_HEIGHT;	
+		dx = parseInt((parseInt(X) / self.ratioW));
+		dy = parseInt((parseInt(Y) / self.ratioH));
+		return [dx, dy]
 	}
 
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
@@ -371,14 +381,18 @@ function _game()
 
 	}
 
-	self.draw = function() {
+	self.resetWorld = function() {
 		world.removeAllChildren();
 		world.x = world.y = 0;
-
 		self.mouseModX = 0;
 		self.mouseModY = 0;
-		self.autoMove = false;
-		self.clickedAt = [];
+	}
+
+	self.draw = function() {
+		self.resetWorld();
+
+		//self.autoMove = false;
+		//self.clickedAt = [];
 
 		added = false;
 
@@ -415,8 +429,7 @@ function _game()
 
 	// Sets up world and widgets, called first before tick
 	self.reset = function() {
-		world.removeAllChildren();
-		world.x = world.y = 0;
+		self.resetWorld();
 
 		self.drawHud();
 
@@ -460,6 +473,9 @@ function _game()
 		self.mouseModX = self.mouseModX - x;
 		self.mouseModY = self.mouseModY - y;
 
+		self.clientMouseX = self.clientMouseX ;
+		self.clientMouseY = self.clientMouseY ;
+
                 self.playerGameCoords['x'] = self.playerGameCoords['x'] + x ;
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
 
@@ -477,7 +493,7 @@ function _game()
 			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA_WIDTH  || 
 			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA_HEIGHT  ||
 			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - NEW_AREA_HEIGHT ) {
-			self.getMap();
+			//self.getMap();
 		} 
 	}
 
@@ -590,80 +606,67 @@ function _game()
 			if(self.clickedAt.length == 0) {
 				self.logPlayerClick(direction);
 			}
-			self.didPlayerArrive();
+			self.autoMovePlayer();
 		}
 
 		ticks++;
 		
 	}
 
-	self.didPlayerArrive = function() {
 
-		ratioW = self.w / BASE_WIDTH;
-		ratioH = self.h / BASE_HEIGHT;	
-
+	self.autoMovePlayer = function() {
+	
 		if(!self.autoMove) {
 			self.autoMove = true;
-			destinationX = parseInt((parseInt(self.clickedAt[0]) / ratioW) - 27 + self.mouseModX);
-			destinationY = parseInt((parseInt(self.clickedAt[1]) / ratioH) - 45 + self.mouseModY);
-			circle = new createjs.Shape();
-			circle.graphics.beginFill("black").drawCircle(0, 0, 10);
-    			circle.x = destinationX;
-    			circle.y = destinationY;
-    			world.addChild(circle);
-    			stage.update();
+			destination = self.pixelToGame(self.clickedAt[0], self.clickedAt[1]);
+			destinationX = destination[0] + self.mouseModX;
+			destinationY = destination[1] + self.mouseModY;
 		}
 		else {
-			destinationX = parseInt((parseInt(self.clickedAt[0]) / ratioW) - 27 );
-			destinationY = parseInt((parseInt(self.clickedAt[1]) / ratioH) - 45 );
+			destination = self.pixelToGame(self.clickedAt[0], self.clickedAt[1]);
+			destinationX = destination[0] ;
+			destinationY = destination[1] ;
 		}
-
+	
 		directionX = self.clickedAt[2];
 		directionY = self.clickedAt[3];
-		if(directionX < 0) {
-			directionX = directionX * -1;
-		} 		
-		if(directionY < 0) {
-			directionY = directionY * -1;
-		} 		
-		directionX = parseInt(directionX);
-		directionY = parseInt(directionY);
-
 		moved = false;
 	
-		playerX = parseInt(hero.x) + 32;
-		playerY = parseInt(hero.y) + 32;
-
-
-		logger(playerX);
-		logger(destinationX);
+		playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
+		playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
+	
+		circle = new createjs.Shape();
+		circle.graphics.beginFill("black").drawCircle(0, 0, 4);
+		circle.x = destinationX;
+		circle.y = destinationY;
+		world.addChild(circle);
+		stage.update();
 
 		circle = new createjs.Shape();
-		circle.graphics.beginFill("blue").drawCircle(0, 0, 10);
-    		circle.x = playerX;
-    		circle.y = playerY;
-    		world.addChild(circle);
-    		stage.update();
+		circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
+		circle.x = playerX;
+		circle.y = playerY;
+		world.addChild(circle);
+		stage.update();
+		logger("dest " + destinationX);
+		logger("player " + playerX);
 		
-		if(destinationX < playerX ) {
-			self.moveHero(directionX, 0);
-			hero.wasMoving = true;
+		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
 			moved = true;
 		}
-		if(destinationX > playerX ) {
-			self.moveHero(-directionX, 0);
-			hero.wasMoving = true;
+		else if(parseInt(directionX) == 0 && directionY < 0.00 && playerY < destinationY){
 			moved = true;
 		}
-		if(destinationY < playerY ) {
-			self.moveHero(0, directionY);
-			hero.wasMoving = true;
+		else if(parseInt(directionY) == 0 && directionX < 0.00 && playerX < destinationX){
 			moved = true;
 		}
-		if(destinationY > playerY ) {
-			self.moveHero(0, -directionY);
-			hero.wasMoving = true;
+		else if(parseInt(directionY) == 0 && directionX > 0.00 && playerX > destinationX){
 			moved = true;
+		}
+		else if(parseInt(directionY) != 0 && parseInt(directionX) != 0) {
+			if(directionY > 0.00 && directionX > 0.00 && playerX > destinationX && playerY > destinationY) {
+				moved = true;
+			}
 		}
 		if(!moved) {
 			hero.wasMoving = false;
@@ -672,7 +675,12 @@ function _game()
 			self.clickedAt = [];
 			self.autoMove = false;
 		}
+		else {
+			self.moveHero(directionX, directionY);
+			hero.wasMoving = true;
+		}
 	}
+
 
 	self.logPlayerClick = function(direction) {
 		self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
@@ -750,6 +758,8 @@ function _game()
 	self.handleResize = function(e) {
 		self.w  = getWidth(canvas);
 		self.h  = getHeight(canvas);
+		self.ratioW = self.w / BASE_WIDTH;
+		self.ratioH = self.h / BASE_HEIGHT;	
 	}
 
 	self.preloadResources();

@@ -114,7 +114,7 @@ function exportMap() {
 
 function directionKeys(movementSpeed, hero) 
 {
-	keyPressed = self.Game.keyPressed;
+	keyPressed = window.Game.keyPressed;
 	f = directionAnimation;
 
 	movementSpeedX = 0;
@@ -139,25 +139,25 @@ function directionKeys(movementSpeed, hero)
 	
 
 	// Left
-	if(self.keyPressed.indexOf(leftKey) != -1) {
-		if(self.keyPressed.length == 1) {
+	if(window.Game.keyPressed.indexOf(leftKey) != -1) {
+		if(window.Game.keyPressed.length == 1) {
 			f(hero, "left");
 		}
 		movementSpeedX += movementSpeed;
 	}	
 	// Right
-	if(self.keyPressed.indexOf(rightKey) != -1) {
-		if(self.keyPressed.length == 1) {
+	if(window.Game.keyPressed.indexOf(rightKey) != -1) {
+		if(window.Game.keyPressed.length == 1) {
 			f(hero, "right");
 		}
 		movementSpeedX -= movementSpeed;
 	}	
 	// Top
-	if(self.keyPressed.indexOf(upKey) != -1) {
-		if(self.keyPressed.indexOf(leftKey) != -1) {
+	if(window.Game.keyPressed.indexOf(upKey) != -1) {
+		if(window.Game.keyPressed.indexOf(leftKey) != -1) {
 			f(hero, "upleft");
 		}
-		else if(self.keyPressed.indexOf(rightKey) != -1) {
+		else if(window.Game.keyPressed.indexOf(rightKey) != -1) {
 			f(hero, "upright");
 		}
 		else {
@@ -166,11 +166,11 @@ function directionKeys(movementSpeed, hero)
 		movementSpeedY += movementSpeed;
 	}	
 	// Down
-	if(self.keyPressed.indexOf(downKey) != -1) {
-		if(self.keyPressed.indexOf(leftKey) != -1) {
+	if(window.Game.keyPressed.indexOf(downKey) != -1) {
+		if(window.Game.keyPressed.indexOf(leftKey) != -1) {
 			f(hero, "downright");
 		}
-		else if(self.keyPressed.indexOf(rightKey) != -1) {
+		else if(window.Game.keyPressed.indexOf(rightKey) != -1) {
 			f(hero, "downleft");
 		}
 		else {
@@ -231,8 +231,8 @@ function directionAnimation(hero, direction) {
 }
 
 function directionMouse(movementSpeed, hero) {
-	clientMouseX = self.Game.clientMouseX;
-	clientMouseY = self.Game.clientMouseY;
+	clientMouseX = window.Game.clientMouseX;
+	clientMouseY = window.Game.clientMouseY;
 	h = window.Game.h;
 	w = window.Game.w;
 	f = directionAnimation;
