@@ -21,6 +21,14 @@
 		(assoc-in [:location :y] (:target_y evt))
 		)))
 
+(defn chop? [player target evt ctx]
+	(cond 
+		(and 
+			(= (:type evt) "chop")
+			(= (:type player) "player")) true
+	:else false))
+	
+
 (defn  take-damage? [player evt ctx]
 	true)
 
@@ -33,6 +41,12 @@
 		(thenfunc player evt ctx)
 		player)
 )
+
+(defn is-a [ entity-types valid-type ]
+	(if (list? entity-types) (some (partial = valid-type ) entity-types)
+		(= entity-types valid-type)))
+		
+	
 
 ; combining functions
 (defn do-move [ player evt ctx ] 

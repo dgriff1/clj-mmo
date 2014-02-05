@@ -6,6 +6,14 @@
 (defn player-factory []
 	(player-rec "1234" [:sword] (player-attributes) {:building  0}) 	)
 
+
+(deftest is-a-test 
+	(is (not (is-a (list "tree", "horse"), "grass")))
+	(is (not (is-a "tree", "grass")))
+	(is (is-a "tree", "tree"))
+	(is (is-a (list "house", "tree"), "tree")))
+
+
 (deftest bad-move-test
 	(let [ player (player-factory) evt { :action "garbage_event" :target_x 10 :target_y 10 } ctx {} ]
 		(is (= false (move? player evt ctx )))))
