@@ -473,9 +473,6 @@ function _game()
 		self.mouseModX = self.mouseModX - x;
 		self.mouseModY = self.mouseModY - y;
 
-		self.clientMouseX = self.clientMouseX ;
-		self.clientMouseY = self.clientMouseY ;
-
                 self.playerGameCoords['x'] = self.playerGameCoords['x'] + x ;
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
 
@@ -493,7 +490,7 @@ function _game()
 			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA_WIDTH  || 
 			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA_HEIGHT  ||
 			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - NEW_AREA_HEIGHT ) {
-			//self.getMap();
+			self.getMap();
 		} 
 	}
 
@@ -621,11 +618,8 @@ function _game()
 			destination = self.pixelToGame(self.clickedAt[0], self.clickedAt[1]);
 			destinationX = destination[0] + self.mouseModX;
 			destinationY = destination[1] + self.mouseModY;
-		}
-		else {
-			destination = self.pixelToGame(self.clickedAt[0], self.clickedAt[1]);
-			destinationX = destination[0] ;
-			destinationY = destination[1] ;
+			self.autoMoveX = destinationX;
+			self.autoMoveY = destinationX;
 		}
 	
 		directionX = self.clickedAt[2];
@@ -635,19 +629,19 @@ function _game()
 		playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
 		playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
 	
-		circle = new createjs.Shape();
-		circle.graphics.beginFill("black").drawCircle(0, 0, 4);
-		circle.x = destinationX;
-		circle.y = destinationY;
-		world.addChild(circle);
-		stage.update();
+		//circle = new createjs.Shape();
+		//circle.graphics.beginFill("red").drawCircle(0, 0, 4);
+		//circle.x = self.autoMoveX;
+		//circle.y = self.autoMoveY;
+		//world.addChild(circle);
+		//stage.update();
 
-		circle = new createjs.Shape();
-		circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
-		circle.x = playerX;
-		circle.y = playerY;
-		world.addChild(circle);
-		stage.update();
+		//circle = new createjs.Shape();
+		//circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
+		//circle.x = playerX;
+		//circle.y = playerY;
+		//world.addChild(circle);
+		//stage.update();
 		
 		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
 			moved = true;
@@ -671,7 +665,7 @@ function _game()
 			self.previousAnimation = undefined;
 			self.stopHeroAnimations(hero);
 			self.clickedAt = [];
-			self.autoMove = false;
+			self.autoMove = false;		
 		}
 		else {
 			self.moveHero(directionX, directionY);
