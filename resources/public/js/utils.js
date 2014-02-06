@@ -294,6 +294,77 @@ function directionMouse(movementSpeed, hero) {
 	return [0, 0];
 }
 
+function autoMoveHero(hero) {
+
+	if(!window.Game.autoMove) {
+		window.Game.autoMove = true;
+		destination = window.Game.pixelToGame(window.Game.clickedAt[0], window.Game.clickedAt[1]);
+		destinationX = destination[0] + window.Game.mouseModX;
+		destinationY = destination[1] + window.Game.mouseModY;
+		window.Game.autoMoveX = destinationX;
+		window.Game.autoMoveY = destinationX;
+	}
+
+	directionX = window.Game.clickedAt[2];
+	directionY = window.Game.clickedAt[3];
+	moved = false;
+
+	playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
+	playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
+
+	//circle = new createjs.Shape();
+	//circle.graphics.beginFill("red").drawCircle(0, 0, 4);
+	//circle.x = window.Game.autoMoveX;
+	//circle.y = window.Game.autoMoveY;
+	//world.addChild(circle);
+	//stage.update();
+
+	//circle = new createjs.Shape();
+	//circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
+	//circle.x = playerX;
+	//circle.y = playerY;
+	//world.addChild(circle);
+	//stage.update();
+	
+	if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
+		moved = true;
+	}
+	else if(parseInt(directionX) == 0 && directionY < 0.00 && playerY < destinationY){
+		moved = true;
+	}
+	else if(parseInt(directionY) == 0 && directionX < 0.00 && playerX < destinationX){
+		moved = true;
+	}
+	else if(parseInt(directionY) == 0 && directionX > 0.00 && playerX > destinationX){
+		moved = true;
+	}
+	else if(parseInt(directionY) != 0 && parseInt(directionX) != 0) {
+		if(directionY > 0.00 && directionX > 0.00 && playerX > destinationX && playerY > destinationY) {
+			moved = true;
+		}
+		else if(directionY > 0.00 && directionX < 0.00 && playerX < destinationX && playerY > destinationY) {
+			moved = true;
+		}
+		else if(directionY < 0.00 && directionX < 0.00 && playerX < destinationX && playerY < destinationY) {
+			moved = true;
+		}
+		else if(directionY < 0.00 && directionX > 0.00 && playerX > destinationX && playerY < destinationY) {
+			moved = true;
+		}
+	}
+	if(!moved) {
+		hero.wasMoving = false;
+		window.Game.previousAnimation = undefined;
+		window.Game.stopHeroAnimations(hero);
+		window.Game.clickedAt = [];
+		window.Game.autoMove = false;		
+	}
+	else {
+		window.Game.moveHero(directionX, directionY);
+		hero.wasMoving = true;
+	}
+}
+
 function calculateIntersection(rect1, rect2, x, y)
 {
   // prevent x|y from being null||undefined

@@ -19,28 +19,49 @@ function _game()
 		parallaxObjects = [],
 		mouseDown = false;
 
+	// canvas stuff
 	self.width = w;
 	self.height = h;
 	self.scale = scale;
-        self.playerGameCoords = {"_id" : playerID, "x" : 0, "y" : 0}
-	self.playersToAdd       = new Array();
-	self.currentPlayers     = new Array();
-	self.WORLD_DATA = [];
 
-	self.assets = assets;
+	// structure that keep track of player game world x and y
+        self.playerGameCoords = {"_id" : playerID, "x" : 0, "y" : 0}
+
+	// Players that need to be drawn
+	self.playersToAdd       = new Array();
+
+	// Players in our world
+	self.currentPlayers     = new Array();
+
+	// Data that needs to be drawn
+	self.worldToAdd = [];
+
+	self.assets = assets; // resource seets
         self.playerID = playerID;
-	self.testMode = false;
+	self.testMode = false; 
+
+	// Used for counting frames
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
+
+	// Used for tracking keys
 	self.keyDown = 0; 
 	self.keyPressed = [];
+
+	// Used for automove
 	self.clickedAt = [];
 	self.autoMove = false;
+	self.autoMoveX = 0;
+	self.autoMoveY = 0;
+
+	// Used to track game mouse
         self.clientMouseX = 0;
         self.clientMouseY = 0;
 	self.mouseModX = 0;
 	self.mouseModY = 0;
+
+	// Used to track re-drawing
 	self.lastSentMessage	= 0.00;
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
@@ -254,10 +275,10 @@ function _game()
 			foreground = undefined;
 		}
 		data = [];
-		for(each in self.WORLD_DATA) {
-			if(self.WORLD_DATA[each]['type'] == type && 
-	                   (RESOURCES[self.WORLD_DATA[each]['resource']]['foreground'] != foreground )) {
-				data.push(self.WORLD_DATA[each]);
+		for(each in self.worldToAdd) {
+			if(self.worldToAdd[each]['type'] == type && 
+	                   (RESOURCES[self.worldToAdd[each]['resource']]['foreground'] != foreground )) {
+				data.push(self.worldToAdd[each]);
 			}
 		}
 		return data;
@@ -288,12 +309,12 @@ function _game()
 		sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
 
 		sortableEntity = sortableEntity.concat(foregroundEntity);
-		self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
+		self.worldToAdd = sortableTerrain.concat(sortableEntity);
 	}
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
-		if(data._id in self.WORLD_DATA && data.type != PLAYER) {
+		if(data._id in self.worldToAdd && data.type != PLAYER) {
 			return;
 		}
                 if(data.type == PLAYER) {
@@ -311,10 +332,10 @@ function _game()
                         return;
 		}
 		else if(data.type == ENTITY) {
-			self.WORLD_DATA.unshift(data);
+			self.worldToAdd.unshift(data);
 		}
 		else if(data.type == TERRAIN) {
-			self.WORLD_DATA.push(data);
+			self.worldToAdd.push(data);
 
 		}
 		self.lastHandleMessage = now();
@@ -391,22 +412,19 @@ function _game()
 	self.draw = function() {
 		self.resetWorld();
 
-		//self.autoMove = false;
-		//self.clickedAt = [];
-
 		added = false;
 
-		for(var each = 0; each < self.WORLD_DATA.length; each++) {
-			if(self.WORLD_DATA[each] === undefined) {
+		for(var each = 0; each < self.worldToAdd.length; each++) {
+			if(self.worldToAdd[each] === undefined) {
 				continue;
 			}
-			else if(self.WORLD_DATA[each]['type'] != TERRAIN && !added) {
+			else if(self.worldToAdd[each]['type'] != TERRAIN && !added) {
 				self.addPlayersToWorld();
 				added = true;
 			}
-			x = self.WORLD_DATA[each]['location']['x'];
-			y = self.WORLD_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], false);
+			x = self.worldToAdd[each]['location']['x'];
+			y = self.worldToAdd[each]['location']['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['resource'], self.worldToAdd[each]['type'], false);
 		}
 		self.hideLoader();	
 		stage.update();
@@ -570,7 +588,7 @@ function _game()
 			self.draw();
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
-			self.WORLD_DATA = [];
+			self.worldToAdd = [];
 			stage.update();
 		}
 	}
@@ -603,74 +621,11 @@ function _game()
 			if(self.clickedAt.length == 0) {
 				self.logPlayerClick(direction);
 			}
-			self.autoMovePlayer();
+			autoMoveHero(hero);
 		}
 
 		ticks++;
 		
-	}
-
-
-	self.autoMovePlayer = function() {
-	
-		if(!self.autoMove) {
-			self.autoMove = true;
-			destination = self.pixelToGame(self.clickedAt[0], self.clickedAt[1]);
-			destinationX = destination[0] + self.mouseModX;
-			destinationY = destination[1] + self.mouseModY;
-			self.autoMoveX = destinationX;
-			self.autoMoveY = destinationX;
-		}
-	
-		directionX = self.clickedAt[2];
-		directionY = self.clickedAt[3];
-		moved = false;
-	
-		playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
-		playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
-	
-		//circle = new createjs.Shape();
-		//circle.graphics.beginFill("red").drawCircle(0, 0, 4);
-		//circle.x = self.autoMoveX;
-		//circle.y = self.autoMoveY;
-		//world.addChild(circle);
-		//stage.update();
-
-		//circle = new createjs.Shape();
-		//circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
-		//circle.x = playerX;
-		//circle.y = playerY;
-		//world.addChild(circle);
-		//stage.update();
-		
-		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
-			moved = true;
-		}
-		else if(parseInt(directionX) == 0 && directionY < 0.00 && playerY < destinationY){
-			moved = true;
-		}
-		else if(parseInt(directionY) == 0 && directionX < 0.00 && playerX < destinationX){
-			moved = true;
-		}
-		else if(parseInt(directionY) == 0 && directionX > 0.00 && playerX > destinationX){
-			moved = true;
-		}
-		else if(parseInt(directionY) != 0 && parseInt(directionX) != 0) {
-			if(directionY > 0.00 && directionX > 0.00 && playerX > destinationX && playerY > destinationY) {
-				moved = true;
-			}
-		}
-		if(!moved) {
-			hero.wasMoving = false;
-			self.previousAnimation = undefined;
-			self.stopHeroAnimations(hero);
-			self.clickedAt = [];
-			self.autoMove = false;		
-		}
-		else {
-			self.moveHero(directionX, directionY);
-			hero.wasMoving = true;
-		}
 	}
 
 
