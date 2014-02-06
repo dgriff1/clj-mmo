@@ -648,8 +648,6 @@ function _game()
 		circle.y = playerY;
 		world.addChild(circle);
 		stage.update();
-		logger("dest " + destinationX);
-		logger("player " + playerX);
 		
 		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
 			moved = true;
@@ -716,8 +714,8 @@ function _game()
 
         self.handleMouseMove = function(e)
 	{
-                self.clientMouseX = e.layerX;
-                self.clientMouseY = e.layerY;	
+                self.clientMouseX = e.offsetX;
+                self.clientMouseY = e.offsetY;	
 	}
 
         self.handleMouseDown = function(e)
