@@ -339,16 +339,16 @@ function autoMoveHero(hero) {
 		moved = true;
 	}
 	else if(parseInt(directionY) != 0 && parseInt(directionX) != 0) {
-		if(directionY > 0.00 && directionX > 0.00 && playerX > destinationX && playerY > destinationY) {
+		if(directionY > 0.00 && directionX > 0.00 && (playerX > destinationX || playerY > destinationY)) {
 			moved = true;
 		}
-		else if(directionY > 0.00 && directionX < 0.00 && playerX < destinationX && playerY > destinationY) {
+		else if(directionY > 0.00 && directionX < 0.00 && (playerX < destinationX || playerY > destinationY)) {
 			moved = true;
 		}
-		else if(directionY < 0.00 && directionX < 0.00 && playerX < destinationX && playerY < destinationY) {
+		else if(directionY < 0.00 && directionX < 0.00 && (playerX < destinationX || playerY < destinationY)) {
 			moved = true;
 		}
-		else if(directionY < 0.00 && directionX > 0.00 && playerX > destinationX && playerY < destinationY) {
+		else if(directionY < 0.00 && directionX > 0.00 && (playerX > destinationX || playerY < destinationY)) {
 			moved = true;
 		}
 	}
