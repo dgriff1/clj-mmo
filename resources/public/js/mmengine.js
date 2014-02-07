@@ -19,24 +19,49 @@ function _game()
 		parallaxObjects = [],
 		mouseDown = false;
 
+	// canvas stuff
 	self.width = w;
 	self.height = h;
 	self.scale = scale;
-        self.playerGameCoords = {"_id" : playerID, "x" : 0, "y" : 0}
-	self.playersToAdd       = new Array();
-	self.currentPlayers     = new Array();
-	self.WORLD_DATA = [];
 
-	self.assets = assets;
+	// structure that keep track of player game world x and y
+        self.playerGameCoords = {"_id" : playerID, "x" : 0, "y" : 0}
+
+	// Players that need to be drawn
+	self.playersToAdd       = new Array();
+
+	// Players in our world
+	self.currentPlayers     = new Array();
+
+	// Data that needs to be drawn
+	self.worldToAdd = [];
+
+	self.assets = assets; // resource seets
         self.playerID = playerID;
-	self.testMode = false;
+	self.testMode = false; 
+
+	// Used for counting frames
 	self.frameTimer = undefined;
 	self.framesPerSecondCounter = 0;
 	self.framesPerSecond = 0;
+
+	// Used for tracking keys
 	self.keyDown = 0; 
 	self.keyPressed = [];
+
+	// Used for automove
+	self.clickedAt = [];
+	self.autoMove = false;
+	self.autoMoveX = 0;
+	self.autoMoveY = 0;
+
+	// Used to track game mouse
         self.clientMouseX = 0;
         self.clientMouseY = 0;
+	self.mouseModX = 0;
+	self.mouseModY = 0;
+
+	// Used to track re-drawing
 	self.lastSentMessage	= 0.00;
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
@@ -195,6 +220,8 @@ function _game()
 		document.body.appendChild(canvas);
 		self.w  = getWidth(canvas);
 		self.h  = getHeight(canvas);
+		self.ratioW = self.w / BASE_WIDTH;
+		self.ratioH = self.h / BASE_HEIGHT;	
 	}
 	
 	self.initializeGame = function() {
@@ -233,11 +260,13 @@ function _game()
 			document.onkeyup = self.handleKeyUp;
 			canvas.onmousedown = self.handleMouseDown;
 			canvas.onmouseup = self.handleMouseUp;
-			canvas.onmousemove = self.handleMouseMove;
+			//canvas.onmousemove = self.handleMouseMove;
 		}
+		
 		
 		createjs.Ticker.setFPS(FPS_RATE);
 		createjs.Ticker.addEventListener("tick", function() { self.tick();  });
+		canvas.addEventListener("mousemove", function(e) { self.handleMouseMove(e);  });
 		createjs.Ticker.useRAF = true;
 	}
 
@@ -246,10 +275,10 @@ function _game()
 			foreground = undefined;
 		}
 		data = [];
-		for(each in self.WORLD_DATA) {
-			if(self.WORLD_DATA[each]['type'] == type && 
-	                   (RESOURCES[self.WORLD_DATA[each]['resource']]['foreground'] != foreground )) {
-				data.push(self.WORLD_DATA[each]);
+		for(each in self.worldToAdd) {
+			if(self.worldToAdd[each]['type'] == type && 
+	                   (RESOURCES[self.worldToAdd[each]['resource']]['foreground'] != foreground )) {
+				data.push(self.worldToAdd[each]);
 			}
 		}
 		return data;
@@ -280,12 +309,12 @@ function _game()
 		sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
 
 		sortableEntity = sortableEntity.concat(foregroundEntity);
-		self.WORLD_DATA = sortableTerrain.concat(sortableEntity);
+		self.worldToAdd = sortableTerrain.concat(sortableEntity);
 	}
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
-		if(data._id in self.WORLD_DATA && data.type != PLAYER) {
+		if(data._id in self.worldToAdd && data.type != PLAYER) {
 			return;
 		}
                 if(data.type == PLAYER) {
@@ -303,32 +332,50 @@ function _game()
                         return;
 		}
 		else if(data.type == ENTITY) {
-			self.WORLD_DATA.unshift(data);
+			self.worldToAdd.unshift(data);
 		}
 		else if(data.type == TERRAIN) {
-			self.WORLD_DATA.push(data);
+			self.worldToAdd.push(data);
 
 		}
 		self.lastHandleMessage = now();
 		self.sorted = false;
 	}
 
-	self.calculatePosition = function(objX, objY) {
+	self.gameToWorldPosition = function(objX, objY) {
 		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
 		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
-		self.wx = heroX + ((self.playerGameCoords['x'] - objX ));
-		self.wy = heroY + ((self.playerGameCoords['y'] - objY ));
-		return [self.wx, self.wy]
+		wx = heroX + ((self.playerGameCoords['x'] - objX ));
+		wy = heroY + ((self.playerGameCoords['y'] - objY ));
+		return [wx, wy]
+	}
+
+	self.worldToGamePosition = function(X, Y) {
+		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
+		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
+		wx = X - heroX;
+		wy = Y - heroY;
+		rx = self.playerGameCoords['x'] - wx;
+		ry = self.playerGameCoords['y'] - wy;
+		return [rx, ry]
+	}
+
+	self.pixelToGame = function(X, Y) {
+		self.ratioW = self.w / BASE_WIDTH;
+		self.ratioH = self.h / BASE_HEIGHT;	
+		dx = parseInt((parseInt(X) / self.ratioW));
+		dy = parseInt((parseInt(Y) / self.ratioH));
+		return [dx, dy]
 	}
 
 	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
-			hx = w/2 - ((RESOURCES['HERO']['width']*scale)/2);
-			hy = h/2 - ((RESOURCES['HERO']['height']*scale)/2);
-			pos = self.calculatePosition(x, y);
+			hx = w/2 - ((RESOURCES['HERO']['width'])/2);
+			hy = h/2 - ((RESOURCES['HERO']['height'])/2);
+			pos = self.gameToWorldPosition(x, y);
 		}
 		else {
-			pos = self.calculatePosition(x, y);
+			pos = self.gameToWorldPosition(x, y);
 		}
 		if(typeof(resource) == "string") {
 			self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
@@ -345,7 +392,7 @@ function _game()
 	self.addPlayersToWorld = function() {
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
-			loc = self.calculatePosition(aPlayer.realX, aPlayer.realY);
+			loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
 			aPlayer.x = loc[0];
 			aPlayer.y = loc[1];
 			world.addChild(aPlayer);
@@ -355,23 +402,29 @@ function _game()
 
 	}
 
-	self.draw = function() {
+	self.resetWorld = function() {
 		world.removeAllChildren();
 		world.x = world.y = 0;
+		self.mouseModX = 0;
+		self.mouseModY = 0;
+	}
+
+	self.draw = function() {
+		self.resetWorld();
 
 		added = false;
 
-		for(var each = 0; each < self.WORLD_DATA.length; each++) {
-			if(self.WORLD_DATA[each] === undefined) {
+		for(var each = 0; each < self.worldToAdd.length; each++) {
+			if(self.worldToAdd[each] === undefined) {
 				continue;
 			}
-			else if(self.WORLD_DATA[each]['type'] != TERRAIN && !added) {
+			else if(self.worldToAdd[each]['type'] != TERRAIN && !added) {
 				self.addPlayersToWorld();
 				added = true;
 			}
-			x = self.WORLD_DATA[each]['location']['x'];
-			y = self.WORLD_DATA[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.WORLD_DATA[each]['resource']]['resource'], self.WORLD_DATA[each]['type'], false);
+			x = self.worldToAdd[each]['location']['x'];
+			y = self.worldToAdd[each]['location']['y'];
+			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['resource'], self.worldToAdd[each]['type'], false);
 		}
 		self.hideLoader();	
 		stage.update();
@@ -394,8 +447,7 @@ function _game()
 
 	// Sets up world and widgets, called first before tick
 	self.reset = function() {
-		world.removeAllChildren();
-		world.x = world.y = 0;
+		self.resetWorld();
 
 		self.drawHud();
 
@@ -404,10 +456,10 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		hero.x = w/2 - ((RESOURCES['HERO']['width'])/2);
-		hero.y = h/2 - ((RESOURCES['HERO']['height'])/2);
+		hero.x = BASE_WIDTH/2 - ((RESOURCES['HERO']['width'])/2);
+		hero.y = BASE_HEIGHT/2 - ((RESOURCES['HERO']['height'])/2);
 		hero.reset();
-		hero.wasMoving = true;
+		hero.wasMoving = false;
 		world.addChild(hero);
 	}
 
@@ -436,6 +488,9 @@ function _game()
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
 
+		self.mouseModX = self.mouseModX - x;
+		self.mouseModY = self.mouseModY - y;
+
                 self.playerGameCoords['x'] = self.playerGameCoords['x'] + x ;
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
 
@@ -463,7 +518,7 @@ function _game()
 		newHero._id  = id;
 		newHero.type = PLAYER;
 		newHero.currentFrame = 1;
-		loc = self.calculatePosition(heroLocation.x, heroLocation.y);
+		loc = self.gameToWorldPosition(heroLocation.x, heroLocation.y);
 		newHero.x = loc[0]
 		newHero.y = loc[1]
 		newHero.realX = heroLocation.x;
@@ -492,7 +547,7 @@ function _game()
 			if(obj._id != undefined && obj._id == msg._id) {
 			        self.doAnimation(obj, "down");
 				loc = msg.location;
-				loc = self.calculatePosition(loc.x, loc.y);
+				loc = self.gameToWorldPosition(loc.x, loc.y);
 				self.currentPlayers[count].x = loc[0];
 				self.currentPlayers[count].y = loc[1];
 				self.currentPlayers[count].realX = msg.location.x;
@@ -533,7 +588,7 @@ function _game()
 			self.draw();
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
-			self.WORLD_DATA = [];
+			self.worldToAdd = [];
 			stage.update();
 		}
 	}
@@ -544,7 +599,7 @@ function _game()
 
 		self.drawWorldData();
 
-                if(mouseDown)
+                if(mouseDown && self.clickedAt.length == 0)
                 { 
 			direction = directionMouse(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
@@ -563,13 +618,19 @@ function _game()
 		}
 		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
 		{	
-			hero.wasMoving = false;
-			self.stopHeroAnimations(hero);
+			if(self.clickedAt.length == 0) {
+				self.logPlayerClick(direction);
+			}
+			autoMoveHero(hero);
 		}
 
 		ticks++;
 		
-		//stage.update();
+	}
+
+
+	self.logPlayerClick = function(direction) {
+		self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
 	}
 	
 	self.sendPlayerState = function() {
@@ -602,12 +663,16 @@ function _game()
 
         self.handleMouseMove = function(e)
 	{
-                self.clientMouseX = e.layerX;
-                self.clientMouseY = e.layerY;
+                self.clientMouseX = e.offsetX;
+                self.clientMouseY = e.offsetY;	
 	}
 
         self.handleMouseDown = function(e)
 	{
+		if(self.autoMove) {
+			self.autoMove = false;
+			self.clickedAt = [];
+		}
 		if ( !mouseDown ) {
 			mouseDown = true;
 		}
@@ -640,6 +705,8 @@ function _game()
 	self.handleResize = function(e) {
 		self.w  = getWidth(canvas);
 		self.h  = getHeight(canvas);
+		self.ratioW = self.w / BASE_WIDTH;
+		self.ratioH = self.h / BASE_HEIGHT;	
 	}
 
 	self.preloadResources();

@@ -114,8 +114,8 @@ function exportMap() {
 
 function directionKeys(movementSpeed, hero) 
 {
-	keyPressed = self.Game.keyPressed;
-	f = window.Game.doAnimation;
+	keyPressed = window.Game.keyPressed;
+	f = directionAnimation;
 
 	movementSpeedX = 0;
 	movementSpeedY = 0;
@@ -139,33 +139,45 @@ function directionKeys(movementSpeed, hero)
 	
 
 	// Left
-	if(self.keyPressed.indexOf(leftKey) != -1) {
-		if(hero) {
+	if(window.Game.keyPressed.indexOf(leftKey) != -1) {
+		if(window.Game.keyPressed.length == 1) {
 			f(hero, "left");
 		}
 		movementSpeedX += movementSpeed;
 	}	
 	// Right
-	if(self.keyPressed.indexOf(rightKey) != -1) {
-		if(hero) {
+	if(window.Game.keyPressed.indexOf(rightKey) != -1) {
+		if(window.Game.keyPressed.length == 1) {
 			f(hero, "right");
 		}
 		movementSpeedX -= movementSpeed;
 	}	
 	// Top
-	if(self.keyPressed.indexOf(upKey) != -1) {
-		if(hero) {
+	if(window.Game.keyPressed.indexOf(upKey) != -1) {
+		if(window.Game.keyPressed.indexOf(leftKey) != -1) {
+			f(hero, "upleft");
+		}
+		else if(window.Game.keyPressed.indexOf(rightKey) != -1) {
+			f(hero, "upright");
+		}
+		else {
 			f(hero, "up");
 		}
 		movementSpeedY += movementSpeed;
 	}	
 	// Down
-	if(self.keyPressed.indexOf(downKey) != -1) {
-		if(hero) {
+	if(window.Game.keyPressed.indexOf(downKey) != -1) {
+		if(window.Game.keyPressed.indexOf(leftKey) != -1) {
+			f(hero, "downright");
+		}
+		else if(window.Game.keyPressed.indexOf(rightKey) != -1) {
+			f(hero, "downleft");
+		}
+		else {
 			f(hero, "down");
 		}
 		movementSpeedY -= movementSpeed;
-	}	
+	}
 	return [movementSpeedX, movementSpeedY];
 }
 
@@ -208,12 +220,22 @@ function isMouseNearPlayer(hero) {
 	return false;
 }
 
+function directionAnimation(hero, direction) {
+	if(window.Game.previousAnimation === undefined || window.Game.previousAnimation == direction) {
+	}
+	else {
+		hero.gotoAndPlay(direction);
+	}
+	window.Game.previousAnimation = direction;
+	window.Game.doAnimation(hero, direction);
+}
+
 function directionMouse(movementSpeed, hero) {
-	clientMouseX = self.Game.clientMouseX;
-	clientMouseY = self.Game.clientMouseY;
+	clientMouseX = window.Game.clientMouseX;
+	clientMouseY = window.Game.clientMouseY;
 	h = window.Game.h;
 	w = window.Game.w;
-	f = window.Game.doAnimation;
+	f = directionAnimation;
 
 	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 	
@@ -225,67 +247,122 @@ function directionMouse(movementSpeed, hero) {
 	if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
 		&& clientMouseX < w/2)
         {
-		if(hero) {
-			f(hero, "left");
-		}
+		f(hero, "left");
 		return [movementSpeed, 0];
         }
 	// Right
 	else if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
 		&& clientMouseX > w/2)
         {
-		if(hero) {
-			f(hero, "right");
-		}
+		f(hero, "right");
 		return [-movementSpeed, 0];
         }
 	// Up
 	else if(clientMouseX > w/2 - RESOURCES['HERO']['width']  && clientMouseX < w/2 + RESOURCES['HERO']['width']
 		&& clientMouseY > h/2)
         {
-		if(hero) {
-			f(hero, "down");
-		}
+		f(hero, "down");
 		return [0, -movementSpeed];
         }
 	// Down
 	else if(clientMouseX + RESOURCES['HERO']['width'] > w/2 - RESOURCES['HERO']['width']  && clientMouseX < w/2
 		&& clientMouseY < h/2)
         {	
-		if(hero) {
-			f(hero, "up");
-		}
+		f(hero, "up");
 		return [0, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY < h/2)
         {
-		if(hero) {
-			f(hero, "upleft");
-		}
+		f(hero, "upleft");
 		return [movementSpeed, movementSpeed];
         }
 	else if(clientMouseX < w/2 && clientMouseY > h/2)
         {
-		if(hero) {
-			f(hero, "downright");	
-		}
+		f(hero, "downright");	
 		return [movementSpeed, -movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY < h/2)
         {
-		if(hero) {
-			f(hero, "upright");
-		}
+		f(hero, "upright");
 		return [-movementSpeed, movementSpeed];
         }
 	else if(clientMouseX > w/2 && clientMouseY > h/2)
         {
-		if(hero) {
-			f(hero, "downleft");
-		}
+		f(hero, "downleft");
 		return [-movementSpeed, -movementSpeed];
         }
 	return [0, 0];
+}
+
+function autoMoveHero(hero) {
+
+	if(!window.Game.autoMove) {
+		window.Game.autoMove = true;
+		destination = window.Game.pixelToGame(window.Game.clickedAt[0], window.Game.clickedAt[1]);
+		destinationX = destination[0] + window.Game.mouseModX;
+		destinationY = destination[1] + window.Game.mouseModY;
+		window.Game.autoMoveX = destinationX;
+		window.Game.autoMoveY = destinationX;
+	}
+
+	directionX = window.Game.clickedAt[2];
+	directionY = window.Game.clickedAt[3];
+	moved = false;
+
+	playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
+	playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
+
+	//circle = new createjs.Shape();
+	//circle.graphics.beginFill("red").drawCircle(0, 0, 4);
+	//circle.x = window.Game.autoMoveX;
+	//circle.y = window.Game.autoMoveY;
+	//world.addChild(circle);
+	//stage.update();
+
+	//circle = new createjs.Shape();
+	//circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
+	//circle.x = playerX;
+	//circle.y = playerY;
+	//world.addChild(circle);
+	//stage.update();
+	
+	if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
+		moved = true;
+	}
+	else if(parseInt(directionX) == 0 && directionY < 0.00 && playerY < destinationY){
+		moved = true;
+	}
+	else if(parseInt(directionY) == 0 && directionX < 0.00 && playerX < destinationX){
+		moved = true;
+	}
+	else if(parseInt(directionY) == 0 && directionX > 0.00 && playerX > destinationX){
+		moved = true;
+	}
+	else if(parseInt(directionY) != 0 && parseInt(directionX) != 0) {
+		if(directionY > 0.00 && directionX > 0.00 && (playerX > destinationX || playerY > destinationY)) {
+			moved = true;
+		}
+		else if(directionY > 0.00 && directionX < 0.00 && (playerX < destinationX || playerY > destinationY)) {
+			moved = true;
+		}
+		else if(directionY < 0.00 && directionX < 0.00 && (playerX < destinationX || playerY < destinationY)) {
+			moved = true;
+		}
+		else if(directionY < 0.00 && directionX > 0.00 && (playerX > destinationX || playerY < destinationY)) {
+			moved = true;
+		}
+	}
+	if(!moved) {
+		hero.wasMoving = false;
+		window.Game.previousAnimation = undefined;
+		window.Game.stopHeroAnimations(hero);
+		window.Game.clickedAt = [];
+		window.Game.autoMove = false;		
+	}
+	else {
+		window.Game.moveHero(directionX, directionY);
+		hero.wasMoving = true;
+	}
 }
 
 function calculateIntersection(rect1, rect2, x, y)
