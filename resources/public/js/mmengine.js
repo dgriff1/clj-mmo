@@ -314,32 +314,38 @@ function _game()
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
-		if(data._id in self.worldToAdd && data.type != PLAYER) {
-			return;
-		}
-                if(data.type == PLAYER) {
-			if(data._id != playerID) {
-				if(self.currentPlayers[data._id] === undefined) {
-					self.playersToAdd[data._id] = data;	
-				}
-				else {
-					self.movePlayer(data);
-				}
+		if(data.length === undefined) {
+			if(data._id in self.worldToAdd && data.type != PLAYER) {
+				return;
 			}
-			if(stage != undefined) {
-				stage.update();
+                	if(data.type == PLAYER) {
+				if(data._id != playerID) {
+					if(self.currentPlayers[data._id] === undefined) {
+						self.playersToAdd[data._id] = data;	
+					}
+					else {
+						self.movePlayer(data);
+					}
+				}
+				if(stage != undefined) {
+					stage.update();
+				}
+                	        return;
 			}
-                        return;
 		}
-		else if(data.type == ENTITY) {
-			self.worldToAdd.unshift(data);
-		}
-		else if(data.type == TERRAIN) {
-			self.worldToAdd.push(data);
+		else {
+			for(msg in data) {
+				if(data[msg].type == ENTITY) {
+					self.worldToAdd.unshift(data[msg]);
+				}
+				else if(data[msg].type == TERRAIN) {
+					self.worldToAdd.push(data[msg]);
 
+				}
+			}
+			self.lastHandleMessage = now();
+			self.sorted = false;
 		}
-		self.lastHandleMessage = now();
-		self.sorted = false;
 	}
 
 	self.gameToWorldPosition = function(objX, objY) {
