@@ -30,8 +30,8 @@
 (defn message-handler [ ch p msg params ] 
 	(prn "Msg " msg )
 	(cond 
-		; (= (:type msg) "proximity" ) (map (fn [close_msg] (prn "Really cmon " close_msg) (enqueue ch (json-str close_msg)))  (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] ) ))
 		(= (:type msg) "proximity" ) (dorun (map (fn [close] (enqueue ch (json-str close)))  (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] )  )))
+		; (= (:type msg) "proximity" ) (enqueue ch (json-str (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] )  )))
 		:else  (let [ player (db/get-player all_players (:id params))]
 						(do 
 					  		(let [json_msg (json-str (util/safe-player @(send player actions/determine-action msg {}))) ]
