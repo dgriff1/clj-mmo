@@ -204,6 +204,7 @@ function _game()
 	}
 
 	self.getMap = function() {
+		logger("new map");
 		self.doSend(JSON.stringify({"type"     : "proximity", 
                                             "location" : {"x" : self.playerGameCoords['x'],
                                                           "y" : self.playerGameCoords['y']}
@@ -314,7 +315,8 @@ function _game()
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
-		if(data.length === undefined) {
+		dataLength = data.length;
+		if(dataLength === undefined) {
 			if(data._id in self.worldToAdd && data.type != PLAYER) {
 				return;
 			}
@@ -334,7 +336,7 @@ function _game()
 			}
 		}
 		else {
-			for(msg in data) {
+			for(msg = 0; msg < dataLength; msg++) {
 				if(data[msg].type == ENTITY) {
 					self.worldToAdd.unshift(data[msg]);
 				}
