@@ -266,14 +266,10 @@ function _game()
 		createjs.Ticker.useRAF = true;
 	}
 
-	self.getWorldByType = function(type, foreground) {
-		if(!foreground) {
-			foreground = undefined;
-		}
+	self.getWorldByType = function(type) {
 		data = [];
 		for(each in self.worldToAdd) {
-			if(self.worldToAdd[each]['type'] == type && 
-	                   (RESOURCES[self.worldToAdd[each]['resource']]['foreground'] != foreground )) {
+			if(self.worldToAdd[each]['type'] == type) {
 				data.push(self.worldToAdd[each]);
 			}
 		}
@@ -295,16 +291,12 @@ function _game()
 
 	self.sortWorldData = function() {
 
-		sortableTerrain = self.getWorldByType(TERRAIN, true);
+		sortableTerrain = self.getWorldByType(TERRAIN);
 		sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
 
-		foregroundEntity = self.getWorldByType(ENTITY, false);
-		foregroundEntity = self.sortWorldType(foregroundEntity, ENTITY);
-
-		sortableEntity = self.getWorldByType(ENTITY, true);
+		sortableEntity = self.getWorldByType(ENTITY);
 		sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
 
-		sortableEntity = sortableEntity.concat(foregroundEntity);
 		self.worldToAdd = sortableTerrain.concat(sortableEntity);
 	}
 
@@ -382,12 +374,12 @@ function _game()
 			pos = self.gameToWorldPosition(x, y);
 		}
 		if(typeof(resource) == "string") {
-			self.addWidget(pos[0], pos[1], new Bitmap(self.assets[resource]), resourceType);
+			self.addWidget(pos[0], pos[1], self.assets[resource], resourceType);
 		}
 		else {
 			for(each in resource) {
 				res = resource[each];
-				self.addWidget(pos[0] + res[0], pos[1] + res[1], new Bitmap(res[2]), resourceType);
+				self.addWidget(pos[0] + res[0], pos[1] + res[1], res[2], resourceType);
 			}
 		}
 	}
@@ -588,6 +580,7 @@ function _game()
 
 	self.drawWorldData = function() {
 		if(!self.sorted && now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
+			self.worldToAdd.push(hero);
 			self.sortWorldData();	
 			//MESSAGE_INTERVAL = MESSAGE_INTERVAL + 10000.00;
 			self.draw();
@@ -649,13 +642,14 @@ function _game()
 		}
 	}
 
-	self.addWidget = function(x,y,img,type) {
+	self.addWidget = function(x,y,image,type) {
+		img = new Bitmap(image);
 		x = Math.round(x);
 		y = Math.round(y);
 
 		img.x = x;
 		img.y = y;
-		img.snapToPixel = false;
+		img.snapToPixel = true;
                 img.type = type;
 
 		world.addChild(img);
