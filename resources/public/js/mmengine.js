@@ -331,15 +331,16 @@ function _game()
 			}
 		}
 		else {
-			for(msg = 0; msg < dataLength; msg++) {
-				if(data[msg].type == ENTITY) {
-					self.worldToAdd.unshift(data[msg]);
-				}
-				else if(data[msg].type == TERRAIN) {
-					self.worldToAdd.push(data[msg]);
+			self.worldToAdd = data;
+			//for(msg = 0; msg < dataLength; msg++) {
+			//	//if(data[msg].type == ENTITY) {
+			//		//self.worldToAdd.unshift(data[msg]);
+			//	//}
+			//	//else if(data[msg].type == TERRAIN) {
+			//		self.worldToAdd.push(data[msg]);
 
-				}
-			}
+			//	//}
+			//}
 			self.lastHandleMessage = now();
 			self.sorted = false;
 		}
@@ -588,6 +589,7 @@ function _game()
 	self.drawWorldData = function() {
 		if(!self.sorted && now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
 			self.sortWorldData();	
+			//MESSAGE_INTERVAL = MESSAGE_INTERVAL + 10000.00;
 			self.draw();
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
