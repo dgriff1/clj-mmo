@@ -2,7 +2,7 @@
     function Hero(image) {
         this.initialize(image);
     }
-    Hero.prototype = new BitmapAnimation();
+    Hero.prototype = new Sprite();
 
     Hero.prototype.Bitmap_initialize = Hero.prototype.initialize;
    

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
 		<title>Mankraft</title>
 		<style type="text/css">
 			* {
@@ -29,9 +31,9 @@
 				width: 100%;
 				background-color: #000000;
 				border: 4px solid;
-				-webkit-border-image:url(/assets/wood_border.jpg) 30 30 round; /* Safari 5 */
-				-o-border-image:url(/assets/wood_border.jpg) 30 30 round; /* Opera */
-				border-image:url(/assets/wood_border.jpg) 30 30 round;
+				/* -webkit-border-image:url(/assets/wood_border.jpg) 30 30 round; /* Safari 5 */
+				/* -o-border-image:url(/assets/wood_border.jpg) 30 30 round; /* Opera */
+				/* border-image:url(/assets/wood_border.jpg) 30 30 round; */
 				visibility: hidden;
 			}
 			h1 {
@@ -41,23 +43,23 @@
 	</head>
 	<body>
 		<h1>Project: Mankraft 0.0.2</h1>
+		<script>
+			var createjs = window;
+		</script>
+		<script src="/js/jquery.js"></script>
+		<script src="/js/easeljs-NEXT.min.js"></script>
+		<script src="/js/utils.js"></script>
+		<script src="/js/hero.js"></script>
+		<script src="/js/mmengine.js"></script>
+
+		<div class="loader" id="loader">
+			<h1>Loading...</h1><br>
+			<img src="/assets/loader.gif"/>
+		</div>
+
+		<div class="error" id="error" style="visibility: hidden;display: none;">
+			<h1>You have been disconnected!</h1><br>
+		</div>
 	</body>
-	<script>
-		var createjs = window;
-	</script>
-	<script src="/js/jquery.js"></script>
-	<script src="/js/easeljs-NEXT.min.js"></script>
-	<script src="/js/utils.js"></script>
-	<script src="/js/hero.js"></script>
-	<script src="/js/mmengine.js"></script>
-
-	<div class="loader" id="loader">
-		<h1>Loading...</h1><br>
-		<img src="/assets/loader.gif"/>
-	</div>
-
-	<div class="error" id="error" style="visibility: hidden;display: none;">
-		<h1>You have been disconnected!</h1><br>
-	</div>
 
 </html>
