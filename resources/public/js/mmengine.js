@@ -484,12 +484,12 @@ function _game()
 		hero.y = hero.y - y;
 
 		//sort player in world
-		obs = stage.getObjectsUnderPoint(hero.x, hero.y);
-		for(o in obs) {
-			if(obs[o].type == ENTITY) {
-				world.removeChild(obs[o]);
-			}
-		}
+		//obs = stage.getObjectsUnderPoint(hero.x, hero.y);
+		//for(o in obs) {
+		//	if(obs[o].type == ENTITY) {
+		//		world.removeChild(obs[o]);
+		//	}
+		//}
 
 		self.mouseModX = self.mouseModX - x;
 		self.mouseModY = self.mouseModY - y;
