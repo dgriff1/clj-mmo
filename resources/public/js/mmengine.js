@@ -406,23 +406,22 @@ function _game()
 	}
 
 	self.draw = function() {
+		self.hideLoader();	
 		self.resetWorld();
-
-		added = false;
 
 		for(var each = 0; each < self.worldToAdd.length; each++) {
 			if(self.worldToAdd[each] === undefined) {
 				continue;
 			}
-			else if(self.worldToAdd[each]['type'] != TERRAIN && !added) {
-				self.addPlayersToWorld();
-				added = true;
-			}
+			//else if(self.worldToAdd[each]['type'] != TERRAIN && !added) {
+			//	self.addPlayersToWorld();
+			//	added = true;
+			//}
 			x = self.worldToAdd[each]['location']['x'];
 			y = self.worldToAdd[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['resource'], self.worldToAdd[each]['type'], false);
 		}
-		self.hideLoader();	
+		self.addPlayersToWorld();
 		stage.update();
 
 	}
@@ -483,6 +482,14 @@ function _game()
 
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
+
+		//sort player in world
+		obs = stage.getObjectsUnderPoint(hero.x, hero.y);
+		for(o in obs) {
+			if(obs[o].type == ENTITY) {
+				world.removeChild(obs[o]);
+			}
+		}
 
 		self.mouseModX = self.mouseModX - x;
 		self.mouseModY = self.mouseModY - y;
@@ -652,7 +659,9 @@ function _game()
 		img.snapToPixel = true;
                 img.type = type;
 
+		img.addEventListener("mousedown", function(data) { } );
 		world.addChild(img);
+		//img.cache(x, y, 64, 64);
 		if(type == ENTITY) {	
 			if(ENABLE_SHADOWS) {
              	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	
