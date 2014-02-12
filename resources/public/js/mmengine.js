@@ -69,11 +69,11 @@ function _game()
 	self.preloadResources = function() {
 		for(key in RESOURCES) {
 			if(!self.isPrefab(RESOURCES[key])) {
-				self.loadImage(RESOURCES[key]['resource']);
+				self.loadImage(RESOURCES[key]['image']);
 			}
 			else {
-				for(fab in RESOURCES[key]['resource']) {
-					asset = RESOURCES[key]['resource'][fab][2];
+				for(fab in RESOURCES[key]['image']) {
+					asset = RESOURCES[key]['image'][fab][2];
 					self.loadImage(asset);
 				}
 			}
@@ -84,7 +84,7 @@ function _game()
 	self.loadedAssets = 0;
 
 	self.isPrefab = function(obj) {
-		if(typeof(obj['resource']) != "string") {
+		if(typeof(obj['image']) != "string") {
 			return true;
 		}
 		return false;
@@ -364,7 +364,7 @@ function _game()
 		return [dx, dy]
 	}
 
-	self.addWidgetToWorld = function(x, y, resource, resourceType, preHero) {
+	self.addWidgetToWorld = function(x, y, image, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((RESOURCES['HERO']['width'])/2);
 			hy = h/2 - ((RESOURCES['HERO']['height'])/2);
@@ -373,11 +373,11 @@ function _game()
 		else {
 			pos = self.gameToWorldPosition(x, y);
 		}
-		if(typeof(resource) == "string") {
-			self.addWidget(pos[0], pos[1], self.assets[resource], resourceType);
+		if(typeof(image) == "string") {
+			self.addWidget(pos[0], pos[1], self.assets[image], resourceType);
 		}
 		else {
-			for(each in resource) {
+			for(each in image) {
 				res = resource[each];
 				self.addWidget(pos[0] + res[0], pos[1] + res[1], res[2], resourceType);
 			}
@@ -419,7 +419,7 @@ function _game()
 			//}
 			x = self.worldToAdd[each]['location']['x'];
 			y = self.worldToAdd[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['resource'], self.worldToAdd[each]['type'], false);
+			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], false);
 		}
 		self.addPlayersToWorld();
 		stage.update();

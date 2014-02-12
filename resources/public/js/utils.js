@@ -10,20 +10,20 @@ PLAYER = "player";
 
 
 RESOURCES = {
-	'HERO'      : { 'resource' : '/assets/hero3.png' , 'type' : PLAYER, 'width' : 64, 'height' : 64},
-	'ROCKS'     : { 'resource' : '/assets/rocks.png' , 'type' : ENTITY},
-	//'TREE'      : { 'resource' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
-	'TREE'      : { 'resource' : '/assets/tree2.png', 'type' : ENTITY, 'foreground' : true},
-	'GRASS'     : { 'resource' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
-	'WATER'     : { 'resource' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
-	'BEACH'     : { 'resource' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
-	'BUSH'      : { 'resource' : '/assets/bush.png' , 'type' : ENTITY}
+	'HERO'      : { 'image' : '/assets/hero3.png' , 'type' : PLAYER, 'width' : 64, 'height' : 64},
+	'ROCKS'     : { 'image' : '/assets/rocks.png' , 'type' : ENTITY},
+	//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
+	'TREE'      : { 'image' : '/assets/tree2.png', 'type' : ENTITY, 'foreground' : true},
+	'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'WATER'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
+	'BUSH'      : { 'image' : '/assets/bush.png' , 'type' : ENTITY}
 }	
 
 
 function initializeSpriteSheets() {
 	var heroSpriteData = {
-		images: [window.Game.assets[RESOURCES['HERO']['resource']]],
+		images: [window.Game.assets[RESOURCES['HERO']['image']]],
 		frames: {
 			width: RESOURCES['HERO']['width'],
 			height: RESOURCES['HERO']['height']
