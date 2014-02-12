@@ -409,6 +409,8 @@ function _game()
 		self.hideLoader();	
 		self.resetWorld();
 
+		self.entities = [];
+
 		for(var each = 0; each < self.worldToAdd.length; each++) {
 			if(self.worldToAdd[each] === undefined) {
 				continue;
@@ -483,6 +485,22 @@ function _game()
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
 
+		if(self.entities != undefined) {
+			for(e in self.entities) {
+				eObj = self.entities[e];
+				eObj.height = eObj.image.height;
+				eObj.width = eObj.image.width;
+
+				hero.height = 64;
+				hero.width = 64;	
+
+				overlap = (calculateIntersection(eObj, hero));
+
+				if(overlap) {
+					//world.removeChild(eObj);
+				}
+			}
+		}
 		//sort player in world
 		//obs = stage.getObjectsUnderPoint(hero.x, hero.y);
 		//for(o in obs) {
@@ -662,6 +680,7 @@ function _game()
 		world.addChild(img);
 		//img.cache(x, y, 64, 64);
 		if(type == ENTITY) {	
+			self.entities.push(img);
 			if(ENABLE_SHADOWS) {
              	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	
 			}

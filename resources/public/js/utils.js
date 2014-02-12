@@ -13,7 +13,7 @@ RESOURCES = {
 	'HERO'      : { 'image' : '/assets/hero3.png' , 'type' : PLAYER, 'width' : 64, 'height' : 64},
 	'ROCKS'     : { 'image' : '/assets/rocks.png' , 'type' : ENTITY},
 	//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : ENTITY, 'foreground' : true},
-	'TREE'      : { 'image' : '/assets/tree2.png', 'type' : ENTITY, 'foreground' : true},
+	'TREE'      : { 'image' : '/assets/tree2.png', 'type' : ENTITY, 'height' : 126, 'width' : 126},
 	'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
 	'WATER'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
 	'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : TERRAIN},
