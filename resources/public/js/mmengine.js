@@ -112,8 +112,25 @@ function _game()
 	self.onLoadedAsset = function(e) {
 		++self.loadedAssets;
 		if ( self.loadedAssets == self.requestedAssets ) {
- 			websocket = new WebSocket(wsUri);
-                	window.addEventListener("load", self.MMWebSocket, false);   
+			logger("assets loaded");
+ 			self.websocket = new WebSocket(wsUri);
+			self.websocket.onopen = function(evt) { 
+				self.onOpen(evt) ;
+			}; 
+
+			self.websocket.onclose = function(evt) { 
+				self.onClose(evt) ;
+			}; 
+
+			self.websocket.onmessage = function(evt) { 
+                	        self.writeToBuffer(evt.data);
+				self.onMessage(evt) ;
+			}; 
+
+			self.websocket.onerror = function(evt) { 
+				self.showError();
+				self.onError(evt);
+			}; 
 			self.checkForInit = setInterval(function(){self.checkAndInit()},100);
 		}
 	}
@@ -125,28 +142,6 @@ function _game()
                 if(msg._id == self.playerID) { 
 			self.playerAtProximity = msg;
 		}
-	}
-
-	// Our web socket callbacks
-	self.MMWebSocket = function(e) { 
- 
-		websocket.onopen = function(evt) { 
-			self.onOpen(evt) ;
-		}; 
-
-		websocket.onclose = function(evt) { 
-			self.onClose(evt) ;
-		}; 
-
-		websocket.onmessage = function(evt) { 
-                        self.writeToBuffer(evt.data);
-			self.onMessage(evt) ;
-		}; 
-
-		websocket.onerror = function(evt) { 
-			self.showError();
-			self.onError(evt);
-		}; 
 	}
 
 	self.onOpen = function(evt) { 
@@ -166,7 +161,7 @@ function _game()
 	}  
 
 	self.doSend = function(message) {
-		websocket.send(message); 
+		self.websocket.send(message); 
 	}  
 
 	self.formatMessage = function(message) {
@@ -226,7 +221,7 @@ function _game()
 	}
 	
 	self.initializeGame = function() {
-
+		logger("Initialize Game");
 		if(self.testMode) {
 			return;
 		}
