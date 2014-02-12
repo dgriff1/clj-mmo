@@ -587,7 +587,6 @@ function _game()
 
 	self.drawWorldData = function() {
 		if(!self.sorted && now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
-			self.worldToAdd.push(hero);
 			self.sortWorldData();	
 			//MESSAGE_INTERVAL = MESSAGE_INTERVAL + 10000.00;
 			self.draw();
