@@ -671,8 +671,8 @@ function _game()
 
         self.handleMouseMove = function(e)
 	{
-                self.clientMouseX = e.offsetX;
-                self.clientMouseY = e.offsetY;	
+                self.clientMouseX = e.offsetX || e.layerX; // layerX for FF
+                self.clientMouseY = e.offsetY || e.layerY; // layerY for FF	
 	}
 
         self.handleMouseDown = function(e)
