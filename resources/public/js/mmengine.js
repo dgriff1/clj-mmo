@@ -728,8 +728,22 @@ function _game()
                 self.clientMouseY = e.offsetY || e.layerY; // layerY for FF	
 	}
 
+	self.makeDOMUnselect = function() {
+		document.getElementById('page').setAttribute('class', 'unselectable');
+		document.getElementById('page').removeAttribute('class');
+		
+		// the opera way
+		document.getElementById('canvas_id').setAttribute('unselectable', 'on');
+		document.getElementById('canvas_id').removeAttribute('unselectable');
+		
+		// the onselectstart way for navigator.appName === "Microsoft Internet Explorer"
+		document.onselectstart = function() { if (dragging) return false; };
+
+	}
+
         self.handleMouseDown = function(e)
 	{
+		
 		if(self.autoMove) {
 			self.autoMove = false;
 			self.clickedAt = [];
