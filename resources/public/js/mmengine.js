@@ -495,35 +495,14 @@ function _game()
 				playerID = (world.getChildIndex(player));
 
 				if(overlap) {	
-					circle = new createjs.Shape();
- 					circle.graphics.beginFill("red").drawCircle(0, 0, 5);
- 					circle.x = eObj.x;
-					circle.y = eObj.y;
-					world.addChild(circle);
-					circle = new createjs.Shape();
- 					circle.graphics.beginFill("blue").drawCircle(0, 0, 5);
- 					circle.x = eObj.x;
-					circle.y = eObj.y + eObj.height - (player.height/2);
-					world.addChild(circle);
- 					//circle.graphics.beginFill("green").drawCircle(0, 0, 5);
- 					//circle.x = playerX;
-					//circle.y = playerY;
-					//world.addChild(circle);
-
-					//eObj.y = hero.y - 150;
-					if(eObj.y - eObj.height - (player.height/2) < playerY && playerID > objID) {
+					if(eObj.y + eObj.height - (player.height/2) < hero.centerPlayerY && playerID < objID) {
 						logger('switch');
-						//world.removeChild(eObj);
 						world.swapChildren(eObj, player);
-						objID = (world.getChildIndex(eObj));
-						playerID = (world.getChildIndex(player));
 					}
-					if(eObj.y - eObj.height - (player.height/2) > playerY && playerID < objID) {
+					else if(eObj.y + eObj.height - (player.height/2) > hero.centerPlayerY && playerID > objID) {
 						logger('switchback');
-						//world.removeChild(eObj);
 						world.swapChildren(eObj, player);
 					}
-					//world.removeChild(eObj);
 				}
 			}
 		}
