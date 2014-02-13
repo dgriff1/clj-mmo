@@ -304,9 +304,6 @@ function _game()
 		data = JSON.parse(data);
 		dataLength = data.length;
 		if(dataLength === undefined) {
-			if(data._id in self.worldToAdd && data.type != PLAYER) {
-				return;
-			}
                 	if(data.type == PLAYER) {
 				if(data._id != playerID) {
 					if(self.currentPlayers[data._id] === undefined) {
@@ -324,15 +321,6 @@ function _game()
 		}
 		else {
 			self.worldToAdd = data;
-			//for(msg = 0; msg < dataLength; msg++) {
-			//	//if(data[msg].type == ENTITY) {
-			//		//self.worldToAdd.unshift(data[msg]);
-			//	//}
-			//	//else if(data[msg].type == TERRAIN) {
-			//		self.worldToAdd.push(data[msg]);
-
-			//	//}
-			//}
 			self.lastHandleMessage = now();
 			self.sorted = false;
 		}
@@ -386,6 +374,8 @@ function _game()
 
 
 	self.addPlayersToWorld = function() {
+		logger(self.currentPlayers);
+		logger(self.playersToAdd);
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
 			loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
@@ -409,7 +399,7 @@ function _game()
 		self.hideLoader();	
 		self.resetWorld();
 
-		self.entities = [];
+		self.entities = new Array();
 
 		for(var each = 0; each < self.worldToAdd.length; each++) {
 			if(self.worldToAdd[each] === undefined) {
@@ -484,8 +474,8 @@ function _game()
 				player.height = RESOURCES['HERO']['height'];
 
 				altPlayer = new Object()
-				altPlayer.x = hero.centerPlayerX;
-				altPlayer.y = hero.centerPlayerY;
+				altPlayer.x = player.centerPlayerX;
+				altPlayer.y = player.centerPlayerY;
 				altPlayer.height = player.height;
 				altPlayer.width = player.width;
 
@@ -495,12 +485,10 @@ function _game()
 				playerID = (world.getChildIndex(player));
 
 				if(overlap) {	
-					if(eObj.y + eObj.height - (player.height/2) < hero.centerPlayerY && playerID < objID) {
-						logger('switch');
+					if(eObj.y + eObj.height - (player.height/2) < player.centerPlayerY && playerID < objID) {
 						world.swapChildren(eObj, player);
 					}
-					else if(eObj.y + eObj.height - (player.height/2) > hero.centerPlayerY && playerID > objID) {
-						logger('switchback');
+					else if(eObj.y + eObj.height - (player.height/2) > player.centerPlayerY && playerID > objID) {
 						world.swapChildren(eObj, player);
 					}
 				}
@@ -585,7 +573,11 @@ function _game()
 				self.currentPlayers[count].y = loc[1];
 				self.currentPlayers[count].realX = msg.location.x;
 				self.currentPlayers[count].realY = msg.location.y;
+				self.currentPlayers[count].centerPlayerX = loc[0];
+				self.currentPlayers[count].centerPlayerY = loc[1];
+				obj.x = loc[0];
 				obj.y = loc[1];
+				self.sortPlayerInWorld(self.currentPlayers[count]);
 				break;
 			}
 		}	
