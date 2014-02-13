@@ -483,11 +483,9 @@ function _game()
 				player.width = RESOURCES['HERO']['width'];
 				player.height = RESOURCES['HERO']['height'];
 
-				playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
-				playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
-				altPlayer = new Object();
-				altPlayer.x = playerX;
-				altPlayer.y = playerY;
+				altPlayer = new Object()
+				altPlayer.x = hero.centerPlayerX;
+				altPlayer.y = hero.centerPlayerY;
 				altPlayer.height = player.height;
 				altPlayer.width = player.width;
 
@@ -538,6 +536,9 @@ function _game()
 
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
+	
+		hero.centerPlayerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
+		hero.centerPlayerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
 
 		self.sortPlayerInWorld(hero);
 

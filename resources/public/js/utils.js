@@ -309,8 +309,8 @@ function autoMoveHero(hero) {
 	directionY = window.Game.clickedAt[3];
 	moved = false;
 
-	playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
-	playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
+	playerX = hero.centerPlayerX;
+	playerY = hero.centerPlayerY;
 
 	//circle = new createjs.Shape();
 	//circle.graphics.beginFill("red").drawCircle(0, 0, 4);
