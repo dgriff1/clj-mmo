@@ -415,10 +415,6 @@ function _game()
 			if(self.worldToAdd[each] === undefined) {
 				continue;
 			}
-			//else if(self.worldToAdd[each]['type'] != TERRAIN && !added) {
-			//	self.addPlayersToWorld();
-			//	added = true;
-			//}
 			x = self.worldToAdd[each]['location']['x'];
 			y = self.worldToAdd[each]['location']['y'];
 			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], false);
@@ -455,7 +451,7 @@ function _game()
 	self.addOurHeroToWorld = function() {
 		hero.x = BASE_WIDTH/2 - ((RESOURCES['HERO']['width'])/2);
 		hero.y = BASE_HEIGHT/2 - ((RESOURCES['HERO']['height'])/2);
-		hero.reset();
+		//hero.reset();
 		hero.wasMoving = false;
 		world.addChild(hero);
 	}
@@ -477,6 +473,33 @@ function _game()
 		stage.update();
 	}
 
+	self.sortPlayerInWorld = function(player) {
+		if(self.entities != undefined) {
+			for(e in self.entities) {
+				eObj = self.entities[e];
+				eObj.height = eObj.image.height;
+				eObj.width = eObj.image.width;
+
+				player.width = RESOURCES['HERO']['width'];
+				player.height = RESOURCES['HERO']['height'];
+
+				overlap = (calculateIntersection(eObj, player));
+
+				objID = (world.getChildIndex(eObj));
+				playerID = (world.getChildIndex(player));
+				if(overlap) {
+					if(eObj.y + (eObj.height - 80) < player.y && playerID > objID) {
+						world.swapChildren(eObj, player);
+					}
+					else if(eObj.y + (eObj.height - 80) > player.y && playerID < objID) {
+						//world.swapChildren(eObj, player);
+					}
+					//world.removeChild(eObj);
+				}
+			}
+		}
+	}
+
 	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
 		world.x = world.x + x;
@@ -485,29 +508,7 @@ function _game()
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
 
-		if(self.entities != undefined) {
-			for(e in self.entities) {
-				eObj = self.entities[e];
-				eObj.height = eObj.image.height;
-				eObj.width = eObj.image.width;
-
-				hero.height = 64;
-				hero.width = 64;	
-
-				overlap = (calculateIntersection(eObj, hero));
-
-				if(overlap) {
-					//world.removeChild(eObj);
-				}
-			}
-		}
-		//sort player in world
-		//obs = stage.getObjectsUnderPoint(hero.x, hero.y);
-		//for(o in obs) {
-		//	if(obs[o].type == ENTITY) {
-		//		world.removeChild(obs[o]);
-		//	}
-		//}
+		self.sortPlayerInWorld(hero);
 
 		self.mouseModX = self.mouseModX - x;
 		self.mouseModY = self.mouseModY - y;
@@ -611,7 +612,7 @@ function _game()
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
 			self.worldToAdd = [];
-			stage.update();
+			//stage.update();
 		}
 	}
 
@@ -631,6 +632,8 @@ function _game()
 			
 		}
 		if(self.keyPressed.length != []) {
+			self.clickedAt = [];
+			self.autoMove = false;
 			direction = directionKeys(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
