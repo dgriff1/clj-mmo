@@ -612,7 +612,7 @@ function _game()
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
 			self.worldToAdd = [];
-			//stage.update();
+			self.sortPlayerInWorld(hero);
 		}
 	}
 
