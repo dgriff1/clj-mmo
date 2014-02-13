@@ -483,16 +483,47 @@ function _game()
 				player.width = RESOURCES['HERO']['width'];
 				player.height = RESOURCES['HERO']['height'];
 
-				overlap = (calculateIntersection(eObj, player));
+				playerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
+				playerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
+				altPlayer = new Object();
+				altPlayer.x = playerX;
+				altPlayer.y = playerY;
+				altPlayer.height = player.height;
+				altPlayer.width = player.width;
+
+				overlap = (calculateIntersection(eObj, altPlayer));
 
 				objID = (world.getChildIndex(eObj));
 				playerID = (world.getChildIndex(player));
-				if(overlap) {
-					if(eObj.y + (eObj.height - 80) < player.y && playerID > objID) {
+
+				if(overlap) {	
+					circle = new createjs.Shape();
+ 					circle.graphics.beginFill("red").drawCircle(0, 0, 5);
+ 					circle.x = eObj.x;
+					circle.y = eObj.y;
+					world.addChild(circle);
+					circle = new createjs.Shape();
+ 					circle.graphics.beginFill("blue").drawCircle(0, 0, 5);
+ 					circle.x = eObj.x;
+					circle.y = eObj.y + eObj.height - (player.height/2);
+					world.addChild(circle);
+ 					//circle.graphics.beginFill("green").drawCircle(0, 0, 5);
+ 					//circle.x = playerX;
+					//circle.y = playerY;
+					//world.addChild(circle);
+
+					//eObj.y = hero.y - 150;
+					if(eObj.y - eObj.height - (player.height/2) < playerY && playerID > objID) {
+						logger('switch');
+						//world.removeChild(eObj);
 						world.swapChildren(eObj, player);
+						objID = (world.getChildIndex(eObj));
+						playerID = (world.getChildIndex(player));
 					}
-					else if(eObj.y + (eObj.height - 80) > player.y && playerID < objID) {
-						//world.swapChildren(eObj, player);
+					if(eObj.y - eObj.height - (player.height/2) > playerY && playerID < objID) {
+						logger('switchback');
+						//world.removeChild(eObj);
+						world.swapChildren(eObj, player);
 					}
 					//world.removeChild(eObj);
 				}
