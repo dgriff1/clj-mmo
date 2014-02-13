@@ -239,9 +239,9 @@ function directionMouse(movementSpeed, hero) {
 
 	movementSpeed = calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 	
-	if(isMouseNearPlayer(hero)) {
-		return [0, 0];
-	}
+	//if(isMouseNearPlayer(hero)) {
+	//	return [0, 0];
+	//}
 
 	// Left
 	if(clientMouseY > h/2 - RESOURCES['HERO']['height'] && clientMouseY < h/2 + RESOURCES['HERO']['height']
