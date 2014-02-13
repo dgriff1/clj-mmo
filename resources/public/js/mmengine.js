@@ -482,13 +482,13 @@ function _game()
 				overlap = (calculateIntersection(eObj, altPlayer));
 
 				objID = (world.getChildIndex(eObj));
-				playerID = (world.getChildIndex(player));
+				pID = (world.getChildIndex(player));
 
 				if(overlap) {	
-					if(eObj.y + eObj.height - (player.height/2) < player.centerPlayerY && playerID < objID) {
+					if(eObj.y + eObj.height - (player.height/2) < player.centerPlayerY && pID < objID) {
 						world.swapChildren(eObj, player);
 					}
-					else if(eObj.y + eObj.height - (player.height/2) > player.centerPlayerY && playerID > objID) {
+					else if(eObj.y + eObj.height - (player.height/2) > player.centerPlayerY && pID > objID) {
 						world.swapChildren(eObj, player);
 					}
 				}
