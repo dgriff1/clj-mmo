@@ -61,10 +61,10 @@ function _game()
 	// Used to track game mouse
         self.clientMouseX = 0;
         self.clientMouseY = 0;
-	self.mouseModX = 0;
-	self.mouseModY = 0;
 
 	// Used to track re-drawing
+	self.worldOffsetX = 0;
+	self.worldOffsetY = 0;
 	self.lastSentMessage	= 0.00;
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
@@ -391,8 +391,8 @@ function _game()
 	self.resetWorld = function() {
 		world.removeAllChildren();
 		world.x = world.y = 0;
-		self.mouseModX = 0;
-		self.mouseModY = 0;
+		self.worldOffsetX = 0;
+		self.worldOffsetY = 0;
 	}
 
 	self.draw = function() {
@@ -509,8 +509,8 @@ function _game()
 
 		self.sortPlayerInWorld(hero);
 
-		self.mouseModX = self.mouseModX - x;
-		self.mouseModY = self.mouseModY - y;
+		self.worldOffsetX = self.worldOffsetX - x;
+		self.worldOffsetY = self.worldOffsetY - y;
 
                 self.playerGameCoords['x'] = self.playerGameCoords['x'] + x ;
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
@@ -570,8 +570,8 @@ function _game()
 			        self.doAnimation(obj, msg.direction);
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
-				obj.x = loc[0];
-				obj.y = loc[1];
+				obj.x = loc[0] + self.worldOffsetX;
+				obj.y = loc[1] + self.worldOffsetY;
 				obj.realX = msg.location.x;
 				obj.realY = msg.location.y;
 				obj.centerPlayerX = loc[0] + (self.RESOURCES["HERO"]["width"]/2);
