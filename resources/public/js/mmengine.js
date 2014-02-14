@@ -142,7 +142,7 @@ function _game()
         self.writeToBuffer = function(msg) {
 		if(self.playerAtProximity != undefined) { return }
                 msg = JSON.parse(msg);
-                if(msg._id == self.playerID) { 
+                if(msg._id == self.playerID) { 		
 			self.playerAtProximity = msg;
 		}
 	}
@@ -418,7 +418,6 @@ function _game()
 	}
 
 	self.drawHud = function() {
-
  		// SELF BOX
     		selfBox = new createjs.Shape();
 		selfBox.graphics.beginStroke("#000000");
@@ -457,8 +456,6 @@ function _game()
 		img.height = 64;
 		stage.addChild(img);
 
-    		stage.update();
-
 		//conditions
 		for(c = 0; c < 5; c = c + 1) {
     			need = new createjs.Shape();
@@ -472,15 +469,15 @@ function _game()
 		}
 
 		// hot keys
-		for(h = 0; h < 23; h = h + 1) {
+		for(hot = 0; hot < 23; hot = hot + 1) {
     			selfBox = new createjs.Shape();
 			selfBox.graphics.beginStroke("#000000");
 			selfBox.graphics.setStrokeStyle(1);
 			selfBox.snapToPixel = true;
-			if( h == 17) {
+			if( hot == 17) {
 				continue;
 			}
-			else if(h > 17) {
+			else if(hot > 17) {
     				selfBox.graphics.beginFill("white").drawRect(0, 0, 20, 20);
 				selfBox.y = BASE_HEIGHT - 20;
 			}
@@ -488,9 +485,10 @@ function _game()
     				selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
 				selfBox.y = BASE_HEIGHT - 10;
 			}
-    			selfBox.x = 70 + (40 + (h*25));
+    			selfBox.x = 70 + (40 + (hot*25));
    	 		stage.addChild(selfBox);
 		}
+    		stage.update();
 		// chat box
     		//selfBox = new createjs.Shape();
 		//selfBox.graphics.beginStroke("#000000");
@@ -609,6 +607,7 @@ function _game()
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
 
 		self.sendPlayerState();
+		stage.update();
 
 	}
 
@@ -633,8 +632,8 @@ function _game()
 		newHero.type = self.utils.PLAYER;
 		newHero.currentFrame = 1;
 		loc = self.gameToWorldPosition(heroLocation.x, heroLocation.y);
-		newHero.x = loc[0]
-		newHero.y = loc[1]
+		newHero.x = loc[0];
+		newHero.y = loc[1];
 		newHero.realX = heroLocation.x;
 		newHero.realY = heroLocation.y;
 		if(ENABLE_SHADOWS) {
