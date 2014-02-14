@@ -1,7 +1,6 @@
-var	playerID = fetchGetParm("id");
-var	wsUri = "ws://" + window.location.host + "/object/" + playerID; 
 
-loadSettings();
+
+window.Utils.loadSettings();
 
 function _game()
 {
@@ -15,9 +14,11 @@ function _game()
 		stage,
 		world,
 		hero,
-		assets = [], spriteSheets = [],
-		parallaxObjects = [],
-		mouseDown = false;
+		assets = [], spriteSheets = [];
+
+	// utils
+	self.utils = window.Utils;
+	self.RESOURCES = self.utils.RESOURCES;
 
 	// canvas stuff
 	self.width = w;
@@ -25,7 +26,7 @@ function _game()
 	self.scale = scale;
 
 	// structure that keep track of player game world x and y
-        self.playerGameCoords = {"_id" : playerID, "x" : 0, "y" : 0}
+        self.playerGameCoords = {"_id" : self.playerID, "x" : 0, "y" : 0}
 
 	// Players that need to be drawn
 	self.playersToAdd       = new Array();
@@ -37,7 +38,8 @@ function _game()
 	self.worldToAdd = [];
 
 	self.assets = assets; // resource seets
-        self.playerID = playerID;
+	self.playerID = self.utils.fetchGetParm("id");
+	self.wsUri = "ws://" + window.location.host + "/object/" + self.playerID; 
 	self.testMode = false; 
 
 	// Used for counting frames
@@ -54,6 +56,7 @@ function _game()
 	self.autoMove = false;
 	self.autoMoveX = 0;
 	self.autoMoveY = 0;
+	self.mouseDown = false;
 
 	// Used to track game mouse
         self.clientMouseX = 0;
@@ -67,13 +70,13 @@ function _game()
 	self.sorted = false;
 
 	self.preloadResources = function() {
-		for(key in RESOURCES) {
-			if(!self.isPrefab(RESOURCES[key])) {
-				self.loadImage(RESOURCES[key]['image']);
+		for(key in self.RESOURCES) {
+			if(!self.isPrefab(self.RESOURCES[key])) {
+				self.loadImage(self.RESOURCES[key]['image']);
 			}
 			else {
-				for(fab in RESOURCES[key]['image']) {
-					asset = RESOURCES[key]['image'][fab][2];
+				for(fab in self.RESOURCES[key]['image']) {
+					asset = self.RESOURCES[key]['image'][fab][2];
 					self.loadImage(asset);
 				}
 			}
@@ -113,7 +116,7 @@ function _game()
 		++self.loadedAssets;
 		if ( self.loadedAssets == self.requestedAssets ) {
 			logger("assets loaded");
- 			self.websocket = new WebSocket(wsUri);
+ 			self.websocket = new WebSocket(self.wsUri);
 			self.websocket.onopen = function(evt) { 
 				self.onOpen(evt) ;
 			}; 
@@ -189,12 +192,12 @@ function _game()
 	}
 
 	self.initHero = function () { 
-		hero = new Hero(RESOURCES['HERO']['spriteSheet']);
+		hero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
 		if(ENABLE_SHADOWS) {
 			hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		}
 		hero.currentFrame = 1;
-		hero._id = playerID;
+		hero._id = self.playerID;
 		self.stopHeroAnimations(hero);
 	}
 
@@ -214,8 +217,8 @@ function _game()
 		canvas.width = BASE_WIDTH;
 		canvas.height = BASE_HEIGHT;
 		document.body.appendChild(canvas);
-		self.w  = getWidth(canvas);
-		self.h  = getHeight(canvas);
+		self.w  = self.utils.getWidth(canvas);
+		self.h  = self.utils.getHeight(canvas);
 		self.ratioW = self.w / BASE_WIDTH;
 		self.ratioH = self.h / BASE_HEIGHT;	
 	}
@@ -233,7 +236,7 @@ function _game()
 		world = new Container();
 		stage.addChild(world);
 	
-		initializeSpriteSheets();
+		self.utils.initializeSpriteSheets();
 
 		self.initHero();
 
@@ -277,12 +280,12 @@ function _game()
 	}
 
 	self.sortWorldType = function(data, type) {
-		if(type == TERRAIN) {
+		if(type == self.utils.TERRAIN) {
 			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 1; }  return -1; });
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  return -1; });
 			data = data.reverse();
 		}
-		if(type == ENTITY) {
+		if(type == self.utils.ENTITIY) {
 			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1 });
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return -1; }  return 1 });
 		}
@@ -291,11 +294,11 @@ function _game()
 
 	self.sortWorldData = function() {
 
-		sortableTerrain = self.getWorldByType(TERRAIN);
-		sortableTerrain = self.sortWorldType(sortableTerrain, TERRAIN);
+		sortableTerrain = self.getWorldByType(self.utils.TERRAIN);
+		sortableTerrain = self.sortWorldType(sortableTerrain, self.utils.TERRAIN);
 
-		sortableEntity = self.getWorldByType(ENTITY);
-		sortableEntity = self.sortWorldType(sortableEntity, ENTITY);
+		sortableEntity = self.getWorldByType(self.utils.ENTITIY);
+		sortableEntity = self.sortWorldType(sortableEntity, self.utils.ENTITIY);
 
 		self.worldToAdd = sortableTerrain.concat(sortableEntity);
 	}
@@ -304,8 +307,8 @@ function _game()
 		data = JSON.parse(data);
 		dataLength = data.length;
 		if(dataLength === undefined) {
-                	if(data.type == PLAYER) {
-				if(data._id != playerID) {
+                	if(data.type == self.utils.PLAYER) {
+				if(data._id != self.playerID) {
 					if(self.currentPlayers[data._id] === undefined) {
 						self.playersToAdd[data._id] = data;	
 					}
@@ -321,22 +324,22 @@ function _game()
 		}
 		else {
 			self.worldToAdd = data;
-			self.lastHandleMessage = now();
+			self.lastHandleMessage = self.utils.now();
 			self.sorted = false;
 		}
 	}
 
 	self.gameToWorldPosition = function(objX, objY) {
-		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
-		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
+		heroX = w/2 - ((self.RESOURCES['HERO']['width'])/2);
+		heroY = h/2 - ((self.RESOURCES['HERO']['height'])/2);
 		wx = heroX + ((self.playerGameCoords['x'] - objX ));
 		wy = heroY + ((self.playerGameCoords['y'] - objY ));
 		return [wx, wy]
 	}
 
 	self.worldToGamePosition = function(X, Y) {
-		heroX = w/2 - ((RESOURCES['HERO']['width'])/2);
-		heroY = h/2 - ((RESOURCES['HERO']['height'])/2);
+		heroX = w/2 - ((self.RESOURCES['HERO']['width'])/2);
+		heroY = h/2 - ((self.RESOURCES['HERO']['height'])/2);
 		wx = X - heroX;
 		wy = Y - heroY;
 		rx = self.playerGameCoords['x'] - wx;
@@ -354,8 +357,8 @@ function _game()
 
 	self.addWidgetToWorld = function(x, y, image, resourceType, preHero) {
 		if(preHero != undefined && preHero) {
-			hx = w/2 - ((RESOURCES['HERO']['width'])/2);
-			hy = h/2 - ((RESOURCES['HERO']['height'])/2);
+			hx = w/2 - ((self.RESOURCES['HERO']['width'])/2);
+			hy = h/2 - ((self.RESOURCES['HERO']['height'])/2);
 			pos = self.gameToWorldPosition(x, y);
 		}
 		else {
@@ -404,7 +407,7 @@ function _game()
 			}
 			x = self.worldToAdd[each]['location']['x'];
 			y = self.worldToAdd[each]['location']['y'];
-			self.addWidgetToWorld(x, y, RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], false);
+			self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], false);
 		}
 		self.addPlayersToWorld();
 		stage.update();
@@ -436,8 +439,8 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		hero.x = BASE_WIDTH/2 - ((RESOURCES['HERO']['width'])/2);
-		hero.y = BASE_HEIGHT/2 - ((RESOURCES['HERO']['height'])/2);
+		hero.x = BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
+		hero.y = BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
 		hero.wasMoving = false;
 		world.addChild(hero);
 	}
@@ -466,8 +469,8 @@ function _game()
 				eObj.height = eObj.image.height;
 				eObj.width = eObj.image.width;
 
-				player.width = RESOURCES['HERO']['width'];
-				player.height = RESOURCES['HERO']['height'];
+				player.width = self.RESOURCES['HERO']['width'];
+				player.height = self.RESOURCES['HERO']['height'];
 
 				altPlayer = new Object()
 				altPlayer.x = player.centerPlayerX;
@@ -475,7 +478,7 @@ function _game()
 				altPlayer.height = player.height;
 				altPlayer.width = player.width;
 
-				overlap = (calculateIntersection(eObj, altPlayer));
+				overlap = (self.utils.calculateIntersection(eObj, altPlayer));
 
 				objID = (world.getChildIndex(eObj));
 				pID = (world.getChildIndex(player));
@@ -500,8 +503,8 @@ function _game()
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
 	
-		hero.centerPlayerX = parseInt(hero.x) + parseInt(RESOURCES['HERO']['width'] / 2);
-		hero.centerPlayerY = parseInt(hero.y) + parseInt(RESOURCES['HERO']['height'] / 2);
+		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
+		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 
 		self.sortPlayerInWorld(hero);
 
@@ -531,9 +534,9 @@ function _game()
 
 	// Adds new player to world
 	self.addNewPlayerToWorld = function(id, heroLocation) {
-		newHero = new Hero(RESOURCES['HERO']['spriteSheet']);
+		newHero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
 		newHero._id  = id;
-		newHero.type = PLAYER;
+		newHero.type = self.utils.PLAYER;
 		newHero.currentFrame = 1;
 		loc = self.gameToWorldPosition(heroLocation.x, heroLocation.y);
 		newHero.x = loc[0]
@@ -570,8 +573,8 @@ function _game()
 				obj.y = loc[1];
 				obj.realX = msg.location.x;
 				obj.realY = msg.location.y;
-				obj.centerPlayerX = loc[0] + (RESOURCES["HERO"]["width"]/2);
-				obj.centerPlayerY = loc[1] + (RESOURCES["HERO"]["height"]/2);
+				obj.centerPlayerX = loc[0] + (self.RESOURCES["HERO"]["width"]/2);
+				obj.centerPlayerY = loc[1] + (self.RESOURCES["HERO"]["height"]/2);
 
 				self.sortPlayerInWorld(self.currentPlayers[count]);
 				break;
@@ -583,9 +586,9 @@ function _game()
 		self.framesPerSecondCounter = self.framesPerSecondCounter + 1;
                 if(self.frameTimer === undefined)
 		{
-                	self.frameTimer = now();
+                	self.frameTimer = self.utils.now();
 		}
-		nextTimer = now();
+		nextTimer = self.utils.now();
 		if(nextTimer - self.frameTimer > 1)
 		{
                         self.framesPerSecond = self.framesPerSecondCounter - 1;
@@ -604,7 +607,7 @@ function _game()
 	}
 
 	self.drawWorldData = function() {
-		if(!self.sorted && now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
+		if(!self.sorted && self.utils.now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
 			self.sortWorldData();	
 			//MESSAGE_INTERVAL = MESSAGE_INTERVAL + 10000.00;
 			self.draw();
@@ -621,9 +624,9 @@ function _game()
 
 		self.drawWorldData();
 
-                if(mouseDown && self.clickedAt.length == 0)
+                if(self.mouseDown && self.clickedAt.length == 0)
                 { 
-			direction = directionMouse(MOVEMENT_SPEED, hero);
+			direction = self.utils.directionMouse(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			hero.wasMoving = true;
@@ -633,19 +636,19 @@ function _game()
 		if(self.keyPressed.length != []) {
 			self.clickedAt = [];
 			self.autoMove = false;
-			direction = directionKeys(MOVEMENT_SPEED, hero);
+			direction = self.utils.directionKeys(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			if(xDirection != 0 || yDirection != 0) {
 				self.moveHero(xDirection, yDirection);
 			}
 		}
-		if(hero.wasMoving && !mouseDown && self.keyPressed.length < 1)
+		if(hero.wasMoving && !self.maouseDown && self.keyPressed.length < 1)
 		{	
 			if(self.clickedAt.length == 0) {
 				self.logPlayerClick(direction);
 			}
-			autoMoveHero(hero);
+			self.utils.autoMoveHero(hero);
 		}
 
 		ticks++;
@@ -658,13 +661,13 @@ function _game()
 	}
 	
 	self.sendPlayerState = function() {
-		if(now() - self.lastSentMessage > UPDATE_RATE) {
+		if(self.utils.now() - self.lastSentMessage > UPDATE_RATE) {
 			self.doSend(JSON.stringify({    "name"      : "player", 
 							"action"    : "move", 
 							"target_x"  : self.playerGameCoords['x'], 
 							"target_y"  : self.playerGameCoords['y'],
                                                         "direction" : 0}));
-			self.lastSentMessage = now();
+			self.lastSentMessage = self.utils.now();
 		}
 	}
 
@@ -681,7 +684,7 @@ function _game()
 		img.addEventListener("mousedown", function(data) { } );
 		world.addChild(img);
 		//img.cache(x, y, 64, 64);
-		if(type == ENTITY) {	
+		if(type == self.utils.ENTITIY) {	
 			self.entities.push(img);
 			if(ENABLE_SHADOWS) {
              	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	
@@ -715,14 +718,14 @@ function _game()
 			self.autoMove = false;
 			self.clickedAt = [];
 		}
-		if ( !mouseDown ) {
-			mouseDown = true;
+		if ( !self.mouseDown ) {
+			self.mouseDown = true;
 		}
 	}
 
         self.handleMouseUp  = function(e)
 	{
-		mouseDown = false;
+		self.mouseDown = false;
 	}
 
 	self.handleKeyDown = function(e)
@@ -745,8 +748,8 @@ function _game()
 	}
 
 	self.handleResize = function(e) {
-		self.w  = getWidth(canvas);
-		self.h  = getHeight(canvas);
+		self.w  = self.utils.getWidth(canvas);
+		self.h  = self.utils.getHeight(canvas);
 		self.ratioW = self.w / BASE_WIDTH;
 		self.ratioH = self.h / BASE_HEIGHT;	
 	}
