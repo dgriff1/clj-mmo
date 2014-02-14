@@ -202,7 +202,7 @@ function _game()
 	}
 
 	self.getMap = function() {
-		self.drawLoading();
+		self.drawMapLoader();
 		logger("new map");
 		self.doSend(JSON.stringify({"type"     : "proximity", 
                                             "location" : {"x" : self.playerGameCoords['x'],
@@ -414,20 +414,20 @@ function _game()
 			self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], false);
 		}
 		self.addPlayersToWorld();
-		self.removeLoading();
+		self.removeMapLoader();
 		stage.update();
 
 	}
 
-	self.drawLoading = function() {
+	self.drawMapLoader = function() {
 		img = new Bitmap('/assets/clock.png');
 		img.x = BASE_WIDTH/2 - 15;	
-		img.y = 10;
+		img.y = 40;
 		stage.addChild(img);
 		self.loadingClock = img;
 	}
 
-	self.removeLoading = function() {
+	self.removeMapLoader = function() {
 		stage.removeChild(self.loadingClock);
 	}
 
