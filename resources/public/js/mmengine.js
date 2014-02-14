@@ -459,6 +459,39 @@ function _game()
 
     		stage.update();
 
+		//conditions
+		for(c = 0; c < 5; c = c + 1) {
+    			need = new createjs.Shape();
+			need.graphics.beginStroke("#000000");
+			need.graphics.setStrokeStyle(1);
+			need.snapToPixel = true;
+    			need.graphics.beginFill("white").drawCircle(0, 0, 10);
+    			need.x = BASE_WIDTH - (17 + (c*25));
+			need.y = 14;
+    			stage.addChild(need);
+		}
+
+		// hot keys
+		for(h = 0; h < 23; h = h + 1) {
+    			selfBox = new createjs.Shape();
+			selfBox.graphics.beginStroke("#000000");
+			selfBox.graphics.setStrokeStyle(1);
+			selfBox.snapToPixel = true;
+			if( h == 17) {
+				continue;
+			}
+			else if(h > 17) {
+    				selfBox.graphics.beginFill("white").drawRect(0, 0, 20, 20);
+				selfBox.y = BASE_HEIGHT - 20;
+			}
+			else {
+    				selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
+				selfBox.y = BASE_HEIGHT - 10;
+			}
+    			selfBox.x = 70 + (40 + (h*25));
+   	 		stage.addChild(selfBox);
+		}
+
 		//textInfo = new createjs.Text("Project: Mankraft v0.0.2", "20px Arial", "#FFFFFF");
 		//textInfo.onMouseMove = function(e) { alert(1); };
  		//textInfo.x = 50;
