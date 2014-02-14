@@ -491,13 +491,29 @@ function _game()
     			selfBox.x = 70 + (40 + (h*25));
    	 		stage.addChild(selfBox);
 		}
+		// chat box
+    		//selfBox = new createjs.Shape();
+		//selfBox.graphics.beginStroke("#000000");
+		//selfBox.graphics.setStrokeStyle(1);
+		//selfBox.snapToPixel = true;
+    		//selfBox.graphics.beginFill("black").drawRect(0, 0, 180, 60);
+    		//selfBox.x = 90;
+		//selfBox.y = BASE_HEIGHT/2 + 80;
+    		//stage.addChild(selfBox);
 
-		//textInfo = new createjs.Text("Project: Mankraft v0.0.2", "20px Arial", "#FFFFFF");
-		//textInfo.onMouseMove = function(e) { alert(1); };
- 		//textInfo.x = 50;
- 		//textInfo.y = 50;
+		//textInfo = new createjs.Text("Player2:", "12px sans-serif", "#FF0000");
+ 		//textInfo.x = 100;
+ 		//textInfo.y = BASE_HEIGHT/2 + 100;
 		//textInfo.textBaseline = "alphabetic";
 		//stage.addChild(textInfo);
+
+		//textInfo = new createjs.Text("A/S/L ;) LOL", "12px sans-serif", "#0000FF");
+ 		//textInfo.x = 160;
+ 		//textInfo.y = BASE_HEIGHT/2 + 100;
+		//textInfo.textBaseline = "alphabetic";
+		//stage.addChild(textInfo);
+
+
 		//text = new createjs.Text("FPS: ", "20px Arial", "#FFFFFF");
  		//text.x = 5;
  		//text.y = 30;
