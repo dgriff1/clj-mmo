@@ -374,8 +374,6 @@ function _game()
 
 
 	self.addPlayersToWorld = function() {
-		logger(self.currentPlayers);
-		logger(self.playersToAdd);
  		for(player in self.currentPlayers) {
 			aPlayer = self.currentPlayers[player];
 			loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
@@ -385,7 +383,6 @@ function _game()
 		}
 		self.addOurHeroToWorld();
 	 	self.checkToAddPlayers();
-
 	}
 
 	self.resetWorld = function() {
@@ -441,7 +438,6 @@ function _game()
 	self.addOurHeroToWorld = function() {
 		hero.x = BASE_WIDTH/2 - ((RESOURCES['HERO']['width'])/2);
 		hero.y = BASE_HEIGHT/2 - ((RESOURCES['HERO']['height'])/2);
-		//hero.reset();
 		hero.wasMoving = false;
 		world.addChild(hero);
 	}
@@ -549,6 +545,7 @@ function _game()
 		}
 		newHero.reset();
 		self.currentPlayers[id] = newHero;
+		self.sortPlayerInWorld(newHero);
 		world.addChild(newHero);
 	}
 
