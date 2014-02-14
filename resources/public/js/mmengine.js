@@ -415,6 +415,47 @@ function _game()
 	}
 
 	self.drawHud = function() {
+
+ 		// SELF BOX
+    		selfBox = new createjs.Shape();
+		selfBox.graphics.beginStroke("#000000");
+		selfBox.graphics.setStrokeStyle(1);
+		selfBox.snapToPixel = true;
+    		selfBox.graphics.beginFill("white").drawRect(0, 0, 50, 80);
+    		selfBox.x = 10;
+		selfBox.y = BASE_HEIGHT/2 + 50;
+    		stage.addChild(selfBox);
+	
+		// hero left
+		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
+		img.gotoAndStop("down");
+		img.x = 3;
+		img.y = BASE_HEIGHT/2 + 50;
+		img.width = 64;
+		img.height = 64;
+		stage.addChild(img);
+
+ 		// TARGET BOX
+    		selfBox = new createjs.Shape();
+		selfBox.graphics.beginStroke("#000000");
+		selfBox.graphics.setStrokeStyle(1);
+		selfBox.snapToPixel = true;
+    		selfBox.graphics.beginFill("white").drawRect(0, 0, 50, 80);
+    		selfBox.x = BASE_WIDTH - 60;
+		selfBox.y = BASE_HEIGHT/2 + 50;
+    		stage.addChild(selfBox);
+
+		// hero left
+		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
+		img.gotoAndStop("down");
+		img.x = BASE_WIDTH - 68;
+		img.y = BASE_HEIGHT/2 + 50;
+		img.width = 64;
+		img.height = 64;
+		stage.addChild(img);
+
+    		stage.update();
+
 		//textInfo = new createjs.Text("Project: Mankraft v0.0.2", "20px Arial", "#FFFFFF");
 		//textInfo.onMouseMove = function(e) { alert(1); };
  		//textInfo.x = 50;
@@ -630,7 +671,6 @@ function _game()
 			direction = self.utils.directionMouse(MOVEMENT_SPEED, hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
-			hero.wasMoving = true;
 			self.moveHero(xDirection, yDirection);
 			
 		}

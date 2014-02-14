@@ -304,8 +304,8 @@ function _utils()
 		if(!window.Game.autoMove) {
 			window.Game.autoMove = true;
 			destination = window.Game.pixelToGame(window.Game.clickedAt[0], window.Game.clickedAt[1]);
-			destinationX = destination[0] + window.Game.mouseModX;
-			destinationY = destination[1] + window.Game.mouseModY;
+			destinationX = destination[0] + window.Game.worldOffsetX;
+			destinationY = destination[1] + window.Game.worldOffsetY;
 			window.Game.autoMoveX = destinationX;
 			window.Game.autoMoveY = destinationX;
 		}
