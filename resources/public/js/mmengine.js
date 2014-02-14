@@ -217,6 +217,9 @@ function _game()
 		canvas.width = BASE_WIDTH;
 		canvas.height = BASE_HEIGHT;
 		document.body.appendChild(canvas);
+		textBox = document.createElement('input');
+		textBox.value = "Enter Text Here";
+		document.body.appendChild(textBox);
 		self.w  = self.utils.getWidth(canvas);
 		self.h  = self.utils.getHeight(canvas);
 		self.ratioW = self.w / BASE_WIDTH;
