@@ -421,7 +421,7 @@ function _game()
 
 	self.drawLoading = function() {
 		img = new Bitmap('/assets/clock.png');
-		img.x = BASE_WIDTH/2 - 35;	
+		img.x = BASE_WIDTH/2 - 15;	
 		img.y = 10;
 		stage.addChild(img);
 		self.loadingClock = img;
