@@ -447,6 +447,7 @@ function _game()
 
 	self.doAnimation = function(hero, animation)
 	{
+		hero.animation = animation;
 		if(!hero.wasMoving)
 		{
 			hero.gotoAndPlay(animation);
@@ -566,7 +567,7 @@ function _game()
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
-			        self.doAnimation(obj, "down");
+			        self.doAnimation(obj, msg.direction);
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
 				obj.x = loc[0];
@@ -666,7 +667,7 @@ function _game()
 							"action"    : "move", 
 							"target_x"  : self.playerGameCoords['x'], 
 							"target_y"  : self.playerGameCoords['y'],
-                                                        "direction" : 0}));
+                                                        "direction" : hero.animation}));
 			self.lastSentMessage = self.utils.now();
 		}
 	}
