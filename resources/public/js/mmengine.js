@@ -569,14 +569,13 @@ function _game()
 			        self.doAnimation(obj, "down");
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
-				self.currentPlayers[count].x = loc[0];
-				self.currentPlayers[count].y = loc[1];
-				self.currentPlayers[count].realX = msg.location.x;
-				self.currentPlayers[count].realY = msg.location.y;
-				self.currentPlayers[count].centerPlayerX = loc[0];
-				self.currentPlayers[count].centerPlayerY = loc[1];
 				obj.x = loc[0];
 				obj.y = loc[1];
+				obj.realX = msg.location.x;
+				obj.realY = msg.location.y;
+				obj.centerPlayerX = loc[0] + (RESOURCES["HERO"]["width"]/2);
+				obj.centerPlayerY = loc[1] + (RESOURCES["HERO"]["height"]/2);
+
 				self.sortPlayerInWorld(self.currentPlayers[count]);
 				break;
 			}
