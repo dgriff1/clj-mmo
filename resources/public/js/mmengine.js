@@ -39,7 +39,7 @@ function _game()
 
 	self.assets = assets; // resource seets
 	self.playerID = self.utils.fetchGetParm("id");
-	self.wsUri = "wss://" + window.location.host + "/object/" + self.playerID; 
+	self.wsUri = "ws://" + window.location.host + "/object/" + self.playerID; 
 	self.testMode = false; 
 
 	// Used for counting frames
