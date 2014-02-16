@@ -646,7 +646,6 @@ function _game()
 
 	// Adds new player to world
 	self.addNewPlayerToWorld = function(id, heroLocation) {
-		logger('id : ' + id);
 		newHero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
 		newHero._id  = id;
 		newHero.type = self.utils.PLAYER;
@@ -669,7 +668,7 @@ function _game()
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
 			if(self.currentPlayers[each] === undefined) {
-				self.addNewPlayerToWorld(self.playersToAdd[each]['_id'], self.playersToAdd[each]['location']);
+				self.addNewPlayerToWorld(3, self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
 			}
 		}
