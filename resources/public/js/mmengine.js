@@ -317,7 +317,6 @@ function _game()
 		if(dataLength === undefined) {
                 	if(data.type == self.utils.PLAYER) {
 				if(data._id != self.playerID) {
-					logger(data);
 					if(self.currentPlayers[data._id] === undefined) {
 						self.playersToAdd[data._id] = data;	
 					}
@@ -676,6 +675,7 @@ function _game()
 	}
 
 	self.movePlayer = function(msg) {
+		logger(msg);
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
