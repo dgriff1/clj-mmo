@@ -424,7 +424,7 @@ function _game()
 	}
 
 	self.drawMapLoader = function() {
-		img = new Bitmap('/assets/clock.gif');
+		img = new Bitmap('/assets/clock.png');
 		img.x = BASE_WIDTH/2 - 15;	
 		img.y = 40;
 		stage.addChild(img);
@@ -668,6 +668,7 @@ function _game()
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
 			if(self.currentPlayers[each] === undefined) {
+				logger(self.playersToAdd[each]);
 				self.addNewPlayerToWorld(self.playersToAdd[each]['_id'], self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
 			}
