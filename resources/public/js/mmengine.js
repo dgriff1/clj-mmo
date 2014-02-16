@@ -218,6 +218,9 @@ function _game()
 		canvas.width = BASE_WIDTH;
 		canvas.height = BASE_HEIGHT;
 		document.body.appendChild(canvas);
+		textBox = document.createElement('textarea');
+		textBox.value = "Player2: F U FGT ;) A/S/L\rPlayer1: LAAMLOLOL";
+		document.body.appendChild(textBox);
 		textBox = document.createElement('input');
 		textBox.value = "Enter Text Here";
 		document.body.appendChild(textBox);
