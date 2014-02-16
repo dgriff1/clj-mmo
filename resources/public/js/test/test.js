@@ -20,13 +20,14 @@ test( "Height settr", function() {
 test( "init buffer check", function() {
   ourGame.playerID = 1;
   ourGame.writeToBuffer(JSON.stringify(playerStruct));
-  ok( ourGame.buffer._id == 1, "Passed!" );
+  ok( ourGame.playerGameCoords['x'] == 100, "Passed!" );
+  ok( ourGame.playerGameCoords['y'] == 50, "Passed!" );
 });
 
 test( "calculate other players position", function() {
-  pos =  ourGame.calculatePosition(5, 5, 30, 95);	
-  ok( ourGame.calculatePosition(5, 5, 30, 95)[0] == 75, "Passed!" );
-  ok( ourGame.calculatePosition(5, 5, 30, 95)[1] == -40, "Passed!" );
+  pos =  ourGame.gameToWorldPosition(5, 5, 30, 95);	
+  ok( parseInt(pos[0]) == 463, "Passed!" );
+  ok( parseInt(pos[1]) == 188, "Passed!" );
 });
 
 
