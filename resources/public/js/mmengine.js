@@ -669,7 +669,7 @@ function _game()
 		for(each in self.playersToAdd) {
 			logger(each);
 			logger(self.playersToAdd[each]);
-			if(self.currentPlayers[self.playersToAdd[each]['_id'] === undefined) {
+			if(self.currentPlayers[self.playersToAdd[each]['_id']] === undefined) {
 				self.addNewPlayerToWorld(self.playersToAdd[each]['_id'], self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
 			}
