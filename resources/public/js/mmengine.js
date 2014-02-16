@@ -423,7 +423,7 @@ function _game()
 	}
 
 	self.drawMapLoader = function() {
-		img = new Bitmap('/assets/clock.png');
+		img = new Bitmap('/assets/clock.gif');
 		img.x = BASE_WIDTH/2 - 15;	
 		img.y = 40;
 		stage.addChild(img);
