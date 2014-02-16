@@ -29,7 +29,7 @@ function _game()
         self.playerGameCoords = {"_id" : self.playerID, "x" : 0, "y" : 0}
 
 	// Players that need to be drawn
-	self.playersToAdd       = new Array();
+	self.playersToAdd       = [];
 
 	// Players in our world
 	self.currentPlayers     = new Array();
@@ -667,8 +667,6 @@ function _game()
 	// Checks to see if others players need to be added to our world
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
-			logger(each);
-			logger(self.playersToAdd[each]);
 			if(self.currentPlayers[self.playersToAdd[each]['_id']] === undefined) {
 				self.addNewPlayerToWorld(self.playersToAdd[each]['_id'], self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
