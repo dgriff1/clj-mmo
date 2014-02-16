@@ -317,7 +317,6 @@ function _game()
 		if(dataLength === undefined) {
                 	if(data.type == self.utils.PLAYER) {
 				if(data._id != self.playerID) {
-					logger(data['_id']);
 					if(self.currentPlayers[data['_id']] === undefined) {
 						self.playersToAdd[data['_id']] = data;	
 					}
@@ -647,6 +646,7 @@ function _game()
 
 	// Adds new player to world
 	self.addNewPlayerToWorld = function(id, heroLocation) {
+		logger('id : ' + id);
 		newHero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
 		newHero._id  = id;
 		newHero.type = self.utils.PLAYER;
