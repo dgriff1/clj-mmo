@@ -318,8 +318,7 @@ function _game()
                 	if(data.type == self.utils.PLAYER) {
 				if(data._id != self.playerID) {
 					if(self.currentPlayers[data['_id']] === undefined) {
-						logger(data['_id']);
-						self.playersToAdd[parseInt(data['_id'])] = data;	
+						self.playersToAdd[data['_id']] = data;	
 					}
 					else {
 						self.movePlayer(data);
@@ -668,7 +667,9 @@ function _game()
 	// Checks to see if others players need to be added to our world
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
-			if(self.currentPlayers[each] === undefined) {
+			logger(each);
+			logger(self.playersToAdd[each]);
+			if(self.currentPlayers[self.playersToAdd[each]['_id'] === undefined) {
 				self.addNewPlayerToWorld(self.playersToAdd[each]['_id'], self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
 			}
