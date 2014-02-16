@@ -675,7 +675,6 @@ function _game()
 	}
 
 	self.movePlayer = function(msg) {
-		logger(msg);
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
