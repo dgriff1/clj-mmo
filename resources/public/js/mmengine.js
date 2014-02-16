@@ -317,6 +317,7 @@ function _game()
 		if(dataLength === undefined) {
                 	if(data.type == self.utils.PLAYER) {
 				if(data._id != self.playerID) {
+					logger(data);
 					if(self.currentPlayers[data['_id']] === undefined) {
 						self.playersToAdd[data['_id']] = data;	
 					}
@@ -668,7 +669,6 @@ function _game()
 	self.checkToAddPlayers = function() {
 		for(each in self.playersToAdd) {
 			if(self.currentPlayers[each] === undefined) {
-				logger(self.playersToAdd[each]);
 				self.addNewPlayerToWorld(self.playersToAdd[each]['_id'], self.playersToAdd[each]['location']);
 				self.playersToAdd.splice(each);
 			}
