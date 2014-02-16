@@ -318,8 +318,8 @@ function _game()
                 	if(data.type == self.utils.PLAYER) {
 				if(data._id != self.playerID) {
 					if(self.currentPlayers[data['_id']] === undefined) {
-						logger(data);
-						self.playersToAdd[data['_id']] = data;	
+						logger(data['_id']);
+						self.playersToAdd[parseInt(data['_id'])] = data;	
 					}
 					else {
 						self.movePlayer(data);
