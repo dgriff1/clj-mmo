@@ -37,6 +37,7 @@ function _game()
 	// Data that needs to be drawn
 	self.worldToAdd = [];
 
+	self.heartBeatCounter = self.utils.now();
 	self.assets = assets; // resource seets
 	self.playerID = self.utils.fetchGetParm("id");
 	self.wsUri = "ws://" + window.location.host + "/object/" + self.playerID; 
@@ -730,11 +731,19 @@ function _game()
 		}
 	}
 
+	self.webSocketHeartBeat = function() {
+		if(self.utils.now() - self.heartBeatCounter > HEARTBEAT) {
+			self.heartBeatCounter = self.utils.now();
+			self.sendPlayerState();
+		}
+	}
+
 	self.tick = function(e)
 	{
 		//self.calculateFramesPerSecond();
 
 		self.drawWorldData();
+		self.webSocketHeartBeat();
 
                 if(self.mouseDown && self.clickedAt.length == 0)
                 { 
