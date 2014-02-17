@@ -153,6 +153,10 @@ function _game()
 	} 
 
 	self.onClose = function(evt) { 
+		if(self.playerGameCoords['_id'] === undefined) {
+			self.hideLoader();
+			self.showError("Player does not exist");
+		}
 		logger("DISCONNECTED"); 
 	}  
 
@@ -161,6 +165,7 @@ function _game()
 	}  
 
 	self.onError = function(evt) { 
+		self.showError();
 		logger('ERROR: ' + evt.data); 
 	}  
 
@@ -172,11 +177,12 @@ function _game()
 		return {}
         }
 
-	self.showError = function() {
+	self.showError = function(msg) {
 		//document.body.style.backgroundImage = "none";
 		document.body.style.backgroundColor = "#111111";
 		$(canvas).css("visibility", "hidden");
-		$(document.getElementById("error")).show();
+		$(document.getElementById("error")).removeAttr("style");
+		$(document.getElementById("error")).html("<h1>" + msg + "</h1>");
 	}
 
 	self.showLoader = function() {
@@ -633,6 +639,24 @@ function _game()
 	// Moved world around player while moving players actual coords
 	self.moveHero = function(x, y) 
 	{	
+    		//need = new createjs.Shape();
+		//need.graphics.beginStroke("#000000");
+		//need.graphics.setStrokeStyle(1);
+		//need.snapToPixel = true;
+    		//need.graphics.beginFill("white").drawCircle(0, 0, 2);
+    		//need.x = hero.x - self.worldOffsetX;
+    		//need.y = hero.y - self.worldOffsetY;
+    		//stage.addChild(need);
+
+    		//need = new createjs.Shape();
+		//need.graphics.beginStroke("#000000");
+		//need.graphics.setStrokeStyle(1);
+		//need.snapToPixel = true;
+    		//need.graphics.beginFill("red").drawCircle(0, 0, 2);
+    		//need.x = hero.centerPlayerX - self.worldOffsetX;
+		//need.y = hero.centerPlayerY - self.worldOffsetY;
+    		//stage.addChild(need);
+
 		self.initPlayerPosition(x, y);
 
 		// need to make a circle calculation
