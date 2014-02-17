@@ -112,29 +112,34 @@ function _game()
 		}
 	}
 
+	self.loadWebSocket = function() {
+ 		self.websocket = new WebSocket(self.wsUri);
+		self.websocket.onopen = function(evt) { 
+			self.onOpen(evt) ;
+		}; 
+
+		self.websocket.onclose = function(evt) { 
+			self.onClose(evt) ;
+		}; 
+
+		self.websocket.onmessage = function(evt) { 
+                        self.writeToBuffer(evt.data);
+			self.onMessage(evt) ;
+		}; 
+
+		self.websocket.onerror = function(evt) { 
+			self.showError();
+			self.onError(evt);
+		}; 
+
+	}
+
 	// Count all assets loaded.  Once all loaded start up websocket
 	self.onLoadedAsset = function(e) {
 		++self.loadedAssets;
 		if ( self.loadedAssets == self.requestedAssets ) {
 			logger("assets loaded");
- 			self.websocket = new WebSocket(self.wsUri);
-			self.websocket.onopen = function(evt) { 
-				self.onOpen(evt) ;
-			}; 
-
-			self.websocket.onclose = function(evt) { 
-				self.onClose(evt) ;
-			}; 
-
-			self.websocket.onmessage = function(evt) { 
-                	        self.writeToBuffer(evt.data);
-				self.onMessage(evt) ;
-			}; 
-
-			self.websocket.onerror = function(evt) { 
-				self.showError();
-				self.onError(evt);
-			}; 
+			self.loadWebSocket();
 			self.checkForInit = setInterval(function(){self.checkAndInit()},100);
 		}
 	}
@@ -156,6 +161,9 @@ function _game()
 		if(self.playerGameCoords['_id'] === undefined) {
 			self.hideLoader();
 			self.showError("Player does not exist");
+		}
+		else {
+			self.loadWebSocket();	
 		}
 		logger("DISCONNECTED"); 
 	}  
