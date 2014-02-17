@@ -160,7 +160,7 @@ function _game()
 	self.onClose = function(evt) { 
 		if(self.playerGameCoords['_id'] === undefined) {
 			self.hideLoader();
-			self.showError("Player does not exist");
+			self.showError("Disconnected");
 		}
 		else {
 			self.loadWebSocket();	
