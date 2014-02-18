@@ -331,7 +331,6 @@ function _game()
 		dataLength = data.length;
 		if(dataLength === undefined) {
                 	if(data.type == self.utils.PLAYER) {
-				logger(data);
 				if(data._id != self.playerID) {
 					if(self.currentPlayers[data['_id']] === undefined) {
 						self.playersToAdd.push(data);
@@ -813,6 +812,12 @@ function _game()
 		self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
 	}
 	
+	self.doPlayerAction = function(action, target_id) {
+			self.doSend(JSON.stringify({    "name"    : "player", 
+							"action"  : action, 
+							"target"  : target_id}));
+	}
+
 	self.sendPlayerState = function() {
 		if(self.utils.now() - self.lastSentMessage > UPDATE_RATE) {
 			self.doSend(JSON.stringify({    "name"      : "player", 
@@ -839,11 +844,15 @@ function _game()
 			img.addEventListener("mouseover", function(data) { 
 				img = (data.target);
 				var matrix = new ColorMatrix(50);
-				//matrix.concat([ -1 , 0, 0, 0, 255, 0 , -1, 0, 0, 255, 0 , 0, -1, 0, 255, 0, 0, 0, 1, 0]);
 				var filter = new createjs.ColorMatrixFilter(matrix);		
 				img.filters = [filter];
 				img.cache(0, 0, img.image.width, img.image.height);
 				stage.update();
+
+				if(hero.x + self.worldOffsetX > img.x 
+					&& hero.y + self.worldOffsetX < img.x + img.image.width) {
+					logger(img);
+				}
 			} );
 			img.addEventListener("mouseout", function(data) { 
 				img = (data.target);
@@ -853,7 +862,7 @@ function _game()
 			} );
 		}
 		img.addEventListener("mousedown", function(data) { 
-			logger(data);
+			//logger(data);
 		 } );
 
 		world.addChild(img);
