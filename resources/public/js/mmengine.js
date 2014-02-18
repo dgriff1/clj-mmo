@@ -819,20 +819,6 @@ function _game()
 
 	self.updateActionText = function() {
 		if(self.utils.now() - self.actionTextTimer > 0.01) {
-			// also handles arrow bounce
-			if(self.targetArrowBounceCounter < 25) {
-				self.targetArrow.y = self.targetArrow.y - 1;
-				self.targetArrowBounceCounter++;
-				stage.update();
-			}
-			else if(self.targetArrowBounceCounter < 50) {
-				self.targetArrow.y = self.targetArrow.y + 1;
-				self.targetArrowBounceCounter++;
-				stage.update();
-			}
-			else {
-				self.targetArrowBounceCounter = 0;
-			}
 
 			self.actionTextTimer = self.utils.now();
 			for(each in stage.children) {
