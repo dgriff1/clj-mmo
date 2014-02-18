@@ -1,4 +1,5 @@
-(ns clj-mmo.actions)
+(ns clj-mmo.actions
+	(:require [clj-mmo.db :as clj-db]))
 
 ; All must be run with "evt" and "ctx" in context
 ; 
@@ -19,12 +20,11 @@
 (defn move [player evt ]
 	(do
 		(prn "Moving player" evt)
-	(-> player
-		(assoc :old_location (:location player))
-		(assoc-in [:location :x] (:target_x evt))
-		(assoc-in [:location :y] (:target_y evt))
-		(assoc-in [:location :direction] (:direction evt))
-		)))
+		{:player (-> player
+			(assoc :old_location (:location player))
+			(assoc-in [:location :x] (:target_x evt))
+			(assoc-in [:location :y] (:target_y evt))
+			(assoc-in [:location :direction] (:direction evt)))}))
 
 (defn chop? [player evt ]
 	(cond 
@@ -35,7 +35,7 @@
 	:else false))
 
 (defn chop [player evt ]
-	evt)
+	{:player player })
 
 
 (defn  take-damage? [player evt ]
@@ -52,11 +52,12 @@
 )
 
 (defn determine-action [ player evt ] 
-	(case 
-		(:action evt) 
-			"move" (if-then player evt move? move )
-			"chop" (if-then player evt chop? chop )
-			(do 
-				(prn "Invalid event " evt ) 
-				{:player player})  ))
+	(clj-db/persist-action-results
+		(case 
+			(:action evt) 
+				"move" (if-then player evt move? move )
+				"chop" (if-then player evt chop? chop )
+				(do 
+					(prn "Invalid event " evt ) 
+					{:player player}))))
 		

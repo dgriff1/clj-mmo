@@ -1,13 +1,13 @@
 (ns clj-mmo.entities
-	(:use clj-mmo.db) ) 
+	(:require [ clj-mmo.db :as db] ) ) 
 
 (defn read-it [ file_name ] 
-	(delete-all-entities)
+	(db/delete-all-entities)
 	(dorun (map 
 				(fn [m] 
 					(do 
 						(prn m )
-						(persist-entity m)
+						(db/persist-entity m)
 					)
 				) (read-string (slurp file_name)))))
 
