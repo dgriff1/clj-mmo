@@ -70,6 +70,10 @@ function _game()
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
 
+	// targeting
+	self.target = undefined;
+	self.targetHudBox = undefined;
+
 	self.preloadResources = function() {
 		for(key in self.RESOURCES) {
 			if(!self.isPrefab(self.RESOURCES[key])) {
@@ -481,13 +485,14 @@ function _game()
 		selfBox.y = BASE_HEIGHT/2 + 50;
     		stage.addChild(selfBox);
 
-		// hero left
+		// hero right
 		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
 		img.gotoAndStop("down");
 		img.x = BASE_WIDTH - 68;
 		img.y = BASE_HEIGHT/2 + 50;
 		img.width = 64;
 		img.height = 64;
+		self.targetHudBox = img;
 		stage.addChild(img);
 
 		//conditions
@@ -504,22 +509,29 @@ function _game()
 
 		// hot keys
 		for(hot = 0; hot < 23; hot = hot + 1) {
-    			selfBox = new createjs.Shape();
-			selfBox.graphics.beginStroke("#000000");
-			selfBox.graphics.setStrokeStyle(1);
-			selfBox.snapToPixel = true;
-			if( hot == 17) {
-				continue;
-			}
-			else if(hot > 17) {
-    				selfBox.graphics.beginFill("white").drawRect(0, 0, 20, 20);
+			if(hot == 0) {
+				selfBox = new Bitmap('/assets/axe.gif');
 				selfBox.y = BASE_HEIGHT - 20;
+    				selfBox.x = 60 + (40 + (hot*25));
 			}
 			else {
-    				selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
-				selfBox.y = BASE_HEIGHT - 10;
+    				selfBox = new createjs.Shape();
+				selfBox.graphics.beginStroke("#000000");
+				selfBox.graphics.setStrokeStyle(1);
+				if( hot == 17) {
+					continue;
+				}
+				else if(hot > 17) {
+    					selfBox.graphics.beginFill("white").drawRect(0, 0, 20, 20);
+					selfBox.y = BASE_HEIGHT - 20;
+				}
+				else {
+    					selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
+					selfBox.y = BASE_HEIGHT - 10;
+				}
+    				selfBox.x = 70 + (40 + (hot*25));
 			}
-    			selfBox.x = 70 + (40 + (hot*25));
+			selfBox.snapToPixel = true;
    	 		stage.addChild(selfBox);
 		}
     		stage.update();
@@ -711,8 +723,7 @@ function _game()
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
-				obj.gotoAndStop(msg.location['direction']);
-			        self.doAnimation(obj, msg.location['direction']);
+				obj.gotoAndPlay(msg.location['direction']);
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
 				obj.x = loc[0] + self.worldOffsetX;
@@ -814,8 +825,7 @@ function _game()
 	}
 	
 	self.doPlayerAction = function(action, target_id) {
-			self.doSend(JSON.stringify({    "name"    : "player", 
-							"action"  : action, 
+			self.doSend(JSON.stringify({    "action"  : action, 
 							"target"  : target_id}));
 	}
 
@@ -829,6 +839,16 @@ function _game()
 			self.lastSentMessage = self.utils.now();
 		}
 	}
+
+	self.chop = function() {
+		if(hero.x + self.worldOffsetX > img.x 
+		   && hero.x + self.worldOffsetX < img.x + img.image.width
+		   && hero.y + self.worldOffsetY > img.y
+		   && hero.y + self.worldOffsetY < img.y + img.image.height) {
+			logger(self.target);
+			self.doPlayerAction("chop", self.target);	
+		}
+	}	
 
 	self.addWidget = function(x,y,image,type) {
 		img = new Bitmap(image);
@@ -849,21 +869,26 @@ function _game()
 				img.filters = [filter];
 				img.cache(0, 0, img.image.width, img.image.height);
 				stage.update();
-
-				if(hero.x + self.worldOffsetX > img.x 
-					&& hero.y + self.worldOffsetX < img.x + img.image.width) {
-					logger(img);
-				}
-			} );
-			img.addEventListener("mouseout", function(data) { 
-				img = (data.target);
-				img.filters = [];
-				img.cache(0, 0, img.image.width, img.image.height);
-				stage.update();
-			} );
+				});
 		}
+		img.addEventListener("mouseout", function(data) { 
+			img = (data.target);
+			img.filters = [];
+			img.cache(0, 0, img.image.width, img.image.height);
+			stage.update();
+		} );
 		img.addEventListener("mousedown", function(data) { 
-			//logger(data);
+			target_x = self.targetHudBox.x;
+			target_y = self.targetHudBox.y;
+			stage.removeChild(self.targetHudBox);
+			targetImg = new Bitmap(data.target.image.src);
+			targetImg.x = target_x;
+			targetImg.y = target_y;
+			stage.addChild(targetImg);
+			targetImg.scale = 0.3;
+			self.target = data.target;
+			self.targetHudBox = targetImg;
+			
 		 } );
 
 		world.addChild(img);
@@ -895,6 +920,10 @@ function _game()
 
 	}
 
+	self.actionBar1 = function() {
+		self.chop();
+	}
+
         self.handleMouseDown = function(e)
 	{
 		
@@ -914,6 +943,9 @@ function _game()
 
 	self.handleKeyDown = function(e)
 	{
+		if(e.keyCode == self.utils.oneKey) {
+			self.actionBar1();
+		}
 		self.keyDown = self.keyDown + 1;
 		if(self.keyPressed.indexOf(e.keyCode) == -1) {
 			self.keyPressed.push(e.keyCode);
