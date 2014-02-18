@@ -165,13 +165,13 @@ function _game()
 	} 
 
 	self.onClose = function(evt) { 
-		if(self.playerGameCoords['_id'] === undefined) {
+		//if(self.playerGameCoords['_id'] === undefined) {
 			self.hideLoader();
 			self.showError("Disconnected");
-		}
-		else {
-			self.loadWebSocket();	
-		}
+		//}
+		//else {
+		//	self.loadWebSocket();	
+		//}
 		logger("DISCONNECTED"); 
 	}  
 
