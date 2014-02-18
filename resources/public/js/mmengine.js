@@ -871,14 +871,9 @@ function _game()
 	}
 
 	self.chop = function() {
-		heroW = self.RESOURCES['HERO']['width'] / 2;
-		heroH = self.RESOURCES['HERO']['height'] / 2;
-		if(hero.x + heroW > self.target.x 
-		   && hero.x + heroW  < self.target.x + self.target.image.width
-		   && hero.y + heroH  > self.target.y
-		   && hero.y - heroH  < self.target.y + self.target.image.height) {
+		overlap = (self.utils.rectIntersection(hero, self.target));
+		if(overlap) {
 			if(self.target.type == self.utils.ENTITY) {
-
 				self.doPlayerAction("chop", self.target._id);	
 				self.animateStateText("+10 wood", self.target.x + (self.target.image.width/4)-20, self.target.y, "#00FF00");
 			}
@@ -892,6 +887,8 @@ function _game()
 
 		img.x = x;
 		img.y = y;
+		img.width = img.image.width;
+		img.height = img.image.height;
 		img.snapToPixel = true;
                 img.type = type;
 		img._id = _id;

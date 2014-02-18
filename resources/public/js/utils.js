@@ -372,6 +372,16 @@ function _utils()
 		}
 	}
 	
+	self.rectIntersection = function(rect1, rect2) {
+		if(rect1.x + rect1.width/2 > rect2.x 
+		   && rect1.x + rect1.width/2  <  rect2.x + rect2.width
+		   && rect1.y + rect1.height/2  > rect2.y
+		   && rect1.y + rect1.height/2  < rect2.y + rect2.height) {
+			return true;
+		}
+		return false;
+	}
+
 	self.calculateIntersection = function(rect1, rect2, x, y)
 	{
 	  // prevent x|y from being null||undefined
