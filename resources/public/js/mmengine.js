@@ -73,6 +73,7 @@ function _game()
 	// targeting
 	self.target = undefined;
 	self.targetHudBox = undefined;
+	self.targetArrow = undefined;
 
 	// action text
 	self.actionTextTimer = self.utils.now();
@@ -645,6 +646,11 @@ function _game()
 		hero.x = hero.x - x;
 		hero.y = hero.y - y;
 	
+		if(self.targetArrow != undefined) {
+			self.targetArrow.x = self.targetArrow.x + x;
+			self.targetArrow.y = self.targetArrow.y + y;
+		}
+
 		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
 		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 
@@ -875,7 +881,8 @@ function _game()
 		if(overlap) {
 			if(self.target.type == self.utils.ENTITY) {
 				self.doPlayerAction("chop", self.target._id);	
-				self.animateStateText("+10 wood", self.target.x + (self.target.image.width/4)-20, self.target.y, "#00FF00");
+				textSize = 40;
+				self.animateStateText("+10 wood", self.target.x + (self.target.image.width/2)-textSize, self.target.y, "#00FF00");
 			}
 		}
 	}	
@@ -897,6 +904,16 @@ function _game()
 	self.targetObject = function(obj) {
 		target_x = self.targetHudBox.x;
 		target_y = self.targetHudBox.y;
+
+		if(self.targetArrow != undefined) {
+			stage.removeChild(self.targetArrow);
+		}
+		targetArrow = new Bitmap('/assets/target.png');
+		targetArrow.x = obj.target.x - self.worldOffsetX + (obj.target.image.width/2) - (targetArrow.image.width/2);
+		targetArrow.y = obj.target.y - self.worldOffsetY;
+		stage.addChild(targetArrow);
+		self.targetArrow = targetArrow;
+
 		stage.removeChild(self.targetHudBox);
 		targetImg = new Bitmap(obj.target.image.src);
 		targetImg.x = target_x;
