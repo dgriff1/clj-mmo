@@ -312,7 +312,7 @@ function _game()
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  return -1; });
 			data = data.reverse();
 		}
-		if(type == self.utils.ENTITIY) {
+		if(type == self.utils.ENTITY) {
 			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1 });
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return -1; }  return 1 });
 		}
@@ -324,8 +324,8 @@ function _game()
 		sortableTerrain = self.getWorldByType(self.utils.TERRAIN);
 		sortableTerrain = self.sortWorldType(sortableTerrain, self.utils.TERRAIN);
 
-		sortableEntity = self.getWorldByType(self.utils.ENTITIY);
-		sortableEntity = self.sortWorldType(sortableEntity, self.utils.ENTITIY);
+		sortableEntity = self.getWorldByType(self.utils.ENTITY);
+		sortableEntity = self.sortWorldType(sortableEntity, self.utils.ENTITY);
 
 		self.worldToAdd = sortableTerrain.concat(sortableEntity);
 	}
@@ -842,11 +842,13 @@ function _game()
 	}
 
 	self.chop = function() {
-		if(hero.x + self.worldOffsetX > img.x 
-		   && hero.x + self.worldOffsetX < img.x + img.image.width
-		   && hero.y + self.worldOffsetY > img.y
-		   && hero.y + self.worldOffsetY < img.y + img.image.height) {
-			self.doPlayerAction("chop", self.target._id);	
+		if(hero.x + self.worldOffsetX > self.target.x 
+		   && hero.x + self.worldOffsetX < self.target.x + self.target.image.width
+		   && hero.y + self.worldOffsetY > self.target.y
+		   && hero.y + self.worldOffsetY < self.target.y + self.target.image.height) {
+			if(self.target.type == self.utils.ENTITY) {
+				self.doPlayerAction("chop", self.target._id);	
+			}
 		}
 	}	
 
@@ -862,7 +864,7 @@ function _game()
 		img._id = _id;
 
 		// mouseover effects
-		if(type == self.utils.ENTITIY) {	
+		if(type == self.utils.ENTITY) {	
 			img.addEventListener("mouseover", function(data) { 
 				img = (data.target);
 				var matrix = new ColorMatrix(50);
@@ -900,7 +902,7 @@ function _game()
 
 		world.addChild(img);
 		//img.cache(x, y, 64, 64);
-		if(type == self.utils.ENTITIY) {	
+		if(type == self.utils.ENTITY) {	
 			self.entities.push(img);
 			if(ENABLE_SHADOWS) {
              	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	
