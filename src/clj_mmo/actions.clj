@@ -1,9 +1,13 @@
-(ns clj-mmo.actions) 
+(ns clj-mmo.actions)
 
 ; All must be run with "evt" and "ctx" in context
 ; 
 
-(defn move? [player evt ctx]
+(defn is-a [ entity-types valid-type ]
+	(if (list? entity-types) (some (partial = valid-type ) entity-types)
+		(= entity-types valid-type)))
+
+(defn move? [player evt ]
 	(cond 
 		(and 
 			(= (:action evt) "move" ) 
@@ -12,7 +16,7 @@
 			true
 		:else false))
 
-(defn move [player evt ctx]
+(defn move [player evt ]
 	(do
 		(prn "Moving player" evt)
 	(-> player
@@ -21,44 +25,37 @@
 		(assoc-in [:location :y] (:target_y evt))
 		)))
 
-(defn chop? [player target evt ctx]
+(defn chop? [player evt ]
 	(cond 
 		(and 
 			(= (:type evt) "chop")
-			(= (:type player) "player")) true
+			(= (:type player) "player")
+			(is-a (:entity-type player) "tree")) true
 	:else false))
-	
 
-(defn  take-damage? [player evt ctx]
+(defn chop [player evt ]
+	evt)
+
+
+(defn  take-damage? [player evt ]
 	true)
 
-(defn take-damage [ player evt ctx]
+(defn take-damage [ player evt ]
 	(assoc player :health 90))
 
 ; if then 
-(defn if-then [ player evt ctx iffunc thenfunc ] 
-	(if (iffunc player evt ctx) 
-		(thenfunc player evt ctx)
+(defn if-then [ player evt iffunc thenfunc ] 
+	(if (iffunc player evt ) 
+		(thenfunc player evt )
 		player)
 )
 
-(defn is-a [ entity-types valid-type ]
-	(if (list? entity-types) (some (partial = valid-type ) entity-types)
-		(= entity-types valid-type)))
-		
-	
-
-; combining functions
-(defn do-move [ player evt ctx ] 
-	(->  player
-		(if-then evt ctx move? move)
-		))
-
-(defn determine-action [ player evt ctx ] 
+(defn determine-action [ player evt ] 
 	(case 
 		(:action evt) 
-			"move" (do-move player evt ctx)
+			"move" (if-then player evt move? move )
+			"chop" (if-then player evt chop? chop )
 			(do 
 				(prn "Invalid event " evt ) 
-				player)  ))
+				{:player player})  ))
 		

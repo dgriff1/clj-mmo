@@ -1,6 +1,6 @@
 (ns clj-mmo.base
 	(:require [clj-mmo.util :as util] )
-	(:use clj-mmo.actions lamina.core clojure.data.json [ clojure.contrib.core :only [ dissoc-in]] ))
+	(:use lamina.core clojure.data.json [ clojure.contrib.core :only [ dissoc-in]] ))
 
 (defn base-type [ target ]  
 	(merge  {:actions [] :behaviors []} target))
@@ -22,12 +22,6 @@
 
 (defn player-rec [id items attributes techtree] 
 	(entity "player" { :_id id :attributes attributes :techtree techtree :conditions [] :health 100 :location { :x 0 :y 0} :channel (channel) }) ) 
-
-(defn on-move [ player evt ctx ] 
-	(cond-> player
-		(move? player evt ctx)  (move evt ctx)
-		(take-damage? player evt ctx) (take-damage evt ctx)
-	))
 
 ; this sends off the association to 2 agents
 (defn set-agent-adjacency [ p other_p]

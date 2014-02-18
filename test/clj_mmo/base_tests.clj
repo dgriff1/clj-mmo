@@ -19,19 +19,14 @@
 		(is []  (:behaviors p-one))
   )) 
 
-(deftest create-action-test
-	(let [ event {:to 123}  p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on-move p-one event {:terrain nil} ) ]
-		(prn p-one)	
-))
-
 (deftest proximity-test 
 	(let [ all_players 
 			(list
 				(agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} :old_location { :x 9999 :y 20001}    ))
-				(agent (assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 500 :y 1500 } ))
+				(agent (assoc (player-rec "2" [:sword] (player-attributes) {:building  0}) :location { :x 800 :y 1801 } ))
 				(agent (assoc (player-rec "3" [:sword] (player-attributes) {:building  0}) :location { :x 0 :y 0} ))
-				(agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 500} ))
-				(agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1500 :y 0} ))
+				(agent (assoc (player-rec "4" [:sword] (player-attributes) {:building  0}) :location { :x 1799 :y 800} ))
+				(agent (assoc (player-rec "5" [:sword] (player-attributes) {:building  0}) :location { :x 1801 :y 0} ))
 			) p  (agent (assoc (player-rec "1" [:sword] (player-attributes) {:building  0}) :location { :x 1000 :y 2000} )) ] 
 		(prn "Proximity " (check-proximity p all_players))))	
 
