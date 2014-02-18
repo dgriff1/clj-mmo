@@ -878,7 +878,7 @@ function _game()
 			if(self.target.type == self.utils.ENTITY) {
 
 				self.doPlayerAction("chop", self.target._id);	
-				self.animateStateText("chop! -10", self.target.x + (self.target.image.width/4)-20, self.target.y, "#FF0000");
+				self.animateStateText("+10 wood", self.target.x + (self.target.image.width/4)-20, self.target.y, "#00FF00");
 			}
 		}
 	}	
