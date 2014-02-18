@@ -74,6 +74,7 @@ function _game()
 	self.target = undefined;
 	self.targetHudBox = undefined;
 	self.targetArrow = undefined;
+	self.targetArrowBounceCounter = 0;
 
 	// action text
 	self.actionTextTimer = self.utils.now();
@@ -601,7 +602,7 @@ function _game()
 	{
 		hero.currentFrame = 48;
 		hero.gotoAndStop('down');
-		hero.gotoAndPlay('idle');
+		//hero.gotoAndPlay('idle');
 		stage.update();
 	}
 
@@ -818,6 +819,21 @@ function _game()
 
 	self.updateActionText = function() {
 		if(self.utils.now() - self.actionTextTimer > 0.01) {
+			// also handles arrow bounce
+			if(self.targetArrowBounceCounter < 25) {
+				self.targetArrow.y = self.targetArrow.y - 1;
+				self.targetArrowBounceCounter++;
+				stage.update();
+			}
+			else if(self.targetArrowBounceCounter < 50) {
+				self.targetArrow.y = self.targetArrow.y + 1;
+				self.targetArrowBounceCounter++;
+				stage.update();
+			}
+			else {
+				self.targetArrowBounceCounter = 0;
+			}
+
 			self.actionTextTimer = self.utils.now();
 			for(each in stage.children) {
 				if("actionText" in stage.children[each]) {	
@@ -934,7 +950,7 @@ function _game()
 			stage.removeChild(self.targetArrow);
 		}
 		targetArrow = new Bitmap('/assets/target.png');
-		targetArrow.x = obj.target.x - self.worldOffsetX + (obj.target.image.width/2) - (targetArrow.image.width/2);
+		targetArrow.x = obj.target.x - self.worldOffsetX + (obj.target.image.width/2) - (32/2);
 		targetArrow.y = obj.target.y - self.worldOffsetY;
 		stage.addChild(targetArrow);
 		self.targetArrow = targetArrow;
