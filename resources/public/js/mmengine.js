@@ -842,6 +842,7 @@ function _game()
 	}
 
 	self.chop = function() {
+		console.log("CHOP " + self.target);
 		if(hero.x + self.worldOffsetX > img.x 
 		   && hero.x + self.worldOffsetX < img.x + img.image.width
 		   && hero.y + self.worldOffsetY > img.y

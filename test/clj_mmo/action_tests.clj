@@ -29,7 +29,7 @@
 
 (deftest determine-action-test
 	(let [ player (player-factory) evt { :action "move" :target_x 15 :target_y 10 } ]
-		(let [ moved_p (determine-action (assoc player :location {:x 14 :y 9}) evt )]  
+		(let [ moved_p (determine-action (assoc player :location {:x 14 :y 9}) evt (list) )]  
 			(prn "Moved " moved_p  " old " player)
 			(is (= (:y (:old_location moved_p)) 9 ))
 			(is (= (:x (:old_location moved_p)) 14 ))

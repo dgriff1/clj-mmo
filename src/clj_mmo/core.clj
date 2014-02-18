@@ -28,13 +28,12 @@
 ;(db/persist-entity { :location { :x 0 :y 0 } :type "terrain" :resource "tree.png" } )
 
 (defn message-handler [ ch p msg params ] 
-	(prn "Msg " msg )
 	(cond 
 		;(= (:type msg) "proximity" ) (dorun (map (fn [close] (enqueue ch (json-str close)))  (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] )  )))
 		 (= (:type msg) "proximity" ) (enqueue ch (json-str (db/get-close-entities (get-in msg [ :location :x ] ) (get-in msg [ :location :y ] )  )))
 		:else  (let [ player (db/get-player all_players (:id params))]
 						(do 
-					  		(let [json_msg (json-str (util/safe-player @(send player actions/determine-action msg))) ]
+					  		(let [json_msg (json-str (util/safe-player @(send player actions/determine-action msg all_players))) ]
 								(enqueue ch json_msg) 
 								(mmo/send-to-adjacents ch @p @all_players)) ) ) ) )
 

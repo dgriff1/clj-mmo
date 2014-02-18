@@ -19,7 +19,6 @@
 
 (defn move [player evt ]
 	(do
-		(prn "Moving player" evt)
 		{:player (-> player
 			(assoc :old_location (:location player))
 			(assoc-in [:location :x] (:target_x evt))
@@ -29,7 +28,6 @@
 (defn chop? [player evt ]
 	(cond 
 		(and 
-			(= (:type evt) "chop")
 			(contains? evt :target) ) true
 	:else false))
 
@@ -51,16 +49,14 @@
 (defn if-then [ player evt iffunc thenfunc ] 
 	(if (iffunc player evt ) 
 		(thenfunc player evt )
-		player)
+		{:player player})
 )
 
-(defn determine-action [ player evt ] 
-	(clj-db/persist-action-results
+(defn determine-action [ player evt all_players ] 
+	(clj-db/persist-action-results all_players
 		(case 
 			(:action evt) 
 				"move" (if-then player evt move? move )
 				"chop" (if-then player evt chop? chop )
-				(do 
-					(prn "Invalid event " evt ) 
-					{:player player}))))
+				{:player player})))
 		
