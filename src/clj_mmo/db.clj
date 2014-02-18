@@ -29,6 +29,10 @@
 (defn persist-entity [ entity ] 
 	(mc/save "mkentities" (assoc entity :_id (ObjectId.)) ))
 
+
+(defn get-entity [ id ] 
+	(mc/find-one-as-map "mkentities" { :_id (ObjectId.  id) } ))
+
 (defn get-all-players [ ] 
 	(determine-adjacency 
 	 	(apply merge (for [ x (mc/find-maps "mkusers" ) ] { (:_id x) (add-watch (agent (assoc x :channel (channel))) :persist persist-player)  }  ))))
@@ -43,4 +47,5 @@
 
 
 (defn persist-action-results [ results_map ] 
+	(dorun (map publish-to-close-players (map persist-entity (or (:entities results_map) {}))))
 	(:player results_map))

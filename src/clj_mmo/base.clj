@@ -106,3 +106,8 @@
 			(if (contains? @other_p :socket) 
 				(do 
 					(prn "sending to other_p " (:socket @other_p)) (enqueue (:socket @other_p) (json-str (util/safe-player p))))))) (keys (get p :adjacency {})))))
+
+(defn publish-to-close-players [ e all_players ] 
+	(doall (map (fn [p] 	
+					(if (close? e @p) 
+						(enqueue (:socket @p) (json-str (e))))) @all_players)))

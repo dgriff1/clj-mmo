@@ -30,12 +30,15 @@
 	(cond 
 		(and 
 			(= (:type evt) "chop")
-			(= (:type player) "player")
-			(is-a (:entity-type player) "tree")) true
+			(contains? evt :target) ) true
 	:else false))
 
 (defn chop [player evt ]
-	{:player player })
+	(let [entity (clj-db/get-entity (:target evt)) ] 
+		{:entities (list 
+			(-> entity 
+				(assoc :health (- (get entity :health 100) 5))))
+		:player player }))
 
 
 (defn  take-damage? [player evt ]
