@@ -382,7 +382,7 @@ function _game()
 		return [dx, dy]
 	}
 
-	self.addWidgetToWorld = function(x, y, image, resourceType, preHero) {
+	self.addWidgetToWorld = function(x, y, image, resourceType, _id, preHero) {
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((self.RESOURCES['HERO']['width'])/2);
 			hy = h/2 - ((self.RESOURCES['HERO']['height'])/2);
@@ -392,12 +392,12 @@ function _game()
 			pos = self.gameToWorldPosition(x, y);
 		}
 		if(typeof(image) == "string") {
-			self.addWidget(pos[0], pos[1], self.assets[image], resourceType);
+			self.addWidget(pos[0], pos[1], self.assets[image], resourceType, _id);
 		}
 		else {
 			for(each in image) {
 				res = resource[each];
-				self.addWidget(pos[0] + res[0], pos[1] + res[1], res[2], resourceType);
+				self.addWidget(pos[0] + res[0], pos[1] + res[1], res[2], resourceType, _id);
 			}
 		}
 	}
@@ -432,9 +432,10 @@ function _game()
 			if(self.worldToAdd[each] === undefined) {
 				continue;
 			}
+			_id = self.worldToAdd[each]['_id'];
 			x = self.worldToAdd[each]['location']['x'];
 			y = self.worldToAdd[each]['location']['y'];
-			self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], false);
+			self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], _id, false);
 		}
 		self.addPlayersToWorld();
 		self.removeMapLoader();
@@ -845,12 +846,11 @@ function _game()
 		   && hero.x + self.worldOffsetX < img.x + img.image.width
 		   && hero.y + self.worldOffsetY > img.y
 		   && hero.y + self.worldOffsetY < img.y + img.image.height) {
-			logger(self.target);
-			self.doPlayerAction("chop", self.target);	
+			self.doPlayerAction("chop", self.target._id);	
 		}
 	}	
 
-	self.addWidget = function(x,y,image,type) {
+	self.addWidget = function(x,y,image,type, _id) {
 		img = new Bitmap(image);
 		x = Math.round(x);
 		y = Math.round(y);
@@ -859,6 +859,7 @@ function _game()
 		img.y = y;
 		img.snapToPixel = true;
                 img.type = type;
+		img._id = _id;
 
 		// mouseover effects
 		if(type == self.utils.ENTITIY) {	
