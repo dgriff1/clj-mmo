@@ -43,4 +43,4 @@
 
 
 (defn persist-action-results [ results_map ] 
-	results_map)
+	(:player results_map))

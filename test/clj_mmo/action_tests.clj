@@ -21,7 +21,7 @@
 (deftest good-move-test
 	(let [ player (player-factory) evt { :action "move" :target_x 8 :target_y 2 } ]
 		(is (= true (move? player evt )))
-		(let [new-player (move player evt )]
+		(let [new-player (:player (move player evt ))]
 			(is (= 8 (:x (:location new-player))))
 			(is (= 2 (:y (:location new-player))))
 		)))
