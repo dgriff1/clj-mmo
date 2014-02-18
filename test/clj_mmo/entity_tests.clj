@@ -8,9 +8,9 @@
 		[
 			e-one (persist-entity { :location { :x 0 :y 0 } :type "terrain" :resource "mud.png" } ) 
 			e-two (persist-entity { :location { :x 0 :y 0 } :type "tree" :resource "tree.png" } )  
-			e-three (persist-entity { :location { :x 701 :y 0 } :type "tree" :resource "tree.png" } )  
-			e-four (persist-entity { :location { :x 0 :y 701 } :type "tree" :resource "tree.png" } )  
-			e-five (persist-entity { :location { :x 701 :y 701 } :type "tree" :resource "tree.png" } )  
+			e-three (persist-entity { :location { :x 801 :y 0 } :type "tree" :resource "tree.png" } )  
+			e-four (persist-entity { :location { :x 0 :y 801 } :type "tree" :resource "tree.png" } )  
+			e-five (persist-entity { :location { :x 801 :y 801 } :type "tree" :resource "tree.png" } )  
 			close_e (get-close-entities 0 0)
 		]
 		(do 

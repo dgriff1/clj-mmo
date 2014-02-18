@@ -15,27 +15,21 @@
 
 
 (deftest bad-move-test
-	(let [ player (player-factory) evt { :action "garbage_event" :target_x 10 :target_y 10 } ctx {} ]
-		(is (= false (move? player evt ctx )))))
+	(let [ player (player-factory) evt { :action "garbage_event" :target_x 10 :target_y 10 } ]
+		(is (= false (move? player evt )))))
 
 (deftest good-move-test
-	(let [ player (player-factory) evt { :action "move" :target_x 8 :target_y 2 } ctx {} ]
-		(is (= true (move? player evt ctx)))
-		(let [new-player (move player evt ctx)]
+	(let [ player (player-factory) evt { :action "move" :target_x 8 :target_y 2 } ]
+		(is (= true (move? player evt )))
+		(let [new-player (:player (move player evt ))]
 			(is (= 8 (:x (:location new-player))))
 			(is (= 2 (:y (:location new-player))))
 		)))
 
 
-(deftest trigger-action-test
-	(let [ event { :xcoord 12 :ycoord 14} p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on-move p-one event {:terrain nil} ) ]
-		(prn p-one)	
-))
-
-
 (deftest determine-action-test
-	(let [ player (player-factory) evt { :action "move" :target_x 15 :target_y 10 } ctx {} ]
-		(let [ moved_p (determine-action (assoc player :location {:x 14 :y 9})  evt ctx)]  
+	(let [ player (player-factory) evt { :action "move" :target_x 15 :target_y 10 } ]
+		(let [ moved_p (determine-action (assoc player :location {:x 14 :y 9}) evt )]  
 			(prn "Moved " moved_p  " old " player)
 			(is (= (:y (:old_location moved_p)) 9 ))
 			(is (= (:x (:old_location moved_p)) 14 ))

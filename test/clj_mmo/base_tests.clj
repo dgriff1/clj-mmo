@@ -19,11 +19,6 @@
 		(is []  (:behaviors p-one))
   )) 
 
-(deftest create-action-test
-	(let [ event {:to 123}  p-one (player-rec "1234" [:sword] (player-attributes) {:building  0}) a-one (on-move p-one event {:terrain nil} ) ]
-		(prn p-one)	
-))
-
 (deftest proximity-test 
 	(let [ all_players 
 			(list

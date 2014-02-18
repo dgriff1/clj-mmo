@@ -13,6 +13,8 @@ function _utils()
 	self.upKey = 38;
 	self.downKey = 40;
 	
+	self.oneKey = 49;
+
 	self.TERRAIN = "terrain";
 	self.ENTITIY = "entity";
 	self.PLAYER = "player";
