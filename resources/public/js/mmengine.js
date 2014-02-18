@@ -74,6 +74,9 @@ function _game()
 	self.target = undefined;
 	self.targetHudBox = undefined;
 
+	// action text
+	self.actionTextTimer = self.utils.now();
+
 	self.preloadResources = function() {
 		for(key in self.RESOURCES) {
 			if(!self.isPrefab(self.RESOURCES[key])) {
@@ -783,12 +786,28 @@ function _game()
 		}
 	}
 
+	self.updateActionText = function() {
+		if(self.utils.now() - self.actionTextTimer > 0.01) {
+			self.actionTextTimer = self.utils.now();
+			for(each in stage.children) {
+				if("actionText" in stage.children[each]) {	
+					stage.children[each].y = stage.children[each].y + 1;	
+					if(stage.children[each].y > 200) {
+						stage.removeChild(stage.children[each]);
+					}
+					stage.update();
+				}
+			}
+		}
+	}
+
 	self.tick = function(e)
 	{
 		//self.calculateFramesPerSecond();
 
 		self.drawWorldData();
 		self.webSocketHeartBeat();
+		self.updateActionText();
 
                 if(self.mouseDown && self.clickedAt.length == 0)
                 { 
@@ -841,13 +860,25 @@ function _game()
 		}
 	}
 
+	self.animateStateText = function(msg, tx, ty, color) {
+		textInfo = new createjs.Text(msg, "1.2em sans-serif", color);
+		textInfo.actionText = true;
+		textInfo.x = tx - self.worldOffsetX;
+		textInfo.y = ty - self.worldOffsetY;
+		textInfo.textBaseline = "alphabetic";
+		stage.addChild(textInfo);
+		stage.update();
+	}
+
 	self.chop = function() {
 		if(hero.x > self.target.x 
 		   && hero.x  < self.target.x + self.target.image.width
 		   && hero.y  > self.target.y
 		   && hero.y  < self.target.y + self.target.image.height) {
 			if(self.target.type == self.utils.ENTITY) {
+
 				self.doPlayerAction("chop", self.target._id);	
+				self.animateStateText("chop! -10", self.target.x + (self.target.image.width/4)-20, self.target.y, "#FF0000");
 			}
 		}
 	}	
@@ -872,7 +903,7 @@ function _game()
 				img.filters = [filter];
 				img.cache(0, 0, img.image.width, img.image.height);
 				stage.update();
-				});
+			});
 		}
 		img.addEventListener("mouseout", function(data) { 
 			img = (data.target);
