@@ -711,7 +711,8 @@ function _game()
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
-			        self.doAnimation(obj, msg.location.direction);
+				obj.gotoAndStop(msg.location['direction']);
+			        self.doAnimation(obj, msg.location['direction']);
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
 				obj.x = loc[0] + self.worldOffsetX;
