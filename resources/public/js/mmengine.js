@@ -889,6 +889,12 @@ function _game()
 			targetImg.scale = 0.3;
 			self.target = data.target;
 			self.targetHudBox = targetImg;
+
+			var matrix = new ColorMatrix(20);
+			var filter = new createjs.ColorMatrixFilter(matrix);		
+			data.target.filters = [filter];
+			data.target.cache(0, 0, img.image.width, img.image.height);
+			stage.update();
 			
 		 } );
 
