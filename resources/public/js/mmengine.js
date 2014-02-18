@@ -710,12 +710,15 @@ function _game()
 		newHero.y = loc[1];
 		newHero.realX = heroLocation.x;
 		newHero.realY = heroLocation.y;
+		newHero.wasMoving = false;	
+		newHero.direction = undefined;
 		if(ENABLE_SHADOWS) {
              		newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);	
 		}
 		newHero.reset();
 		self.currentPlayers[id] = newHero;
 		self.sortPlayerInWorld(newHero);
+		newHero.gotoAndStop("down");
 		world.addChild(newHero);
 	}
 
@@ -733,7 +736,16 @@ function _game()
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
-				obj.gotoAndPlay(msg.location['direction']);
+				if(!obj.wasMoving) {
+					obj.gotoAndPlay(msg.location.direction);
+					obj.wasMoving = true;
+				}
+				else if(obj.direction != undefined && obj.direction != msg.location.direction) {
+					obj.gotoAndPlay(msg.location.direction);
+					
+				}
+				obj.direction = msg.location.direction;
+				obj.lastMovement = self.utils.now();
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
 				obj.x = loc[0] + self.worldOffsetX;
@@ -771,6 +783,18 @@ function _game()
 			self.frameTimer = nextTimer;
 		}
 		return self.framesPerSecondCounter;
+	}
+
+	self.resetPlayerAnimations = function() {
+		if(self.utils.now() - self.heartBeatCounter > 0.1) {
+			for(each in self.currentPlayers) {
+				if(self.currentPlayers[each].wasMoving 
+					&& self.utils.now() - self.currentPlayers[each].lastMovement > 0.1) {
+					self.currentPlayers[each].wasMoving = false;
+					self.currentPlayers[each].gotoAndStop("down");
+				}
+			}
+		}
 	}
 
 	self.drawWorldData = function() {
@@ -811,6 +835,7 @@ function _game()
 	{
 		//self.calculateFramesPerSecond();
 
+		self.resetPlayerAnimations();
 		self.drawWorldData();
 		self.webSocketHeartBeat();
 		self.updateActionText();
