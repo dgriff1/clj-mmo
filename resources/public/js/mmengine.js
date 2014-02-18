@@ -67,6 +67,7 @@ function _game()
 	self.worldOffsetX = 0;
 	self.worldOffsetY = 0;
 	self.lastSentMessage	= 0.00;
+	self.lastPlayerMessage = self.utils.now();
 	self.lastHandleMesssage = 0.00;
 	self.sorted = false;
 
@@ -746,6 +747,7 @@ function _game()
 					
 				}
 				obj.direction = msg.location.direction;
+				self.lastPlayerMessage = self.utils.now();
 				obj.lastMovement = self.utils.now();
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
@@ -787,10 +789,11 @@ function _game()
 	}
 
 	self.resetPlayerAnimations = function() {
-		if(self.utils.now() - self.heartBeatCounter > 0.1) {
+		if(self.utils.now() - self.lastPlayerMessage > 0.2
+		&& self.utils.now() - self.heartBeatCounter > 0.2) {
 			for(each in self.currentPlayers) {
 				if(self.currentPlayers[each].wasMoving 
-					&& self.utils.now() - self.currentPlayers[each].lastMovement > 0.1) {
+					&& self.utils.now() - self.currentPlayers[each].lastMovement > 0.2) {
 					self.currentPlayers[each].wasMoving = false;
 					self.currentPlayers[each].gotoAndStop("down");
 				}
