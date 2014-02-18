@@ -16,19 +16,19 @@ function _utils()
 	self.oneKey = 49;
 
 	self.TERRAIN = "terrain";
-	self.ENTITIY = "entity";
+	self.ENTITY = "entity";
 	self.PLAYER = "player";
 	
 	
 	self.RESOURCES = {
 		'HERO'      : { 'image' : '/assets/hero3.png' , 'type' : self.PLAYER, 'width' : 64, 'height' : 64},
-		'ROCKS'     : { 'image' : '/assets/rocks.png' , 'type' : self.ENTITIY},
-		//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : self.ENTITIY, 'foreground' : true},
-		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITIY, 'height' : 126, 'width' : 126},
+		'ROCKS'     : { 'image' : '/assets/rocks.png' , 'type' : self.ENTITY},
+		//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : self.ENTITY, 'foreground' : true},
+		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITY, 'height' : 126, 'width' : 126},
 		'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
 		'WATER'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
 		'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BUSH'      : { 'image' : '/assets/bush.png' , 'type' : self.ENTITIY}
+		'BUSH'      : { 'image' : '/assets/bush.png' , 'type' : self.ENTITY}
 	}	
 	
 	
