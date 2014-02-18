@@ -880,6 +880,35 @@ function _game()
 		}
 	}	
 
+	self.highlightObject = function(img) {
+		var matrix = new ColorMatrix(50);
+		var filter = new createjs.ColorMatrixFilter(matrix);		
+		img.filters = [filter];
+		img.cache(0, 0, img.image.width, img.image.height);
+		stage.update();
+	}
+
+	self.removeHighlightObject = function(img) {
+		img.filters = [];
+		img.cache(0, 0, img.image.width, img.image.height);
+		stage.update();
+	}
+
+	self.targetObject = function(obj) {
+		target_x = self.targetHudBox.x;
+		target_y = self.targetHudBox.y;
+		stage.removeChild(self.targetHudBox);
+		targetImg = new Bitmap(obj.target.image.src);
+		targetImg.x = target_x;
+		targetImg.y = target_y;
+		stage.addChild(targetImg);
+		targetImg.scale = 0.3;
+		self.targetHudBox = targetImg;
+		self.target = obj.target;
+		stage.update();
+			
+	}
+
 	self.addWidget = function(x,y,image,type, _id) {
 		img = new Bitmap(image);
 		x = Math.round(x);
@@ -897,38 +926,16 @@ function _game()
 		if(type == self.utils.ENTITY) {	
 			img.addEventListener("mouseover", function(data) { 
 				img = (data.target);
-				var matrix = new ColorMatrix(50);
-				var filter = new createjs.ColorMatrixFilter(matrix);		
-				img.filters = [filter];
-				img.cache(0, 0, img.image.width, img.image.height);
-				stage.update();
+				self.highlightObject(img);
 			});
+			img.addEventListener("mouseout", function(data) { 
+				img = (data.target);
+				self.removeHighlightObject(img);
+			} );
+			img.addEventListener("mousedown", function(data) { 
+				self.targetObject(data);
+			 } );
 		}
-		img.addEventListener("mouseout", function(data) { 
-			img = (data.target);
-			img.filters = [];
-			img.cache(0, 0, img.image.width, img.image.height);
-			stage.update();
-		} );
-		img.addEventListener("mousedown", function(data) { 
-			target_x = self.targetHudBox.x;
-			target_y = self.targetHudBox.y;
-			stage.removeChild(self.targetHudBox);
-			targetImg = new Bitmap(data.target.image.src);
-			targetImg.x = target_x;
-			targetImg.y = target_y;
-			stage.addChild(targetImg);
-			targetImg.scale = 0.3;
-			self.target = data.target;
-			self.targetHudBox = targetImg;
-
-			//var matrix = new ColorMatrix(20);
-			//var filter = new createjs.ColorMatrixFilter(matrix);		
-			//data.target.filters = [filter];
-			//data.target.cache(0, 0, img.image.width, img.image.height);
-			stage.update();
-			
-		 } );
 
 		world.addChild(img);
 		//img.cache(x, y, 64, 64);
