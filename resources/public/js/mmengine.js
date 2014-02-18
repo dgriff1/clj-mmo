@@ -74,6 +74,9 @@ function _game()
 	self.target = undefined;
 	self.targetHudBox = undefined;
 
+	// action text
+	self.actionTextTimer = self.utils.now();
+
 	self.preloadResources = function() {
 		for(key in self.RESOURCES) {
 			if(!self.isPrefab(self.RESOURCES[key])) {
@@ -312,7 +315,7 @@ function _game()
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return 1; }  return -1; });
 			data = data.reverse();
 		}
-		if(type == self.utils.ENTITIY) {
+		if(type == self.utils.ENTITY) {
 			data = data.sort(function(a, b) { if(a['location']['x'] < b['location']['x']) { return 0; } return -1 });
 			data = data.sort(function(a, b) { if(a['location']['y'] > b['location']['y']) { return -1; }  return 1 });
 		}
@@ -324,8 +327,8 @@ function _game()
 		sortableTerrain = self.getWorldByType(self.utils.TERRAIN);
 		sortableTerrain = self.sortWorldType(sortableTerrain, self.utils.TERRAIN);
 
-		sortableEntity = self.getWorldByType(self.utils.ENTITIY);
-		sortableEntity = self.sortWorldType(sortableEntity, self.utils.ENTITIY);
+		sortableEntity = self.getWorldByType(self.utils.ENTITY);
+		sortableEntity = self.sortWorldType(sortableEntity, self.utils.ENTITY);
 
 		self.worldToAdd = sortableTerrain.concat(sortableEntity);
 	}
@@ -783,12 +786,28 @@ function _game()
 		}
 	}
 
+	self.updateActionText = function() {
+		if(self.utils.now() - self.actionTextTimer > 0.01) {
+			self.actionTextTimer = self.utils.now();
+			for(each in stage.children) {
+				if("actionText" in stage.children[each]) {	
+					stage.children[each].y = stage.children[each].y + 1;	
+					if(stage.children[each].y > 200) {
+						stage.removeChild(stage.children[each]);
+					}
+					stage.update();
+				}
+			}
+		}
+	}
+
 	self.tick = function(e)
 	{
 		//self.calculateFramesPerSecond();
 
 		self.drawWorldData();
 		self.webSocketHeartBeat();
+		self.updateActionText();
 
                 if(self.mouseDown && self.clickedAt.length == 0)
                 { 
@@ -841,12 +860,28 @@ function _game()
 		}
 	}
 
+	self.animateStateText = function(msg, tx, ty, color) {
+		textInfo = new createjs.Text(msg, "1.2em sans-serif", color);
+		textInfo.actionText = true;
+		textInfo.x = tx - self.worldOffsetX;
+		textInfo.y = ty - self.worldOffsetY;
+		textInfo.textBaseline = "alphabetic";
+		stage.addChild(textInfo);
+		stage.update();
+	}
+
 	self.chop = function() {
-		if(hero.x + self.worldOffsetX > img.x 
-		   && hero.x + self.worldOffsetX < img.x + img.image.width
-		   && hero.y + self.worldOffsetY > img.y
-		   && hero.y + self.worldOffsetY < img.y + img.image.height) {
-			self.doPlayerAction("chop", self.target._id);	
+		heroW = self.RESOURCES['HERO']['width'] / 2;
+		heroH = self.RESOURCES['HERO']['height'] / 2;
+		if(hero.x + heroW > self.target.x 
+		   && hero.x + heroW  < self.target.x + self.target.image.width
+		   && hero.y + heroH  > self.target.y
+		   && hero.y - heroH  < self.target.y + self.target.image.height) {
+			if(self.target.type == self.utils.ENTITY) {
+
+				self.doPlayerAction("chop", self.target._id);	
+				self.animateStateText("+10 wood", self.target.x + (self.target.image.width/4)-20, self.target.y, "#00FF00");
+			}
 		}
 	}	
 
@@ -862,7 +897,7 @@ function _game()
 		img._id = _id;
 
 		// mouseover effects
-		if(type == self.utils.ENTITIY) {	
+		if(type == self.utils.ENTITY) {	
 			img.addEventListener("mouseover", function(data) { 
 				img = (data.target);
 				var matrix = new ColorMatrix(50);
@@ -870,7 +905,7 @@ function _game()
 				img.filters = [filter];
 				img.cache(0, 0, img.image.width, img.image.height);
 				stage.update();
-				});
+			});
 		}
 		img.addEventListener("mouseout", function(data) { 
 			img = (data.target);
@@ -889,12 +924,18 @@ function _game()
 			targetImg.scale = 0.3;
 			self.target = data.target;
 			self.targetHudBox = targetImg;
+
+			//var matrix = new ColorMatrix(20);
+			//var filter = new createjs.ColorMatrixFilter(matrix);		
+			//data.target.filters = [filter];
+			//data.target.cache(0, 0, img.image.width, img.image.height);
+			stage.update();
 			
 		 } );
 
 		world.addChild(img);
 		//img.cache(x, y, 64, 64);
-		if(type == self.utils.ENTITIY) {	
+		if(type == self.utils.ENTITY) {	
 			self.entities.push(img);
 			if(ENABLE_SHADOWS) {
              	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	

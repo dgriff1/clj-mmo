@@ -19,7 +19,6 @@
 
 (defn move [player evt ]
 	(do
-		(prn "Moving player" evt)
 		{:player (-> player
 			(assoc :old_location (:location player))
 			(assoc-in [:location :x] (:target_x evt))
@@ -29,13 +28,15 @@
 (defn chop? [player evt ]
 	(cond 
 		(and 
-			(= (:type evt) "chop")
-			(= (:type player) "player")
-			(is-a (:entity-type player) "tree")) true
+			(contains? evt :target) ) true
 	:else false))
 
 (defn chop [player evt ]
-	{:player player })
+	(let [entity (clj-db/get-entity (:target evt)) ] 
+		{:entities (list 
+			(-> entity 
+				(assoc :health (- (get entity :health 100) 5))))
+		:player player }))
 
 
 (defn  take-damage? [player evt ]
@@ -48,16 +49,14 @@
 (defn if-then [ player evt iffunc thenfunc ] 
 	(if (iffunc player evt ) 
 		(thenfunc player evt )
-		player)
+		{:player player})
 )
 
-(defn determine-action [ player evt ] 
-	(clj-db/persist-action-results
+(defn determine-action [ player evt all_players ] 
+	(clj-db/persist-action-results all_players
 		(case 
 			(:action evt) 
 				"move" (if-then player evt move? move )
 				"chop" (if-then player evt chop? chop )
-				(do 
-					(prn "Invalid event " evt ) 
-					{:player player}))))
+				{:player player})))
 		

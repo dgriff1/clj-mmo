@@ -27,7 +27,14 @@
 
 
 (defn persist-entity [ entity ] 
-	(mc/save "mkentities" (assoc entity :_id (ObjectId.)) ))
+	;(prn "Saving " entity)
+	(mc/save-and-return "mkentities" (if (nil? (:_id entity) )
+								(assoc entity :_id (ObjectId.))
+								entity)))
+
+
+(defn get-entity [ id ] 
+	(mc/find-one-as-map "mkentities" { :_id (ObjectId.  id) } ))
 
 (defn get-all-players [ ] 
 	(determine-adjacency 
@@ -42,5 +49,7 @@
 	(mc/remove "mkentities"))
 
 
-(defn persist-action-results [ results_map ] 
+(defn persist-action-results [ all_players results_map ] 
+	; (prn "Results Map " results_map)
+	(dorun (map (partial publish-to-close-players all_players) (map persist-entity (or (:entities results_map) {}))))
 	(:player results_map))
