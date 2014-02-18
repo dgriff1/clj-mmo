@@ -871,10 +871,12 @@ function _game()
 	}
 
 	self.chop = function() {
-		if(hero.x > self.target.x 
-		   && hero.x  < self.target.x + self.target.image.width
-		   && hero.y  > self.target.y
-		   && hero.y  < self.target.y + self.target.image.height) {
+		heroW = self.RESOURCES['HERO']['width'] / 2;
+		heroH = self.RESOURCES['HERO']['height'] / 2;
+		if(hero.x + heroW > self.target.x 
+		   && hero.x + heroW  < self.target.x + self.target.image.width
+		   && hero.y + heroH  > self.target.y
+		   && hero.y - heroH  < self.target.y + self.target.image.height) {
 			if(self.target.type == self.utils.ENTITY) {
 
 				self.doPlayerAction("chop", self.target._id);	
