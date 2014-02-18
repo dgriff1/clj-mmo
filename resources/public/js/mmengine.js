@@ -254,6 +254,7 @@ function _game()
 		self.initCanvas();
 
 		stage = new Stage(canvas);
+		stage.enableMouseOver(20); 
 
 		world = new Container();
 		stage.addChild(world);
@@ -330,6 +331,7 @@ function _game()
 		dataLength = data.length;
 		if(dataLength === undefined) {
                 	if(data.type == self.utils.PLAYER) {
+				logger(data);
 				if(data._id != self.playerID) {
 					if(self.currentPlayers[data['_id']] === undefined) {
 						self.playersToAdd.push(data);
@@ -710,7 +712,7 @@ function _game()
 		for(count in self.currentPlayers) {
 			obj = self.currentPlayers[count];
 			if(obj._id != undefined && obj._id == msg._id) {
-			        self.doAnimation(obj, msg.direction);
+			        self.doAnimation(obj, msg.location.direction);
 				loc = msg.location;
 				loc = self.gameToWorldPosition(loc.x, loc.y);
 				obj.x = loc[0] + self.worldOffsetX;
@@ -832,7 +834,28 @@ function _game()
 		img.snapToPixel = true;
                 img.type = type;
 
-		img.addEventListener("mousedown", function(data) { } );
+		// mouseover effects
+		if(type == self.utils.ENTITIY) {	
+			img.addEventListener("mouseover", function(data) { 
+				img = (data.target);
+				var matrix = new ColorMatrix(50);
+				//matrix.concat([ -1 , 0, 0, 0, 255, 0 , -1, 0, 0, 255, 0 , 0, -1, 0, 255, 0, 0, 0, 1, 0]);
+				var filter = new createjs.ColorMatrixFilter(matrix);		
+				img.filters = [filter];
+				img.cache(0, 0, img.image.width, img.image.height);
+				stage.update();
+			} );
+			img.addEventListener("mouseout", function(data) { 
+				img = (data.target);
+				img.filters = [];
+				img.cache(0, 0, img.image.width, img.image.height);
+				stage.update();
+			} );
+		}
+		img.addEventListener("mousedown", function(data) { 
+			logger(data);
+		 } );
+
 		world.addChild(img);
 		//img.cache(x, y, 64, 64);
 		if(type == self.utils.ENTITIY) {	
