@@ -33,6 +33,8 @@ function _utils()
 	
 	
 	self.initializeSpriteSheets = function() {
+		animationSpeed = 0.1;
+
 		var heroSpriteData = {
 			images: [window.Game.assets[self.RESOURCES['HERO']['image']]],
 			frames: {
@@ -40,15 +42,15 @@ function _utils()
 				height: self.RESOURCES['HERO']['height']
 			},
 			animations: {
-				left: [0,7,true,0.5],
-				right: [32, 39, true, 0.5],
-				down: [48,55,true,0.5],
-				up: [16,23,true,0.5],
-				upleft: [8,15,true,0.5],
-				upright: [24,31,true,0.5],
-				downleft: [40,47,true,0.5],
-				downright: [56,63,true,0.5],
-				idle: [48,49,true,0.5]
+				left: [0,7,true,animationSpeed],
+				right: [32, 39, true, animationSpeed],
+				down: [48,55,true,animationSpeed],
+				up: [16,23,true,animationSpeed],
+				upleft: [8,15,true,animationSpeed],
+				upright: [24,31,true,animationSpeed],
+				downleft: [40,47,true,animationSpeed],
+				downright: [56,63,true,animationSpeed],
+				idle: [48,49,true,animationSpeed]
 			}
 		}
 		self.RESOURCES['HERO']['spriteSheet'] = new SpriteSheet(heroSpriteData);
