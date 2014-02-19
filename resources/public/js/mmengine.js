@@ -821,12 +821,12 @@ function _game()
 	}
 
 	self.updateActionText = function() {
-		if(self.utils.now() - self.actionTextTimer > 0.01) {
+		if(self.utils.now() - self.actionTextTimer > 0.025) {
 
 			self.actionTextTimer = self.utils.now();
 			for(each in stage.children) {
 				if("actionText" in stage.children[each]) {	
-					stage.children[each].y = stage.children[each].y + 1;	
+					stage.children[each].y = stage.children[each].y + 3;	
 					if(stage.children[each].y > 200) {
 						stage.removeChild(stage.children[each]);
 					}
