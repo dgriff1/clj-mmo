@@ -268,7 +268,8 @@ function _game()
 
 		world = new Container();
 		stage.addChild(world);
-	
+		self.stage = stage;	
+
 		self.utils.initializeSpriteSheets();
 
 		self.initHero();
@@ -586,6 +587,8 @@ function _game()
 		hero.x = BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
 		hero.y = BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
 		hero.wasMoving = false;
+		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
+		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 		world.addChild(hero);
 	}
 
@@ -620,6 +623,8 @@ function _game()
 				altPlayer = new Object()
 				altPlayer.x = player.centerPlayerX;
 				altPlayer.y = player.centerPlayerY;
+		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
+		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 				altPlayer.height = player.height;
 				altPlayer.width = player.width;
 
@@ -1019,7 +1024,6 @@ function _game()
 
         self.handleMouseDown = function(e)
 	{
-		
 		if(self.autoMove) {
 			self.autoMove = false;
 			self.clickedAt = [];

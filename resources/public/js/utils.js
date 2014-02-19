@@ -237,14 +237,63 @@ function _utils()
 		window.Game.doAnimation(hero, direction);
 	}
 	
+	self.calculateAngle = function(hero) {
+		destination = window.Game.pixelToGame(window.Game.clientMouseX, window.Game.clientMouseY);
+		p1 = new Object();	
+		p2 = new Object();	
+	
+
+		p1.x = hero.centerPlayerX - window.Game.worldOffsetX;
+		p1.y = hero.centerPlayerY - window.Game.worldOffsetY;
+		p2.x = (destination[0] );//- (hero.centerPlayerX - window.Game.worldOffsetX));
+		p2.y = hero.centerPlayerY - window.Game.worldOffsetY;
+		adj = self.lineDistance(p1, p2);
+
+		tempp2 = p2;
+
+		//var line = new createjs.Shape();
+		//line.graphics.setStrokeStyle(3);
+		//line.graphics.beginStroke("red");
+		//line.graphics.moveTo(p1.x, p1.y);
+		//line.graphics.lineTo(p2.x, p2.y);
+		//line.graphics.endStroke();
+		//window.Game.stage.addChild(line);
+		//window.Game.stage.update();
+
+		p1 = new Object();	
+		p2 = new Object();	
+		p1.x = hero.centerPlayerX - window.Game.worldOffsetX;
+		p1.y = hero.centerPlayerY - window.Game.worldOffsetY;
+		p2.x = destination[0] ;//- hero.centerPlayerX - window.Game.worldOffsetX;
+		p2.y = destination[1] ;//- hero.centerPlayerY - window.Game.worldOffsetY;
+		hyp = self.lineDistance(p1, p2);
+	
+		ops = self.lineDistance(tempp2, p2);
+
+		//var line = new createjs.Shape();
+		//line.graphics.setStrokeStyle(3);
+		//line.graphics.beginStroke("blue");
+		//line.graphics.moveTo(p1.x, p1.y);
+		//line.graphics.lineTo(p2.x, p2.y);
+		//line.graphics.endStroke();
+		//window.Game.stage.addChild(line);
+		//window.Game.stage.update();
+
+		angle = (Math.atan2(ops, adj));
+		return angle;
+	}
+
 	self.directionMouse = function(movementSpeed, hero) {
 		clientMouseX = window.Game.clientMouseX;
 		clientMouseY = window.Game.clientMouseY;
 		h = window.Game.h;
 		w = window.Game.w;
 		f = self.directionAnimation;
-	
-		movementSpeed = self.calculateAccel(clientMouseX, clientMouseY, movementSpeed);
+		angle = self.calculateAngle(hero);	
+			
+		logger(angle * 57.29);
+
+		//movementSpeed = self.calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 		
 		//if(isMouseNearPlayer(hero)) {
 		//	return [0, 0];
@@ -281,22 +330,22 @@ function _utils()
 		else if(clientMouseX < w/2 && clientMouseY < h/2)
 	        {
 			f(hero, "upleft");
-			return [movementSpeed, movementSpeed];
+			return [movementSpeed * Math.cos(angle), movementSpeed * Math.sin(angle)];
 	        }
 		else if(clientMouseX < w/2 && clientMouseY > h/2)
 	        {
 			f(hero, "downright");	
-			return [movementSpeed, -movementSpeed];
+			return [movementSpeed * Math.cos(angle), movementSpeed * -Math.sin(angle)];
 	        }
 		else if(clientMouseX > w/2 && clientMouseY < h/2)
 	        {
 			f(hero, "upright");
-			return [-movementSpeed, movementSpeed];
+			return [movementSpeed * -Math.cos(angle), movementSpeed * Math.sin(angle)];
 	        }
 		else if(clientMouseX > w/2 && clientMouseY > h/2)
 	        {
 			f(hero, "downleft");
-			return [-movementSpeed, -movementSpeed];
+			return [-movementSpeed * Math.cos(angle), movementSpeed * -Math.sin(angle)];
 	        }
 		return [0, 0];
 	}
@@ -569,7 +618,21 @@ function _utils()
 	
 	  return dst_canvas;
 	}
-	
+
+	self.lineDistance = function( point1, point2 )
+	{
+	  var xs = 0;
+	  var ys = 0;
+	 
+	  xs = point2.x - point1.x;
+	  xs = xs * xs;
+	 
+	  ys = point2.y - point1.y;
+	  ys = ys * ys;
+	 
+	  return Math.sqrt( xs + ys );
+	}
+
 	self.snapValue = function(value,snap)
 	{
 	  var roundedSnap = (value/snap + (value > 0 ? .5 : -.5)) | 0;
