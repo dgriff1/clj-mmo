@@ -68,6 +68,7 @@ function _game()
 	self.lastSentMessage	= 0.00;
 	self.lastPlayerMessage = self.utils.now();
 	self.lastHandleMesssage = 0.00;
+        self.lastFrame = self.utils.now();
 	self.sorted = false;
 
 	// targeting
@@ -855,7 +856,7 @@ function _game()
 			direction = self.utils.directionMouse(self.settings.MOVEMENT_SPEED, self.hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
-			self.moveHero(xDirection, yDirection);
+			self.moveHero(xDirection * (self.utils.now() - self.lastFrame), yDirection * (self.utils.now() - self.lastFrame));
 			
 		}
 		if(self.keyPressed.length != []) {
@@ -865,7 +866,7 @@ function _game()
 			xDirection = direction[0];
 			yDirection = direction[1];
 			if(xDirection != 0 || yDirection != 0) {
-				self.moveHero(xDirection, yDirection);
+				self.moveHero(xDirection * (self.utils.now() - self.lastFrame), yDirection * (self.utils.now() - self.lastFrame));
 			}
 		}
 		if(self.hero.wasMoving && !self.maouseDown && self.keyPressed.length < 1)
@@ -876,6 +877,7 @@ function _game()
 			self.utils.autoMoveHero(self.hero);
 		}
 
+        	self.lastFrame = self.utils.now();
 		ticks++;
 		
 	}

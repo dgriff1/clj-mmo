@@ -1,4 +1,4 @@
-
+	
 function logger(msg) {
 	console.log(msg);
 }
@@ -283,7 +283,6 @@ function _utils()
 		f = self.directionAnimation;
 		angle = self.calculateAngle(hero);	
 			
-		logger(angle * 57.29);
 
 		//movementSpeed = self.calculateAccel(clientMouseX, clientMouseY, movementSpeed);
 		
@@ -408,7 +407,7 @@ function _utils()
 			window.Game.autoMove = false;		
 		}
 		else {
-			window.Game.moveHero(directionX, directionY);
+			window.Game.moveHero(directionX * (self.now() - window.Game.lastFrame), directionY * (self.now() - window.Game.lastFrame));
 			hero.wasMoving = true;
 		}
 	}
