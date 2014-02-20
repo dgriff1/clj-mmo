@@ -35,7 +35,7 @@ function _utils()
 	
 	
 	self.initializeSpriteSheets = function() {
-		animationSpeed = 0.1;
+		animationSpeed = self.animationSpeed = 0.2;
 
 		var heroSpriteData = {
 			images: [window.Game.assets[self.RESOURCES['HERO']['image']]],
