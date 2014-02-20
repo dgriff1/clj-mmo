@@ -513,30 +513,32 @@ function _game()
 			need.y = 14;
     			stage.addChild(need);
 		}
-
+		// needs
+		for(n = 0; n < 5; n = n + 1) {
+    			need = new createjs.Shape();
+			need.graphics.beginStroke("#000000");
+			need.graphics.setStrokeStyle(1);
+			need.snapToPixel = true;
+    			need.graphics.beginFill("white").drawRect(0, 0, 20, 20);
+    			need.x = self.settings.BASE_WIDTH - (27 + (n*25));
+			need.y = 32;
+    			stage.addChild(need);
+		}
+	
 		// hot keys
-		for(hot = 0; hot < 23; hot = hot + 1) {
+		for(hot = 0; hot < 5; hot = hot + 1) {
 			if(hot == 0) {
 				selfBox = new Bitmap('/assets/axe.gif');
 				selfBox.y = self.settings.BASE_HEIGHT - 20;
-    				selfBox.x = 60 + (40 + (hot*25));
+    				selfBox.x = 320 + (40 + (hot*25));
 			}
 			else {
     				selfBox = new createjs.Shape();
 				selfBox.graphics.beginStroke("#000000");
 				selfBox.graphics.setStrokeStyle(1);
-				if( hot == 17) {
-					continue;
-				}
-				else if(hot > 17) {
-    					selfBox.graphics.beginFill("white").drawRect(0, 0, 20, 20);
-					selfBox.y = self.settings.BASE_HEIGHT - 20;
-				}
-				else {
-    					selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
-					selfBox.y = self.settings.BASE_HEIGHT - 10;
-				}
-    				selfBox.x = 70 + (40 + (hot*25));
+    				selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
+				selfBox.y = self.settings.BASE_HEIGHT - 10;
+    				selfBox.x = 330 + (40 + (hot*25));
 			}
 			selfBox.snapToPixel = true;
    	 		stage.addChild(selfBox);
