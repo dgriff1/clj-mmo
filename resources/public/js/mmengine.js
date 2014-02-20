@@ -217,13 +217,13 @@ function _game()
 	}
 
 	self.initHero = function () { 
-		hero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
+		self.hero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
 		if(ENABLE_SHADOWS) {
-			hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
+			self.hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		}
-		hero.currentFrame = 1;
-		hero._id = self.playerID;
-		self.stopHeroAnimations(hero);
+		self.hero.currentFrame = 1;
+		self.hero._id = self.playerID;
+		self.stopHeroAnimations(self.hero);
 	}
 
 	self.getMap = function() {
@@ -304,8 +304,8 @@ function _game()
 	}
 
 	self.getWorldByType = function(type) {
-		data = [];
-		for(each in self.worldToAdd) {
+		var data = [];
+		for(var each in self.worldToAdd) {
 			if(self.worldToAdd[each]['type'] == type) {
 				data.push(self.worldToAdd[each]);
 			}
@@ -364,10 +364,10 @@ function _game()
 	}
 
 	self.gameToWorldPosition = function(objX, objY) {
-		heroX = w/2 - ((self.RESOURCES['HERO']['width'])/2);
-		heroY = h/2 - ((self.RESOURCES['HERO']['height'])/2);
-		wx = heroX + ((self.playerGameCoords['x'] - objX ));
-		wy = heroY + ((self.playerGameCoords['y'] - objY ));
+		var heroX = w/2 - ((self.RESOURCES['HERO']['width'])/2);
+		var heroY = h/2 - ((self.RESOURCES['HERO']['height'])/2);
+		var wx = heroX + ((self.playerGameCoords['x'] - objX ));
+		var wy = heroY + ((self.playerGameCoords['y'] - objY ));
 		return [wx, wy]
 	}
 
@@ -584,12 +584,12 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		hero.x = BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
-		hero.y = BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
-		hero.wasMoving = false;
-		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
-		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
-		world.addChild(hero);
+		self.hero.x = BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
+		self.hero.y = BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
+		self.hero.wasMoving = false;
+		self.hero.centerPlayerX = parseInt(self.hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
+		self.hero.centerPlayerY = parseInt(self.hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
+		world.addChild(self.hero);
 	}
 
 	self.doAnimation = function(hero, animation)
@@ -623,8 +623,8 @@ function _game()
 				altPlayer = new Object()
 				altPlayer.x = player.centerPlayerX;
 				altPlayer.y = player.centerPlayerY;
-		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
-		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
+				self.hero.centerPlayerX = parseInt(self.hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
+				self.hero.centerPlayerY = parseInt(self.hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 				altPlayer.height = player.height;
 				altPlayer.width = player.width;
 
@@ -650,18 +650,18 @@ function _game()
 		world.x = world.x + x;
 		world.y = world.y + y;
 
-		hero.x = hero.x - x;
-		hero.y = hero.y - y;
+		self.hero.x = self.hero.x - x;
+		self.hero.y = self.hero.y - y;
 	
 		if(self.targetArrow != undefined) {
 			self.targetArrow.x = self.targetArrow.x + x;
 			self.targetArrow.y = self.targetArrow.y + y;
 		}
 
-		hero.centerPlayerX = parseInt(hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
-		hero.centerPlayerY = parseInt(hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
+		self.hero.centerPlayerX = parseInt(self.hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
+		self.hero.centerPlayerY = parseInt(self.hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 
-		self.sortPlayerInWorld(hero);
+		self.sortPlayerInWorld(self.hero);
 
 		self.worldOffsetX = self.worldOffsetX - x;
 		self.worldOffsetY = self.worldOffsetY - y;
@@ -814,7 +814,7 @@ function _game()
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
 			self.worldToAdd = [];
-			self.sortPlayerInWorld(hero);
+			self.sortPlayerInWorld(self.hero);
 		}
 	}
 
@@ -852,7 +852,7 @@ function _game()
 
                 if(self.mouseDown && self.clickedAt.length == 0)
                 { 
-			direction = self.utils.directionMouse(MOVEMENT_SPEED, hero);
+			direction = self.utils.directionMouse(MOVEMENT_SPEED, self.hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			self.moveHero(xDirection, yDirection);
@@ -861,19 +861,19 @@ function _game()
 		if(self.keyPressed.length != []) {
 			self.clickedAt = [];
 			self.autoMove = false;
-			direction = self.utils.directionKeys(MOVEMENT_SPEED, hero);
+			direction = self.utils.directionKeys(MOVEMENT_SPEED, self.hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			if(xDirection != 0 || yDirection != 0) {
 				self.moveHero(xDirection, yDirection);
 			}
 		}
-		if(hero.wasMoving && !self.maouseDown && self.keyPressed.length < 1)
+		if(self.hero.wasMoving && !self.maouseDown && self.keyPressed.length < 1)
 		{	
 			if(self.clickedAt.length == 0) {
 				self.logPlayerClick(direction);
 			}
-			self.utils.autoMoveHero(hero);
+			self.utils.autoMoveHero(self.hero);
 		}
 
 		ticks++;
@@ -896,7 +896,7 @@ function _game()
 							"action"    : "move", 
 							"target_x"  : self.playerGameCoords['x'], 
 							"target_y"  : self.playerGameCoords['y'],
-                                                        "direction" : hero.animation}));
+                                                        "direction" : self.hero.animation}));
 			self.lastSentMessage = self.utils.now();
 		}
 	}
@@ -912,7 +912,7 @@ function _game()
 	}
 
 	self.chop = function() {
-		overlap = (self.utils.rectIntersection(hero, self.target));
+		overlap = (self.utils.rectIntersection(self.hero, self.target));
 		if(overlap) {
 			if(self.target.type == self.utils.ENTITY) {
 				self.doPlayerAction("chop", self.target._id);	
