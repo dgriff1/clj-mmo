@@ -262,12 +262,11 @@ function _game()
 
 		self.initCanvas();
 
-		stage = new Stage(canvas);
-		stage.enableMouseOver(20); 
+		self.stage = new Stage(canvas);
+		self.stage.enableMouseOver(20); 
 
-		world = new Container();
-		stage.addChild(world);
-		self.stage = stage;	
+		self.world = new Container();
+		self.stage.addChild(self.world);
 
 		self.utils.initializeSpriteSheets();
 
@@ -349,8 +348,8 @@ function _game()
 						self.movePlayer(data);
 					}
 				}
-				if(stage != undefined) {
-					stage.update();
+				if(self.stage != undefined) {
+					self.stage.update();
 				}
                 	        return;
 			}
@@ -415,15 +414,15 @@ function _game()
 			loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
 			aPlayer.x = loc[0];
 			aPlayer.y = loc[1];
-			world.addChild(aPlayer);
+			self.world.addChild(aPlayer);
 		}
 		self.addOurHeroToWorld();
 	 	self.checkToAddPlayers();
 	}
 
 	self.resetWorld = function() {
-		world.removeAllChildren();
-		world.x = world.y = 0;
+		self.world.removeAllChildren();
+		self.world.x = self.world.y = 0;
 		self.worldOffsetX = 0;
 		self.worldOffsetY = 0;
 	}
@@ -445,7 +444,7 @@ function _game()
 		}
 		self.addPlayersToWorld();
 		self.removeMapLoader();
-		stage.update();
+		self.stage.update();
 
 	}
 
@@ -453,12 +452,12 @@ function _game()
 		img = new Bitmap('/assets/clock.png');
 		img.x = self.settings.BASE_WIDTH/2 - 15;	
 		img.y = 40;
-		stage.addChild(img);
+		self.stage.addChild(img);
 		self.loadingClock = img;
 	}
 
 	self.removeMapLoader = function() {
-		stage.removeChild(self.loadingClock);
+		self.stage.removeChild(self.loadingClock);
 	}
 
 	self.drawHud = function() {
@@ -471,7 +470,7 @@ function _game()
     		selfBox.graphics.beginFill("white").drawRect(0, 0, 50, 80);
     		selfBox.x = 10;
 		selfBox.y = self.settings.BASE_HEIGHT/2 + 50;
-    		stage.addChild(selfBox);
+    		self.stage.addChild(selfBox);
 	
 		// hero left
 		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
@@ -480,7 +479,7 @@ function _game()
 		img.y = self.settings.BASE_HEIGHT/2 + 50;
 		img.width = 64;
 		img.height = 64;
-		stage.addChild(img);
+		self.stage.addChild(img);
 
  		// TARGET BOX
     		selfBox = new createjs.Shape();
@@ -490,7 +489,7 @@ function _game()
     		selfBox.graphics.beginFill("white").drawRect(0, 0, 50, 80);
     		selfBox.x = self.settings.BASE_WIDTH - 60;
 		selfBox.y = self.settings.BASE_HEIGHT/2 + 50;
-    		stage.addChild(selfBox);
+    		self.stage.addChild(selfBox);
 
 		// hero right
 		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
@@ -500,7 +499,7 @@ function _game()
 		img.width = 64;
 		img.height = 64;
 		self.targetHudBox = img;
-		stage.addChild(img);
+		self.stage.addChild(img);
 
 		//conditions
 		for(c = 0; c < 5; c = c + 1) {
@@ -511,7 +510,7 @@ function _game()
     			need.graphics.beginFill("white").drawCircle(0, 0, 10);
     			need.x = self.settings.BASE_WIDTH - (17 + (c*25));
 			need.y = 14;
-    			stage.addChild(need);
+    			self.stage.addChild(need);
 		}
 		// needs
 		for(n = 0; n < 5; n = n + 1) {
@@ -522,7 +521,7 @@ function _game()
     			need.graphics.beginFill("white").drawRect(0, 0, 20, 20);
     			need.x = self.settings.BASE_WIDTH - (27 + (n*25));
 			need.y = 32;
-    			stage.addChild(need);
+    			self.stage.addChild(need);
 		}
 	
 		// hot keys
@@ -541,9 +540,9 @@ function _game()
     				selfBox.x = 330 + (40 + (hot*25));
 			}
 			selfBox.snapToPixel = true;
-   	 		stage.addChild(selfBox);
+   	 		self.stage.addChild(selfBox);
 		}
-    		stage.update();
+    		self.stage.update();
 		// chat box
     		//selfBox = new createjs.Shape();
 		//selfBox.graphics.beginStroke("#000000");
@@ -590,7 +589,7 @@ function _game()
 		self.hero.wasMoving = false;
 		self.hero.centerPlayerX = parseInt(self.hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
 		self.hero.centerPlayerY = parseInt(self.hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
-		world.addChild(self.hero);
+		self.world.addChild(self.hero);
 	}
 
 	self.doAnimation = function(hero, animation)
@@ -608,7 +607,7 @@ function _game()
 		hero.currentFrame = 48;
 		hero.gotoAndStop('down');
 		//hero.gotoAndPlay('idle');
-		stage.update();
+		self.stage.update();
 	}
 
 	self.sortPlayerInWorld = function(player) {
@@ -631,15 +630,15 @@ function _game()
 
 				overlap = (self.utils.calculateIntersection(eObj, altPlayer));
 
-				objID = (world.getChildIndex(eObj));
-				pID = (world.getChildIndex(player));
+				objID = (self.world.getChildIndex(eObj));
+				pID = (self.world.getChildIndex(player));
 
 				if(overlap) {	
 					if(eObj.y + eObj.height - (player.height/2) < player.centerPlayerY && pID < objID) {
-						world.swapChildren(eObj, player);
+						self.world.swapChildren(eObj, player);
 					}
 					else if(eObj.y + eObj.height - (player.height/2) > player.centerPlayerY && pID > objID) {
-						world.swapChildren(eObj, player);
+						self.world.swapChildren(eObj, player);
 					}
 				}
 			}
@@ -648,8 +647,8 @@ function _game()
 
 	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
-		world.x = world.x + x;
-		world.y = world.y + y;
+		self.world.x = self.world.x + x;
+		self.world.y = self.world.y + y;
 
 		self.hero.x = self.hero.x - x;
 		self.hero.y = self.hero.y - y;
@@ -671,7 +670,7 @@ function _game()
                 self.playerGameCoords['y'] = self.playerGameCoords['y'] + y ;
 
 		self.sendPlayerState();
-		stage.update();
+		self.stage.update();
 
 	}
 
@@ -727,7 +726,7 @@ function _game()
 		self.currentPlayers[id] = newHero;
 		self.sortPlayerInWorld(newHero);
 		newHero.gotoAndStop("down");
-		world.addChild(newHero);
+		self.world.addChild(newHero);
 	}
 
 	// Checks to see if others players need to be added to our world
@@ -780,11 +779,11 @@ function _game()
 		if(nextTimer - self.frameTimer > 1)
 		{
                         self.framesPerSecond = self.framesPerSecondCounter - 1;
-                        for(children in stage.children) {
-				if(stage.children[children].text != undefined) {
-					if(stage.children[children].text.indexOf("FPS") !== -1) {
-						stage.children[children].text = "FPS: " + self.framesPerSecond;
-						stage.update();
+                        for(children in self.stage.children) {
+				if(self.stage.children[children].text != undefined) {
+					if(self.stage.children[children].text.indexOf("FPS") !== -1) {
+						self.stage.children[children].text = "FPS: " + self.framesPerSecond;
+						self.stage.update();
 					}
 				}
 			}
@@ -830,13 +829,13 @@ function _game()
 		if(self.utils.now() - self.actionTextTimer > 0.025) {
 
 			self.actionTextTimer = self.utils.now();
-			for(each in stage.children) {
-				if("actionText" in stage.children[each]) {	
-					stage.children[each].y = stage.children[each].y + 3;	
-					if(stage.children[each].y > 200) {
-						stage.removeChild(stage.children[each]);
+			for(each in self.stage.children) {
+				if("actionText" in self.stage.children[each]) {	
+					self.stage.children[each].y = self.stage.children[each].y + 3;	
+					if(self.stage.children[each].y > 200) {
+						self.stage.removeChild(self.stage.children[each]);
 					}
-					stage.update();
+					self.stage.update();
 				}
 			}
 		}
@@ -908,8 +907,8 @@ function _game()
 		textInfo.x = tx - self.worldOffsetX;
 		textInfo.y = ty - self.worldOffsetY;
 		textInfo.textBaseline = "alphabetic";
-		stage.addChild(textInfo);
-		stage.update();
+		self.stage.addChild(textInfo);
+		self.stage.update();
 	}
 
 	self.chop = function() {
@@ -928,13 +927,13 @@ function _game()
 		var filter = new createjs.ColorMatrixFilter(matrix);		
 		img.filters = [filter];
 		img.cache(0, 0, img.image.width, img.image.height);
-		stage.update();
+		self.stage.update();
 	}
 
 	self.removeHighlightObject = function(img) {
 		img.filters = [];
 		img.cache(0, 0, img.image.width, img.image.height);
-		stage.update();
+		self.stage.update();
 	}
 
 	self.targetObject = function(obj) {
@@ -942,23 +941,23 @@ function _game()
 		target_y = self.targetHudBox.y;
 
 		if(self.targetArrow != undefined) {
-			stage.removeChild(self.targetArrow);
+			self.stage.removeChild(self.targetArrow);
 		}
 		targetArrow = new Bitmap('/assets/target.png');
 		targetArrow.x = obj.target.x - self.worldOffsetX + (obj.target.image.width/2) - (32/2);
 		targetArrow.y = obj.target.y - self.worldOffsetY;
-		stage.addChild(targetArrow);
+		self.stage.addChild(targetArrow);
 		self.targetArrow = targetArrow;
 
-		stage.removeChild(self.targetHudBox);
+		self.stage.removeChild(self.targetHudBox);
 		targetImg = new Bitmap(obj.target.image.src);
 		targetImg.x = target_x;
 		targetImg.y = target_y;
-		stage.addChild(targetImg);
+		self.stage.addChild(targetImg);
 		targetImg.scale = 0.3;
 		self.targetHudBox = targetImg;
 		self.target = obj.target;
-		stage.update();
+		self.stage.update();
 			
 	}
 
@@ -969,8 +968,10 @@ function _game()
 
 		img.x = x;
 		img.y = y;
-		img.width = img.image.width;
-		img.height = img.image.height;
+		if(!self.testMode) {
+			img.width = img.image.width;
+			img.height = img.image.height;
+		}
 		img.snapToPixel = true;
                 img.type = type;
 		img._id = _id;
@@ -990,7 +991,7 @@ function _game()
 			 } );
 		}
 
-		world.addChild(img);
+		self.world.addChild(img);
 		//img.cache(x, y, 64, 64);
 		if(type == self.utils.ENTITY) {	
 			self.entities.push(img);

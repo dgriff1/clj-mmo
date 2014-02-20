@@ -9,6 +9,28 @@ playerStruct = {  '_id' : 1,
 ourGame.playerGameCoords['x'] = 100;
 ourGame.playerGameCoords['y'] = 50;
 
+function world() {
+  self = this;
+
+  self.container = [];
+
+  self.addChild = function(e) {
+    self.container.push(e);
+  }
+
+  self.removeAllChildren = function() {
+    self.container = [];
+  }
+
+  self.removeChild = function(e) {
+    self.container.pop(e);
+  }
+
+  self.update = function() {
+
+  }
+}
+
 test( "Width settr check", function() {
   ok( ourGame.width != undefined, "Passed!" );
 });
@@ -115,6 +137,55 @@ test( "Pixel to Game test players", function() {
   var p2G = ourGame.pixelToGame(200, 300);
   ok(p2G[0] == 200, "Passed!");
   ok(p2G[1] == 350, "Passed!");
+});
+
+test( "addWidgetToWorld test", function() {
+  ourGame.entities = [];
+  ourGame.world = new world();
+  ourGame.addWidgetToWorld(1, 1, '/assets/clock.png', ourGame.utils.ENTITY, -1, false);
+  ok(ourGame.world.container[0]['_id'] == -1, "Passed!");
+  ok(ourGame.world.container[0]['x'] == 467, "Passed!");
+  ok(ourGame.world.container[0]['y'] == 192, "Passed!");
+});
+
+
+test( "addPlayersToWorld test", function() {
+  var player1 = new Object();
+  ourGame.world = new world();
+  player1.x = 2;
+  player1.y = 2;
+  ourGame.currentPlayers = [player1];
+  ourGame.hero = new Object();
+  ourGame.hero.x = 1;
+  ourGame.hero.y = 1;
+  ourGame.playersToAdd = [];
+  ourGame.addPlayersToWorld();
+  ok(ourGame.world.container[1]['x'] == 368, "Passed!");
+  ok(ourGame.world.container[1]['y'] == 143, "Passed!");
+});
+
+test( "reset World test", function() {
+  ourGame.world = new world();
+  ourGame.world.container = [1, 2, 3];
+  ourGame.resetWorld();
+  ok(ourGame.world.container.length == 0, "Passed!");
+});
+
+
+test( "draw test", function() {
+  ourGame.hero = new Object();
+  ourGame.hero.x = 1;
+  ourGame.hero.y = 1;
+  ourGame.worldToAdd = [];
+  ourGame.entities = [];
+  var entity = {"location" : {"x" : 1, "y" : 1}, "resource" : "TREE", "type" : ourGame.utils.ENTITY};
+  ourGame.worldToAdd = [entity];
+  ourGame.world = new world();
+  ourGame.stage = new world();
+  ourGame.draw();
+  logger(ourGame.entities);
+  ok(ourGame.entities[0]['x'] == 467, "Passed!");
+  ok(ourGame.entities[0]['y'] == 192, "Passed!");
 });
 
 
