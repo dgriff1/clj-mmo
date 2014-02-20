@@ -76,7 +76,46 @@ test( "sortWorldType ENTITY test", function() {
 });
 
 
+test( "sortWorldData test", function() {
+  var TERRAIN = {'id' : 1, 'location' : {'x' : 10, 'y' : 30}, 'type' : ourGame.utils.TERRAIN};
+  var ENTITY = {'id' : 2, 'location' : {'x' : 10, 'y' : 30}, 'type' : ourGame.utils.ENTITY};
+  ourGame.worldToAdd = [ENTITY, TERRAIN];
+  ourGame.sortWorldData();
+  ok(ourGame.worldToAdd[1]['type'] == ourGame.utils.ENTITY, "Passed!");
+  ok(ourGame.worldToAdd[0]['type'] == ourGame.utils.TERRAIN, "Passed!");
+});
 
+test( "handleResponse test ENTITIES and TERRAIN", function() {
+  var data = '[{"id" : 1}, {"id" : 2}]';
+  ourGame.handleResponse(data);
+  ok(ourGame.worldToAdd.length == 2, "Passed!");
+});
 
+test( "handleResponse test players", function() {
+  var data = '{"id" : 2, "type" : "player"}';
+  ourGame.handleResponse(data);
+  ok(ourGame.playersToAdd[0]['id'] == 2, "Passed!");
+});
+
+test( "gameToWorld test players", function() {
+  var g2W = ourGame.gameToWorldPosition(200, 300);
+  ok(g2W[0] == 268, "Passed!");
+  ok(g2W[1] == -107, "Passed!");
+});
+
+test( "world to Game test players", function() {
+  var w2G = ourGame.worldToGamePosition(200, 300);
+  ok(w2G[0] == 268, "Passed!");
+  ok(w2G[1] == -107, "Passed!");
+});
+
+test( "Pixel to Game test players", function() {
+  var p2G = ourGame.pixelToGame(200, 300);
+  ourGame.w = 800;
+  ourGame.h = 300;
+  logger(p2G);
+  ok(p2G[0] == 268, "Passed!");
+  ok(p2G[1] == -107, "Passed!");
+});
 
 

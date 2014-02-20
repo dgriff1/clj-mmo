@@ -1,13 +1,11 @@
 
 
-window.Utils.loadSettings();
-
 function _game()
 {
 	window.Game = this;
 	var self = this,
-		w = BASE_WIDTH,
-		h = BASE_HEIGHT,
+		w = window.Settings.BASE_WIDTH,
+		h = window.Settings.BASE_HEIGHT,
 		scale = 1,//snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
 		ticks = 0,
 		canvas,ctx,
@@ -18,6 +16,7 @@ function _game()
 
 	// utils
 	self.utils = window.Utils;
+        self.settings = window.Settings;
 	self.RESOURCES = self.utils.RESOURCES;
 
 	// canvas stuff
@@ -218,7 +217,7 @@ function _game()
 
 	self.initHero = function () { 
 		self.hero = new Hero(self.RESOURCES['HERO']['spriteSheet']);
-		if(ENABLE_SHADOWS) {
+		if(self.settings.ENABLE_SHADOWS) {
 			self.hero.shadow = new createjs.Shadow("#000000", 1, 5, 10);
 		}
 		self.hero.currentFrame = 1;
@@ -240,8 +239,8 @@ function _game()
 
 	self.initCanvas = function() {
 		canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
-		canvas.width = BASE_WIDTH;
-		canvas.height = BASE_HEIGHT;
+		canvas.width =  self.settings.BASE_WIDTH;
+		canvas.height = self.settings.BASE_HEIGHT;
 		document.body.appendChild(canvas);
 		textBox = document.createElement('textarea');
 		textBox.value = "Player2: F U FGT ;) A/S/L\rPlayer1: LAAMLOLOL";
@@ -251,8 +250,8 @@ function _game()
 		document.body.appendChild(textBox);
 		self.w  = self.utils.getWidth(canvas);
 		self.h  = self.utils.getHeight(canvas);
-		self.ratioW = self.w / BASE_WIDTH;
-		self.ratioH = self.h / BASE_HEIGHT;	
+		self.ratioW = self.w / self.settings.BASE_WIDTH;
+		self.ratioH = self.h / self.settings.BASE_HEIGHT;	
 	}
 	
 	self.initializeGame = function() {
@@ -297,7 +296,7 @@ function _game()
 		}
 		
 		
-		createjs.Ticker.setFPS(FPS_RATE);
+		createjs.Ticker.setFPS(self.settings.FPS_RATE);
 		createjs.Ticker.addEventListener("tick", function() { self.tick();  });
 		canvas.addEventListener("mousemove", function(e) { self.handleMouseMove(e);  });
 		createjs.Ticker.useRAF = true;
@@ -328,10 +327,10 @@ function _game()
 
 	self.sortWorldData = function() {
 
-		sortableTerrain = self.getWorldByType(self.utils.TERRAIN);
+		var sortableTerrain = self.getWorldByType(self.utils.TERRAIN);
 		sortableTerrain = self.sortWorldType(sortableTerrain, self.utils.TERRAIN);
 
-		sortableEntity = self.getWorldByType(self.utils.ENTITY);
+		var sortableEntity = self.getWorldByType(self.utils.ENTITY);
 		sortableEntity = self.sortWorldType(sortableEntity, self.utils.ENTITY);
 
 		self.worldToAdd = sortableTerrain.concat(sortableEntity);
@@ -339,7 +338,7 @@ function _game()
 
 	self.handleResponse = function(data) {
 		data = JSON.parse(data);
-		dataLength = data.length;
+		var dataLength = data.length;
 		if(dataLength === undefined) {
                 	if(data.type == self.utils.PLAYER) {
 				if(data._id != self.playerID) {
@@ -372,20 +371,20 @@ function _game()
 	}
 
 	self.worldToGamePosition = function(X, Y) {
-		heroX = w/2 - ((self.RESOURCES['HERO']['width'])/2);
-		heroY = h/2 - ((self.RESOURCES['HERO']['height'])/2);
-		wx = X - heroX;
-		wy = Y - heroY;
-		rx = self.playerGameCoords['x'] - wx;
-		ry = self.playerGameCoords['y'] - wy;
+		var heroX = w/2 - ((self.RESOURCES['HERO']['width'])/2);
+		var heroY = h/2 - ((self.RESOURCES['HERO']['height'])/2);
+		var wx = X - heroX;
+		var wy = Y - heroY;
+		var rx = self.playerGameCoords['x'] - wx;
+		var ry = self.playerGameCoords['y'] - wy;
 		return [rx, ry]
 	}
 
 	self.pixelToGame = function(X, Y) {
-		self.ratioW = self.w / BASE_WIDTH;
-		self.ratioH = self.h / BASE_HEIGHT;	
-		dx = parseInt((parseInt(X) / self.ratioW));
-		dy = parseInt((parseInt(Y) / self.ratioH));
+		self.ratioW = self.w / self.settings.BASE_WIDTH;
+		self.ratioH = self.h / self.settings.BASE_HEIGHT;	
+		var dx = parseInt((parseInt(X) / self.ratioW));
+		var dy = parseInt((parseInt(Y) / self.ratioH));
 		return [dx, dy]
 	}
 
@@ -452,7 +451,7 @@ function _game()
 
 	self.drawMapLoader = function() {
 		img = new Bitmap('/assets/clock.png');
-		img.x = BASE_WIDTH/2 - 15;	
+		img.x = self.settings.BASE_WIDTH/2 - 15;	
 		img.y = 40;
 		stage.addChild(img);
 		self.loadingClock = img;
@@ -471,14 +470,14 @@ function _game()
 		selfBox.snapToPixel = true;
     		selfBox.graphics.beginFill("white").drawRect(0, 0, 50, 80);
     		selfBox.x = 10;
-		selfBox.y = BASE_HEIGHT/2 + 50;
+		selfBox.y = self.settings.BASE_HEIGHT/2 + 50;
     		stage.addChild(selfBox);
 	
 		// hero left
 		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
 		img.gotoAndStop("down");
 		img.x = 3;
-		img.y = BASE_HEIGHT/2 + 50;
+		img.y = self.settings.BASE_HEIGHT/2 + 50;
 		img.width = 64;
 		img.height = 64;
 		stage.addChild(img);
@@ -489,15 +488,15 @@ function _game()
 		selfBox.graphics.setStrokeStyle(1);
 		selfBox.snapToPixel = true;
     		selfBox.graphics.beginFill("white").drawRect(0, 0, 50, 80);
-    		selfBox.x = BASE_WIDTH - 60;
-		selfBox.y = BASE_HEIGHT/2 + 50;
+    		selfBox.x = self.settings.BASE_WIDTH - 60;
+		selfBox.y = self.settings.BASE_HEIGHT/2 + 50;
     		stage.addChild(selfBox);
 
 		// hero right
 		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
 		img.gotoAndStop("down");
-		img.x = BASE_WIDTH - 68;
-		img.y = BASE_HEIGHT/2 + 50;
+		img.x = self.settings.BASE_WIDTH - 68;
+		img.y = self.settings.BASE_HEIGHT/2 + 50;
 		img.width = 64;
 		img.height = 64;
 		self.targetHudBox = img;
@@ -510,7 +509,7 @@ function _game()
 			need.graphics.setStrokeStyle(1);
 			need.snapToPixel = true;
     			need.graphics.beginFill("white").drawCircle(0, 0, 10);
-    			need.x = BASE_WIDTH - (17 + (c*25));
+    			need.x = self.settings.BASE_WIDTH - (17 + (c*25));
 			need.y = 14;
     			stage.addChild(need);
 		}
@@ -519,7 +518,7 @@ function _game()
 		for(hot = 0; hot < 23; hot = hot + 1) {
 			if(hot == 0) {
 				selfBox = new Bitmap('/assets/axe.gif');
-				selfBox.y = BASE_HEIGHT - 20;
+				selfBox.y = self.settings.BASE_HEIGHT - 20;
     				selfBox.x = 60 + (40 + (hot*25));
 			}
 			else {
@@ -531,11 +530,11 @@ function _game()
 				}
 				else if(hot > 17) {
     					selfBox.graphics.beginFill("white").drawRect(0, 0, 20, 20);
-					selfBox.y = BASE_HEIGHT - 20;
+					selfBox.y = self.settings.BASE_HEIGHT - 20;
 				}
 				else {
     					selfBox.graphics.beginFill("white").drawCircle(0, 0, 10);
-					selfBox.y = BASE_HEIGHT - 10;
+					selfBox.y = self.settings.BASE_HEIGHT - 10;
 				}
     				selfBox.x = 70 + (40 + (hot*25));
 			}
@@ -584,8 +583,8 @@ function _game()
 	}
 
 	self.addOurHeroToWorld = function() {
-		self.hero.x = BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
-		self.hero.y = BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
+		self.hero.x = self.settings.BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
+		self.hero.y = self.settings.BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
 		self.hero.wasMoving = false;
 		self.hero.centerPlayerX = parseInt(self.hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
 		self.hero.centerPlayerY = parseInt(self.hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
@@ -698,10 +697,10 @@ function _game()
 		self.initPlayerPosition(x, y);
 
 		// need to make a circle calculation
-		if(self.playerGameCoords['x'] > self.playerAtProximity['location']['x'] + NEW_AREA_WIDTH ||  
-			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - NEW_AREA_WIDTH  || 
-			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + NEW_AREA_HEIGHT  ||
-			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - NEW_AREA_HEIGHT ) {
+		if(self.playerGameCoords['x'] > self.playerAtProximity['location']['x'] + self.settings.NEW_AREA_WIDTH ||  
+			self.playerGameCoords['x'] < self.playerAtProximity['location']['x'] - self.settings.NEW_AREA_WIDTH  || 
+			self.playerGameCoords['y'] > self.playerAtProximity['location']['y'] + self.settings.NEW_AREA_HEIGHT  ||
+			self.playerGameCoords['y'] < self.playerAtProximity['location']['y'] - self.settings.NEW_AREA_HEIGHT ) {
 			self.getMap();
 		} 
 	}
@@ -719,7 +718,7 @@ function _game()
 		newHero.realY = heroLocation.y;
 		newHero.wasMoving = false;	
 		newHero.direction = undefined;
-		if(ENABLE_SHADOWS) {
+		if(self.settings.ENABLE_SHADOWS) {
              		newHero.shadow = new createjs.Shadow("#000000", 1, 5, 10);	
 		}
 		newHero.reset();
@@ -807,9 +806,9 @@ function _game()
 	}
 
 	self.drawWorldData = function() {
-		if(!self.sorted && self.utils.now() - self.lastHandleMessage > MESSAGE_INTERVAL) {
+		if(!self.sorted && self.utils.now() - self.lastHandleMessage > self.settings.MESSAGE_INTERVAL) {
 			self.sortWorldData();	
-			//MESSAGE_INTERVAL = MESSAGE_INTERVAL + 10000.00;
+			//self.settings.MESSAGE_INTERVAL = self.settings.MESSAGE_INTERVAL + 10000.00;
 			self.draw();
 			self.lastHandleMessage = 0.00;
 			self.sorted = true;
@@ -819,7 +818,7 @@ function _game()
 	}
 
 	self.webSocketHeartBeat = function() {
-		if(self.utils.now() - self.heartBeatCounter > HEARTBEAT) {
+		if(self.utils.now() - self.heartBeatCounter > self.settings.HEARTBEART) {
 			self.heartBeatCounter = self.utils.now();
 			self.sendPlayerState();
 		}
@@ -852,7 +851,7 @@ function _game()
 
                 if(self.mouseDown && self.clickedAt.length == 0)
                 { 
-			direction = self.utils.directionMouse(MOVEMENT_SPEED, self.hero);
+			direction = self.utils.directionMouse(self.settings.MOVEMENT_SPEED, self.hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			self.moveHero(xDirection, yDirection);
@@ -861,7 +860,7 @@ function _game()
 		if(self.keyPressed.length != []) {
 			self.clickedAt = [];
 			self.autoMove = false;
-			direction = self.utils.directionKeys(MOVEMENT_SPEED, self.hero);
+			direction = self.utils.directionKeys(self.settings.MOVEMENT_SPEED, self.hero);
 			xDirection = direction[0];
 			yDirection = direction[1];
 			if(xDirection != 0 || yDirection != 0) {
@@ -891,7 +890,7 @@ function _game()
 	}
 
 	self.sendPlayerState = function() {
-		if(self.utils.now() - self.lastSentMessage > UPDATE_RATE) {
+		if(self.utils.now() - self.lastSentMessage > self.settings.UPDATE_RATE) {
 			self.doSend(JSON.stringify({    "name"      : "player", 
 							"action"    : "move", 
 							"target_x"  : self.playerGameCoords['x'], 
@@ -993,7 +992,7 @@ function _game()
 		//img.cache(x, y, 64, 64);
 		if(type == self.utils.ENTITY) {	
 			self.entities.push(img);
-			if(ENABLE_SHADOWS) {
+			if(self.settings.ENABLE_SHADOWS) {
              	   		img.shadow = new createjs.Shadow("#000000", 1, 2, 10);	
 			}
 		}
@@ -1063,8 +1062,8 @@ function _game()
 	self.handleResize = function(e) {
 		self.w  = self.utils.getWidth(canvas);
 		self.h  = self.utils.getHeight(canvas);
-		self.ratioW = self.w / BASE_WIDTH;
-		self.ratioH = self.h / BASE_HEIGHT;	
+		self.ratioW = self.w / self.settings.BASE_WIDTH;
+		self.ratioH = self.h / self.settings.BASE_HEIGHT;	
 	}
 
 	self.preloadResources();

@@ -7,6 +7,8 @@ function _utils()
 {
 	window.Utils = this;
 	var self = this;
+        
+        self.settings = window.Settings;   
 
 	self.leftKey = 37;
 	self.rightKey = 39;
@@ -54,18 +56,6 @@ function _utils()
 			}
 		}
 		self.RESOURCES['HERO']['spriteSheet'] = new SpriteSheet(heroSpriteData);
-	}
-	
-	
-	self.loadSettings = function() {
-		jQuery.ajax({
-			url: "/js/settings.cfg",
-			async: false,
-			cache: false,
-			success: function(data) {
-				eval(data);
-			}
-		});
 	}
 	
 	self.now = function() {
@@ -142,8 +132,8 @@ function _utils()
 			movementSpeed = movementSpeed + 1;
 		}
 	
-		if(movementSpeed > MAX_MOVEMENT_SPEED) {
-			movementSpeed = MAX_MOVEMENT_SPEED;
+		if(movementSpeed > self.settings.MAX_MOVEMENT_SPEED) {
+			movementSpeed = self.settings.MAX_MOVEMENT_SPEED;
 		}
 		
 	
@@ -210,8 +200,8 @@ function _utils()
 			movementSpeed = movementSpeed - accel;
 		}
 	
-		if(movementSpeed > MAX_MOVEMENT_SPEED) {
-			movementSpeed = MAX_MOVEMENT_SPEED;
+		if(movementSpeed > self.settings.MAX_MOVEMENT_SPEED) {
+			movementSpeed = self.settings.MAX_MOVEMENT_SPEED;
 		}
 	
 		return movementSpeed;
