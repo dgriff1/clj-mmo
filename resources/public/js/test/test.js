@@ -30,4 +30,21 @@ test( "calculate other players position", function() {
   ok( parseInt(pos[1]) == 188, "Passed!" );
 });
 
+test( "prefab test", function() {
+  o = new Object();
+  o.image = 'string';
+  isPrefab =  ourGame.isPrefab(o);
+  ok(!isPrefab, "Passed!");
+  o = new Object();
+  o.image = [];
+  isPrefab =  ourGame.isPrefab(o);
+  ok(isPrefab, "Passed!");
+});
 
+test( "getWorldType test", function() {
+  o = new Object();
+  o.type = ourGame.utils.ENTITY;
+  ourGame.worldToAdd.push(o);
+  t = ourGame.getWorldByType(ourGame.utils.ENTITY);
+  ok(o.type == t[0].type, "Passed");
+});
