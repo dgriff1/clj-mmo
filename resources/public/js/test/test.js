@@ -110,12 +110,11 @@ test( "world to Game test players", function() {
 });
 
 test( "Pixel to Game test players", function() {
-  var p2G = ourGame.pixelToGame(200, 300);
   ourGame.w = 800;
   ourGame.h = 300;
-  logger(p2G);
-  ok(p2G[0] == 268, "Passed!");
-  ok(p2G[1] == -107, "Passed!");
+  var p2G = ourGame.pixelToGame(200, 300);
+  ok(p2G[0] == 200, "Passed!");
+  ok(p2G[1] == 350, "Passed!");
 });
 
 
