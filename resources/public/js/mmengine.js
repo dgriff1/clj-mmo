@@ -391,10 +391,10 @@ function _game()
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((self.RESOURCES['HERO']['width'])/2);
 			hy = h/2 - ((self.RESOURCES['HERO']['height'])/2);
-			pos = self.gameToWorldPosition(x, y);
+			var pos = self.gameToWorldPosition(x, y);
 		}
 		else {
-			pos = self.gameToWorldPosition(x, y);
+			var pos = self.gameToWorldPosition(x, y);
 		}
 		if(typeof(image) == "string") {
 			self.addWidget(pos[0], pos[1], self.assets[image], resourceType, _id);
@@ -409,9 +409,9 @@ function _game()
 
 
 	self.addPlayersToWorld = function() {
- 		for(player in self.currentPlayers) {
-			aPlayer = self.currentPlayers[player];
-			loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
+ 		for(var player in self.currentPlayers) {
+			var aPlayer = self.currentPlayers[player];
+			var loc = self.gameToWorldPosition(aPlayer.realX, aPlayer.realY);
 			aPlayer.x = loc[0];
 			aPlayer.y = loc[1];
 			self.world.addChild(aPlayer);
@@ -437,9 +437,9 @@ function _game()
 			if(self.worldToAdd[each] === undefined) {
 				continue;
 			}
-			_id = self.worldToAdd[each]['_id'];
-			x = self.worldToAdd[each]['location']['x'];
-			y = self.worldToAdd[each]['location']['y'];
+			var _id = self.worldToAdd[each]['_id'];
+			var x = self.worldToAdd[each]['location']['x'];
+			var y = self.worldToAdd[each]['location']['y'];
 			self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], _id, false);
 		}
 		self.addPlayersToWorld();
@@ -449,7 +449,7 @@ function _game()
 	}
 
 	self.drawMapLoader = function() {
-		img = new Bitmap('/assets/clock.png');
+		var img = new Bitmap('/assets/clock.png');
 		img.x = self.settings.BASE_WIDTH/2 - 15;	
 		img.y = 40;
 		self.stage.addChild(img);
@@ -473,7 +473,7 @@ function _game()
     		self.stage.addChild(selfBox);
 	
 		// hero left
-		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
+		var img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
 		img.gotoAndStop("down");
 		img.x = 3;
 		img.y = self.settings.BASE_HEIGHT/2 + 50;
@@ -962,7 +962,7 @@ function _game()
 	}
 
 	self.addWidget = function(x,y,image,type, _id) {
-		img = new Bitmap(image);
+		var img = new Bitmap(image);
 		x = Math.round(x);
 		y = Math.round(y);
 
