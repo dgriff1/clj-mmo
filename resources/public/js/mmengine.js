@@ -816,6 +816,7 @@ function _game()
 			self.sorted = true;
 			self.worldToAdd = [];
 			self.sortPlayerInWorld(self.hero);
+			self.hero.wasMoving = true;
 		}
 	}
 
@@ -869,7 +870,7 @@ function _game()
 				self.moveHero(xDirection * (self.utils.now() - self.lastFrame), yDirection * (self.utils.now() - self.lastFrame));
 			}
 		}
-		if(self.hero.wasMoving && !self.maouseDown && self.keyPressed.length < 1)
+		if(self.hero.wasMoving && !self.mouseDown && self.keyPressed.length < 1)
 		{	
 			if(self.clickedAt.length == 0) {
 				self.logPlayerClick(direction);
