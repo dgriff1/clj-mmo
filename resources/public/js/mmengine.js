@@ -233,6 +233,10 @@ function _game()
                                             "location" : {"x" : self.playerGameCoords['x'],
                                                           "y" : self.playerGameCoords['y']}
                                            }));
+
+		self.getMapOffsetX = self.playerGameCoords['x'] - self.playerAtProximity['location']['x'];
+		self.getMapOffsetY = self.playerGameCoords['y'] - self.playerAtProximity['location']['y'];
+
 		self.playerAtProximity['location']['x'] = self.playerGameCoords['x'];
 		self.playerAtProximity['location']['y'] = self.playerGameCoords['y'];
 	}
@@ -587,7 +591,7 @@ function _game()
 	self.addOurHeroToWorld = function() {
 		self.hero.x = self.settings.BASE_WIDTH/2 - ((self.RESOURCES['HERO']['width'])/2);
 		self.hero.y = self.settings.BASE_HEIGHT/2 - ((self.RESOURCES['HERO']['height'])/2);
-		self.hero.wasMoving = false;
+		//self.hero.wasMoving = false;
 		self.hero.centerPlayerX = parseInt(self.hero.x) + parseInt(self.RESOURCES['HERO']['width'] / 2);
 		self.hero.centerPlayerY = parseInt(self.hero.y) + parseInt(self.RESOURCES['HERO']['height'] / 2);
 		self.world.addChild(self.hero);
@@ -816,7 +820,10 @@ function _game()
 			self.sorted = true;
 			self.worldToAdd = [];
 			self.sortPlayerInWorld(self.hero);
-			self.hero.wasMoving = true;
+			if(self.clickedAt.length > 0) {
+				self.clickedAt[0] = self.clickedAt[0] - self.getMapOffsetX;
+				self.clickedAt[1] = self.clickedAt[1] - self.getMapOffsetY;
+			}
 		}
 	}
 
