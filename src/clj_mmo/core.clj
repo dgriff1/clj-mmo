@@ -21,7 +21,7 @@
 ;(prn "All Players " @all_players)
 
 ;; this will create a user
-;(def p-one (mmo/player-rec "123" [:sword], {:strength 1}, {:building  0}))
+(def p-one (mmo/player-rec "456" [:sword], {:strength 1}, {:building  0}))
 ;(db/persist-player nil nil nil p-one )
 ;(db/persist-entity { :location { :x 1 :y 10 } :type "terrain" :resource "terrain1.png" } )
 ;(db/persist-entity { :location { :x 4 :y 20 } :type "item" :resource "sword.png" } )

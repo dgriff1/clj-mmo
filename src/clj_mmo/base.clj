@@ -110,6 +110,5 @@
 (defn publish-to-close-players [ all_players e] 
 	;(prn "E " e " all " all_players)
 	(doall (map (fn [p] 
-					;(prn "PLayer " @(second p))
-					(if (close? e @(second p)) 
-						(enqueue (:socket @(second p)) (json-str e)))) @all_players)))
+				(if (and (not (nil? (:socket @(second p)))) (close? e @(second p))) 
+					(enqueue (:socket @(second p)) (json-str e)))) @all_players)))
