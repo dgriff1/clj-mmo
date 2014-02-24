@@ -56,9 +56,18 @@ def getObj(x, y, List):
 for i in range(300, 320):
     obj = exportList[i]
     obj['resource'] = 'BEACH'
-    adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
-    adjObj['resource'] = 'BEACH'
+    if exportList[i - 1]['location']['y'] < obj['location']['y']:
+    	adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
+    	adjObj['resource'] = 'BEACH_EDGE_RIGHT'
+    	adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
+    	adjObj['resource'] = 'BEACH_EDGE_LEFT'
+    else:
+    	adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
+    	adjObj['resource'] = 'BEACH_EDGE_DOWN'
+    	adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
+    	adjObj['resource'] = 'BEACH_EDGE_UP'
+	
 
-exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
+#exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
 
 writeToFile(exportList)
