@@ -30,10 +30,10 @@ function _utils()
 		'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
 		'WATER'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
 		'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_EDGE_LEFT'     : { 'image' : '/assets/smaller_beach_grass_curve_left.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_EDGE_RIGHT'     : { 'image' : '/assets/smaller_beach_grass_curve_right.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_EDGE_UP'     : { 'image' : '/assets/smaller_beach_grass_curve_up.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_EDGE_DOWN'     : { 'image' : '/assets/smaller_beach_grass_curve_down.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
+		'BEACH_LEFT'     : { 'image' : '/assets/smaller_beach_grass_curve_left.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
+		'BEACH_RIGHT'     : { 'image' : '/assets/smaller_beach_grass_curve_right.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
+		'BEACH_UP'     : { 'image' : '/assets/smaller_beach_grass_curve_up.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
+		'BEACH_DOWN'     : { 'image' : '/assets/smaller_beach_grass_curve_down.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
 		'BUSH'      : { 'image' : '/assets/bush.png' , 'type' : self.ENTITY}
 	}	
 	
