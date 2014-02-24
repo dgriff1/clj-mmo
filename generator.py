@@ -46,6 +46,19 @@ def writeToFile(exportList):
 	f.close()
 
 exportList = generator_base(MAX_ITER, "GRASS", "terrain")
+
+def getObj(x, y, List):
+    for i in List:
+        if i['location']['x'] == x and i['location']['y'] == y:
+            return i
+    return None
+
+for i in range(300, 320):
+    obj = exportList[i]
+    obj['resource'] = 'BEACH'
+    adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
+    adjObj['resource'] = 'BEACH'
+
 exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
 
 writeToFile(exportList)
