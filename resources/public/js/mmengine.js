@@ -83,7 +83,29 @@ function _game()
 	self.preloadResources = function() {
 		for(key in self.RESOURCES) {
 			if(!self.isPrefab(self.RESOURCES[key])) {
-				self.loadImage(self.RESOURCES[key]['image']);
+				// directional
+				if('directional' in self.RESOURCES[key] && self.RESOURCES[key]['directional']) {
+					var sfilename = self.RESOURCES[key]['image'].split(".");
+					var newfilename = '';
+					for(var i in sfilename) {
+						if(i == sfilename.length - 1) {
+							self.loadImage(newfilename + "left" + "." + sfilename[i]);
+							self.loadImage(newfilename + "right" + "." + sfilename[i]);
+							self.loadImage(newfilename + "up" + "." + sfilename[i]);
+							self.loadImage(newfilename + "down" + "." + sfilename[i]);
+						}
+						if(i == sfilename.length - 2) {
+							newfilename = newfilename + sfilename[i] + "_";
+						}
+						else {
+							newfilename = newfilename + sfilename[i] + ".";
+						}
+					}
+				}
+				else {
+					//standard
+					self.loadImage(self.RESOURCES[key]['image']);
+				}
 			}
 			else {
 				for(fab in self.RESOURCES[key]['image']) {
@@ -445,7 +467,12 @@ function _game()
 			var _id = self.worldToAdd[each]['_id'];
 			var x = self.worldToAdd[each]['location']['x'];
 			var y = self.worldToAdd[each]['location']['y'];
-			self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], _id, false);
+			if('directional' in self.RESOURCES[self.worldToAdd[each]['resource']]) {
+				logger(self.worldToAdd[each]);
+			}
+			else {
+				self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], _id, false);
+			}
 		}
 		self.addPlayersToWorld();
 		self.removeMapLoader();

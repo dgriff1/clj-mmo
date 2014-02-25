@@ -26,14 +26,11 @@ function _utils()
 		'HERO'      : { 'image' : '/assets/hero3.png' , 'type' : self.PLAYER, 'width' : 64, 'height' : 64},
 		'ROCKS'     : { 'image' : '/assets/rocks.png' , 'type' : self.ENTITY},
 		//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : self.ENTITY, 'foreground' : true},
-		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITY, 'height' : 126, 'width' : 126},
-		'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'WATER'     : { 'image' : '/assets/water_shallow.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_LEFT'     : { 'image' : '/assets/smaller_beach_grass_curve_left.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_RIGHT'     : { 'image' : '/assets/smaller_beach_grass_curve_right.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_UP'     : { 'image' : '/assets/smaller_beach_grass_curve_up.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
-		'BEACH_DOWN'     : { 'image' : '/assets/smaller_beach_grass_curve_down.png', 'width' : 64 , 'height' : 64 , 'type' : self.TERRAIN},
+		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITY},
+		'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'type' : self.TERRAIN},
+		'WATER'     : { 'image' : '/assets/water_shallow.png', 'type' : self.TERRAIN},
+		'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'type' : self.TERRAIN},
+		'BEACH_GRASS'     : { 'image' : '/assets/smaller_beach_grass.png',  'directional' : true, 'type' : self.TERRAIN},
 		'BUSH'      : { 'image' : '/assets/bush.png' , 'type' : self.ENTITY}
 	}	
 	

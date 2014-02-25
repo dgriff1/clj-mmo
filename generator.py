@@ -57,43 +57,36 @@ def getObj(x, y, List):
 obj = exportList[300]
 obj['resource'] = 'BEACH'
 adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
-adjObj['resource'] = 'BEACH_RIGHT'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'RIGHT'
 adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] - 16, exportList)
-adjObj['resource'] = 'BEACH_LEFT'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'LEFT'
 adjObj = getObj(obj['location']['x'], obj['location']['y'] - 32, exportList)
-adjObj['resource'] = 'BEACH_DOWN'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'DOWN'
+
 
 #sand trace
 adjObj = getObj(obj['location']['x'], obj['location']['y'] + 32, exportList)
 adjObj['resource'] = 'BEACH'
 adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16, exportList)
-adjObj['resource'] = 'BEACH_RIGHT'
+adjObj['resource'] = 'BEACH_GRASS'
 adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
-adjObj['resource'] = 'BEACH_LEFT'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'LEFT'
 
 adjObj = getObj(obj['location']['x'], obj['location']['y'] + 64, exportList)
-adjObj['resource'] = 'BEACH_UP'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'UP'
 adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16 + 32, exportList)
-adjObj['resource'] = 'BEACH_RIGHT'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'RIGHT'
 adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16 + 32, exportList)
-adjObj['resource'] = 'BEACH_LEFT'
+adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'LEFT'
 
 
-
-#for i in range(300, 320):
-#    obj = exportList[i]
-#    obj['resource'] = 'BEACH'
-#    if exportList[i - 1]['location']['y'] < obj['location']['y']:
-#    	adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
-#    	adjObj['resource'] = 'BEACH_RIGHT'
-#    	adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
-#    	adjObj['resource'] = 'BEACH_LEFT'
-#    else:
-#    	adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
-#    	adjObj['resource'] = 'BEACH_DOWN'
-#    	adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
-#    	adjObj['resource'] = 'BEACH_UP'
-	
 
 #exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
 
