@@ -37,7 +37,10 @@ def generator_base(MAX_ITER, image, type, chance=100):
 def writeToFile(exportList):
 	export = '['
 	for e in exportList:
-		row = '{:location {:x %f :y %f} :resource "%s" :type %s } ' % (e['location']['x'], e['location']['y'], e['resource'], e['type'])
+		direction = ''
+		if 'direction' in e:
+                    direction = ':direction "' + e['direction'] + '"'
+		row = '{:location {:x %f :y %f} :resource "%s" :type %s %s} ' % (e['location']['x'], e['location']['y'], e['resource'], e['type'], direction)
 		export += row
 	export += ']'
 	

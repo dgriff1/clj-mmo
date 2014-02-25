@@ -80,27 +80,31 @@ function _game()
 	// action text
 	self.actionTextTimer = self.utils.now();
 
+	self.findDirection = function(filename, direction) {
+		var sfilename = filename.split(".");
+		var newfilename = '';
+		for(var i in sfilename) {
+			if(i == sfilename.length - 1) {
+				return newfilename + direction.toLowerCase() + "." + sfilename[i];
+			}
+			if(i == sfilename.length - 2) {
+				newfilename = newfilename + sfilename[i] + "_";
+			}
+			else {
+				newfilename = newfilename + sfilename[i] + ".";
+			}
+		}
+	}
+
 	self.preloadResources = function() {
 		for(key in self.RESOURCES) {
 			if(!self.isPrefab(self.RESOURCES[key])) {
 				// directional
 				if('directional' in self.RESOURCES[key] && self.RESOURCES[key]['directional']) {
-					var sfilename = self.RESOURCES[key]['image'].split(".");
-					var newfilename = '';
-					for(var i in sfilename) {
-						if(i == sfilename.length - 1) {
-							self.loadImage(newfilename + "left" + "." + sfilename[i]);
-							self.loadImage(newfilename + "right" + "." + sfilename[i]);
-							self.loadImage(newfilename + "up" + "." + sfilename[i]);
-							self.loadImage(newfilename + "down" + "." + sfilename[i]);
-						}
-						if(i == sfilename.length - 2) {
-							newfilename = newfilename + sfilename[i] + "_";
-						}
-						else {
-							newfilename = newfilename + sfilename[i] + ".";
-						}
-					}
+					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "right"));
+					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "left"));
+					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "up"));
+					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "down"));
 				}
 				else {
 					//standard
@@ -467,8 +471,9 @@ function _game()
 			var _id = self.worldToAdd[each]['_id'];
 			var x = self.worldToAdd[each]['location']['x'];
 			var y = self.worldToAdd[each]['location']['y'];
-			if('directional' in self.RESOURCES[self.worldToAdd[each]['resource']]) {
-				logger(self.worldToAdd[each]);
+			if('direction' in self.worldToAdd[each]) {
+				var imageToLoad = self.findDirection(self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['direction']);
+				self.addWidgetToWorld(x, y, imageToLoad, self.worldToAdd[each]['type'], _id, false);
 			}
 			else {
 				self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], _id, false);
@@ -1006,8 +1011,8 @@ function _game()
 		img.x = x;
 		img.y = y;
 		if(!self.testMode) {
-			img.width = img.image.width;
-			img.height = img.image.height;
+		//	img.width = img.image.width;
+		//	img.height = img.image.height;
 		}
 		img.snapToPixel = true;
                 img.type = type;
