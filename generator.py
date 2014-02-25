@@ -75,6 +75,7 @@ adjObj = getObj(obj['location']['x'], obj['location']['y'] + 32, exportList)
 adjObj['resource'] = 'BEACH'
 adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16, exportList)
 adjObj['resource'] = 'BEACH_GRASS'
+adjObj['direction'] = 'RIGHT'
 adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
 adjObj['resource'] = 'BEACH_GRASS'
 adjObj['direction'] = 'LEFT'
