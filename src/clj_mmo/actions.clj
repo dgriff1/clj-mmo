@@ -8,10 +8,33 @@
 	(if (list? entity-types) (some (partial = valid-type ) entity-types)
 		(= entity-types valid-type)))
 
+
+(defn lock-player [ player ] 
+	;(prn "Locking Player")
+	(assoc player :locked true))
+
+(defn unlock-player [ player ] 
+	;(prn "Unlocking Player")
+	(assoc player :locked false))
+
+(defn sleep-and-return [ p interval  ]
+	(Thread/sleep interval) 
+	p)
+
+(defn unlock-after [ player interval ] 
+	(assoc (lock-player player) 
+		:lock_future (future (-> player
+						(sleep-and-return interval)	
+						unlock-player))))
+
+(defn player-locked? [ player ] 
+	(get player :locked false))
+
 (defn move? [player evt ]
 	(cond 
 		(and 
 			(= (:action evt) "move" ) 
+			(not (player-locked? player))
 			(contains? evt :target_x)
 			(contains? evt :target_y))
 			true
@@ -28,6 +51,7 @@
 (defn chop? [player evt ]
 	(cond 
 		(and 
+			(not (player-locked? player))
 			(contains? evt :target) ) true
 	:else false))
 
@@ -36,7 +60,7 @@
 		{:entities (list 
 			(-> entity 
 				(assoc :health (- (get entity :health 100) 5))))
-		:player player }))
+		:player (unlock-after player 1000) }))
 
 
 (defn  take-damage? [player evt ]

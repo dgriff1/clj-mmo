@@ -30,10 +30,14 @@
 (deftest determine-action-test
 	(let [ player (player-factory) evt { :action "move" :target_x 15 :target_y 10 } ]
 		(let [ moved_p (determine-action (assoc player :location {:x 14 :y 9}) evt (list) )]  
-			(prn "Moved " moved_p  " old " player)
 			(is (= (:y (:old_location moved_p)) 9 ))
 			(is (= (:x (:old_location moved_p)) 14 ))
 			(is (= (:y (:location moved_p)) 10 ))
 			(is (= (:x (:location moved_p)) 15 ))
 		)))
-	
+(deftest lock-unlock-test
+	(let [ p 		{}
+		   p-ref	(unlock-after {} 1000) ]
+		(is (player-locked? p-ref))
+		(Thread/sleep 2000)
+		(is (= false (player-locked? @(:lock_future p-ref))))))
