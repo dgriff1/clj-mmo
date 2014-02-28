@@ -94,8 +94,8 @@ adjObj['direction'] = 'LEFT'
 for e in exportList:
     if e['resource'] == "GRASS":
         r = random.randrange(0, 100)
-        if r > 65:
-		exportList.append({"location" : {"x" : e['location']['x'] + 36, "y" : e['location']['y']}, "resource" : "TREE", "type" : "entity"})
+        if r > 85:
+		exportList.append({"location" : {"x" : e['location']['x'], "y" : e['location']['y']}, "resource" : "TREE", "type" : "entity"})
         
 #exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
 

@@ -73,9 +73,10 @@ function _game()
 
 	// targeting
 	self.target = undefined;
-	self.targetHudBox = undefined;
+	self.targetInHud = undefined;
 	self.targetArrow = undefined;
 	self.targetArrowBounceCounter = 0;
+	self.targetBox = undefined;
 
 	// action text
 	self.actionTextTimer = self.utils.now();
@@ -519,7 +520,7 @@ function _game()
 		self.stage.addChild(img);
 
  		// TARGET BOX
-    		selfBox = new createjs.Shape();
+    		var selfBox = new createjs.Shape();
 		selfBox.graphics.beginStroke("#000000");
 		selfBox.graphics.setStrokeStyle(1);
 		selfBox.snapToPixel = true;
@@ -527,6 +528,7 @@ function _game()
     		selfBox.x = self.settings.BASE_WIDTH - 60;
 		selfBox.y = self.settings.BASE_HEIGHT/2 + 50;
     		self.stage.addChild(selfBox);
+		self.targetBox = selfBox;
 
 		// hero right
 		img = new Sprite(self.RESOURCES['HERO']['spriteSheet']);
@@ -535,7 +537,7 @@ function _game()
 		img.y = self.settings.BASE_HEIGHT/2 + 50;
 		img.width = 64;
 		img.height = 64;
-		self.targetHudBox = img;
+		self.targetInHud = img;
 		self.stage.addChild(img);
 
 		//conditions
@@ -979,25 +981,26 @@ function _game()
 	}
 
 	self.targetObject = function(obj) {
-		target_x = self.targetHudBox.x;
-		target_y = self.targetHudBox.y;
+		target_x = self.targetBox.x - 2;
+		target_y = self.targetBox.y + 2;
 
 		if(self.targetArrow != undefined) {
 			self.stage.removeChild(self.targetArrow);
 		}
-		targetArrow = new Bitmap('/assets/target.png');
+		var targetArrow = new Bitmap('/assets/target.png');
 		targetArrow.x = obj.target.x - self.worldOffsetX + (obj.target.image.width/2) - (32/2);
 		targetArrow.y = obj.target.y - self.worldOffsetY;
 		self.stage.addChild(targetArrow);
 		self.targetArrow = targetArrow;
 
-		self.stage.removeChild(self.targetHudBox);
-		targetImg = new Bitmap(obj.target.image.src);
+		self.stage.removeChild(self.targetInHud);
+		var targetImg = new Bitmap(obj.target.image.src);
 		targetImg.x = target_x;
 		targetImg.y = target_y;
+		targetImg.scaleX = 0.5;
+		targetImg.scaleY = 0.5;
 		self.stage.addChild(targetImg);
-		targetImg.scale = 0.3;
-		self.targetHudBox = targetImg;
+		self.targetInHud = targetImg;
 		self.target = obj.target;
 		self.stage.update();
 			
