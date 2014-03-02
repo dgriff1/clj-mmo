@@ -26,7 +26,7 @@ function _utils()
 		'HERO'      : { 'image' : '/assets/hero3.png' , 'type' : self.PLAYER, 'width' : 64, 'height' : 64},
 		'ROCKS'     : { 'image' : '/assets/rocks.png' , 'type' : self.ENTITY},
 		//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : self.ENTITY, 'foreground' : true},
-		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITY},
+		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITY, 'bounds' : {'x' : 45, 'y' : 58, 'width' : 10, 'height' : 30}},
 		'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'type' : self.TERRAIN},
 		'WATER'     : { 'image' : '/assets/water_shallow.png', 'type' : self.TERRAIN},
 		'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'type' : self.TERRAIN},

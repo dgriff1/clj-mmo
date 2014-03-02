@@ -419,7 +419,7 @@ function _game()
 		return [dx, dy]
 	}
 
-	self.addWidgetToWorld = function(x, y, image, resourceType, _id, preHero) {
+	self.addWidgetToWorld = function(x, y, image, resource, resourceType, _id, preHero) {
 		if(preHero != undefined && preHero) {
 			hx = w/2 - ((self.RESOURCES['HERO']['width'])/2);
 			hy = h/2 - ((self.RESOURCES['HERO']['height'])/2);
@@ -429,12 +429,12 @@ function _game()
 			var pos = self.gameToWorldPosition(x, y);
 		}
 		if(typeof(image) == "string") {
-			self.addWidget(pos[0], pos[1], self.assets[image], resourceType, _id);
+			self.addWidget(pos[0], pos[1], self.assets[image], resource, resourceType, _id);
 		}
 		else {
 			for(each in image) {
 				res = resource[each];
-				self.addWidget(pos[0] + res[0], pos[1] + res[1], res[2], resourceType, _id);
+				self.addWidget(pos[0] + res[0], pos[1] + res[1], res[2], resource, resourceType, _id);
 			}
 		}
 	}
@@ -473,11 +473,13 @@ function _game()
 			var x = self.worldToAdd[each]['location']['x'];
 			var y = self.worldToAdd[each]['location']['y'];
 			if('direction' in self.worldToAdd[each]) {
-				var imageToLoad = self.findDirection(self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['direction']);
-				self.addWidgetToWorld(x, y, imageToLoad, self.worldToAdd[each]['type'], _id, false);
+				var resource = self.worldToAdd[each]['resource']
+				var imageToLoad = self.findDirection(self.RESOURCES[resource]['image'], self.worldToAdd[each]['direction']);
+				self.addWidgetToWorld(x, y, imageToLoad, resource, self.worldToAdd[each]['type'], _id, false);
 			}
 			else {
-				self.addWidgetToWorld(x, y, self.RESOURCES[self.worldToAdd[each]['resource']]['image'], self.worldToAdd[each]['type'], _id, false);
+				var resource = self.worldToAdd[each]['resource']
+				self.addWidgetToWorld(x, y, self.RESOURCES[resource]['image'], resource, self.worldToAdd[each]['type'], _id, false);
 			}
 		}
 		self.addPlayersToWorld();
@@ -686,6 +688,39 @@ function _game()
 
 	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
+
+		var compareHero = new Object();
+		compareHero.x = self.hero.x ;
+		compareHero.y = self.hero.y ;
+		compareHero.width = self.hero.width;
+		compareHero.height = self.hero.height;
+                for(var i in self.world.children) {
+			var resource = self.RESOURCES[self.world.children[i]['resource']];
+			if(resource === undefined || !("bounds" in resource)) {
+				continue;
+			}
+
+    			//selfBox = new createjs.Shape();
+			//selfBox.graphics.beginStroke("#000000");
+			//selfBox.graphics.setStrokeStyle(1);
+			//selfBox.snapToPixel = true;
+    			//selfBox.graphics.beginFill("white").drawRect(0, 0, resource['bounds']['width'], resource['bounds']['height']);
+			//selfBox.x = self.world.children[i].x + resource['bounds']['x'];
+			//selfBox.y = self.world.children[i].y + resource['bounds']['y'];
+    			//self.stage.addChild(selfBox);
+		
+			boundsBox = new Object();
+			boundsBox.x = self.world.children[i].x + resource['bounds']['x'] + x;
+			boundsBox.y = self.world.children[i].y + resource['bounds']['y'] + y;
+			boundsBox.width = resource['bounds']['width'];
+			boundsBox.height = resource['bounds']['height'];
+
+			inter = self.utils.rectIntersection(compareHero, boundsBox);
+			if(inter) {
+				return;
+			}
+		}
+
 		self.world.x = self.world.x + x;
 		self.world.y = self.world.y + y;
 
@@ -1006,10 +1041,12 @@ function _game()
 			
 	}
 
-	self.addWidget = function(x,y,image,type, _id) {
+	self.addWidget = function(x,y,image,resource,type, _id) {
 		var img = new Bitmap(image);
 		x = Math.round(x);
 		y = Math.round(y);
+
+		img.resource = resource;			
 
 		img.x = x;
 		img.y = y;
