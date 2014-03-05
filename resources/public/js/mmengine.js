@@ -274,12 +274,12 @@ function _game()
 		canvas.width =  self.settings.BASE_WIDTH;
 		canvas.height = self.settings.BASE_HEIGHT;
 		document.body.appendChild(canvas);
-		textBox = document.createElement('textarea');
-		textBox.value = "Player2: F U FGT ;) A/S/L\rPlayer1: LAAMLOLOL";
-		document.body.appendChild(textBox);
-		textBox = document.createElement('input');
-		textBox.value = "Enter Text Here";
-		document.body.appendChild(textBox);
+		//textBox = document.createElement('textarea');
+		//textBox.value = "Player2: F U FGT ;) A/S/L\rPlayer1: LAAMLOLOL";
+		//document.body.appendChild(textBox);
+		//textBox = document.createElement('input');
+		//textBox.value = "Enter Text Here";
+		//document.body.appendChild(textBox);
 		self.w  = self.utils.getWidth(canvas);
 		self.h  = self.utils.getHeight(canvas);
 		self.ratioW = self.w / self.settings.BASE_WIDTH;

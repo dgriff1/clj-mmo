@@ -56,39 +56,80 @@ def getObj(x, y, List):
             return i
     return None
 
-# bot of sand part
-obj = exportList[300]
-obj['resource'] = 'BEACH'
-adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'RIGHT'
-adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] - 16, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'LEFT'
-adjObj = getObj(obj['location']['x'], obj['location']['y'] - 32, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'DOWN'
 
+increment = 0
+for i in exportList:
+    r = random.randrange(0, 100)
+    if r + increment > 96:
+        #increment = increment + 20
+        if increment > 50:
+            increment = 0
+        i['resource'] = 'BEACH'
+    else:
+        increment = 0
 
-#sand trace
-adjObj = getObj(obj['location']['x'], obj['location']['y'] + 32, exportList)
-adjObj['resource'] = 'BEACH'
-adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'RIGHT'
-adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'LEFT'
+exportList.reverse()
+for i in exportList:
+    if i['resource'] == 'BEACH':
+       obj = getObj(i['location']['x'] - 32 , i['location']['y'] - 16, exportList)
+       if obj and obj['resource'] == 'GRASS':
+           obj['resource'] = 'BEACH_GRASS'
+           obj['direction'] = 'RIGHT'
+       obj = getObj(i['location']['x'] - 32 , i['location']['y'] + 16, exportList)
+       if obj and obj['resource'] == 'GRASS':
+           obj['resource'] = 'BEACH_GRASS'
+           obj['direction'] = 'RIGHT'
+       obj = getObj(i['location']['x'] + 32 , i['location']['y'] + 16, exportList)
+       if obj and obj['resource'] == 'GRASS':
+           obj['resource'] = 'BEACH_GRASS'
+           obj['direction'] = 'LEFT'
+       obj = getObj(i['location']['x'] + 32 , i['location']['y'] + 16, exportList)
+       if obj and obj['resource'] == 'GRASS':
+           obj['resource'] = 'BEACH_GRASS'
+           obj['direction'] = 'LEFT'
+       obj = getObj(i['location']['x']  , i['location']['y'] + 32, exportList)
+       if obj and obj['resource'] == 'GRASS':
+           obj['resource'] = 'BEACH_GRASS'
+           obj['direction'] = 'UP'
+       obj = getObj(i['location']['x']  , i['location']['y'] - 32, exportList)
+       if obj and obj['resource'] == 'GRASS':
+           obj['resource'] = 'BEACH_GRASS'
+           obj['direction'] = 'DOWN'
+exportList.reverse()
 
-adjObj = getObj(obj['location']['x'], obj['location']['y'] + 64, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'UP'
-adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16 + 32, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'RIGHT'
-adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16 + 32, exportList)
-adjObj['resource'] = 'BEACH_GRASS'
-adjObj['direction'] = 'LEFT'
+## bot of sand part
+#obj = exportList[300]
+#obj['resource'] = 'BEACH'
+#adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'RIGHT'
+#adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] - 16, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'LEFT'
+#adjObj = getObj(obj['location']['x'], obj['location']['y'] - 32, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'DOWN'
+#
+#
+##sand trace
+#adjObj = getObj(obj['location']['x'], obj['location']['y'] + 32, exportList)
+#adjObj['resource'] = 'BEACH'
+#adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'RIGHT'
+#adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'LEFT'
+#
+#adjObj = getObj(obj['location']['x'], obj['location']['y'] + 64, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'UP'
+#adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16 + 32, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'RIGHT'
+#adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16 + 32, exportList)
+#adjObj['resource'] = 'BEACH_GRASS'
+#adjObj['direction'] = 'LEFT'
 
 
 for e in exportList:
