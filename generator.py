@@ -57,16 +57,13 @@ def getObj(x, y, List):
     return None
 
 
-increment = 0
 for i in exportList:
-    r = random.randrange(0, 100)
-    if r + increment > 96:
-        #increment = increment + 20
-        if increment > 50:
-            increment = 0
-        i['resource'] = 'BEACH'
-    else:
-        increment = 0
+    r = random.randrange(0, 3)
+    sandList = generator_base(r, "BEACH", "terrain", chance=1)
+    for sand in sandList:
+        o = getObj(sand['location']['x'] + i['location']['x'], sand['location']['y'] + i['location']['y'], exportList)
+        if o:
+            o['resource'] = "BEACH"
 
 exportList.reverse()
 for i in exportList:
