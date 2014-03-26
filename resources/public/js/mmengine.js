@@ -908,7 +908,7 @@ function _game()
 	}
 
 	self.webSocketHeartBeat = function() {
-		if(self.utils.now() - self.heartBeatCounter > self.settings.HEARTBEART) {
+		if(self.utils.now() - self.heartBeatCounter > self.settings.HEARTBEAT) {
 			self.heartBeatCounter = self.utils.now();
 			self.sendPlayerState();
 		}

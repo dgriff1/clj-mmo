@@ -27,7 +27,7 @@ function _settings()
 
 	self.ENABLE_SHADOWS = false;
 
-	self.HEARTBEAT = 10.00;
+	self.HEARTBEAT = 3.00;
 
 }
 new _settings();
