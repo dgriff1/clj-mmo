@@ -686,6 +686,15 @@ function _game()
 		}
 	}
 
+        self.createBoundsBox = function(obj, resource, x, y) {
+		boundsBox = new Object();
+		boundsBox.x = obj.x + resource['x'] + x;
+		boundsBox.y = obj.y + resource['y'] + y;
+		boundsBox.width = resource['width'];
+		boundsBox.height = resource['height'];
+		return boundsBox;
+	}
+
 	// sets up initial location based on first message
 	self.initPlayerPosition = function(x, y) {
 
@@ -696,8 +705,16 @@ function _game()
 		compareHero.height = self.hero.height;
                 for(var i in self.world.children) {
 			var resource = self.RESOURCES[self.world.children[i]['resource']];
-			if(resource === undefined || !("bounds" in resource)) {
+			if(resource === undefined || (!("bounds" in resource) && !("clip" in resource) )) {
 				continue;
+			}
+                        if(("clip" in resource) && resource["clip"]) {
+				self.world.children[i]["width"] = self.world.children[i]["image"].width;
+				self.world.children[i]["height"] = self.world.children[i]["image"].height;
+                        	boundsBox = self.createBoundsBox(self.world.children[i], self.world.children[i], x, y);
+			}
+			else {
+                        	boundsBox = self.createBoundsBox(self.world.children[i], resource['bounds'], x, y);
 			}
 
     			//selfBox = new createjs.Shape();
@@ -709,12 +726,6 @@ function _game()
 			//selfBox.y = self.world.children[i].y + resource['bounds']['y'];
     			//self.stage.addChild(selfBox);
 		
-			boundsBox = new Object();
-			boundsBox.x = self.world.children[i].x + resource['bounds']['x'] + x;
-			boundsBox.y = self.world.children[i].y + resource['bounds']['y'] + y;
-			boundsBox.width = resource['bounds']['width'];
-			boundsBox.height = resource['bounds']['height'];
-
 			inter = self.utils.rectIntersection(compareHero, boundsBox);
 			if(inter) {
 				return;

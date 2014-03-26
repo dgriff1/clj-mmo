@@ -26,7 +26,7 @@ def generator_base(MAX_ITER, image, type, chance=100):
 			r = random.randrange(0, 100)
 			(x, y) = s.next()
 			i = i + 1
-			if r <= chance:
+			if r < chance:
 				x = x * 64 + x1 
 				y = y * 32 + y1 
 				exportList.append({"location" : {"x" : x, "y" : y}, "resource" : image, "type" : type})
@@ -57,13 +57,26 @@ def getObj(x, y, List):
     return None
 
 
-for i in exportList:
-    r = random.randrange(0, 3)
-    sandList = generator_base(r, "WATER", "terrain", chance=1)
-    for sand in sandList:
-        o = getObj(sand['location']['x'] + i['location']['x'], sand['location']['y'] + i['location']['y'], exportList)
+def makePonds(x, y, exportList):
+    size = random.randrange(1, 100)
+    waterList = generator_base(size, "WATER", "terrain", chance=100)
+    for water in waterList:
+        o = getObj(x + water['location']['x'], y + water['location']['y'], exportList)
         if o:
             o['resource'] = "WATER"
+    return exportList
+
+def makeRiver():
+    pass
+
+waterTiles = []
+for tile in exportList:
+    waterchance = random.randrange(0, 1000)
+    if waterchance > 998:
+        waterTiles.append(tile)
+
+for tile in waterTiles:
+    exportList = makePonds(tile['location']['x'], tile['location']['y'], exportList)
 
 exportList.reverse()
 for i in exportList:
@@ -94,47 +107,10 @@ for i in exportList:
            obj['direction'] = 'DOWN'
 exportList.reverse()
 
-## bot of sand part
-#obj = exportList[300]
-#obj['resource'] = 'WATER'
-#adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] - 16, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'RIGHT'
-#adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] - 16, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'LEFT'
-#adjObj = getObj(obj['location']['x'], obj['location']['y'] - 32, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'DOWN'
-#
-#
-##sand trace
-#adjObj = getObj(obj['location']['x'], obj['location']['y'] + 32, exportList)
-#adjObj['resource'] = 'WATER'
-#adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'RIGHT'
-#adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'LEFT'
-#
-#adjObj = getObj(obj['location']['x'], obj['location']['y'] + 64, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'UP'
-#adjObj = getObj(obj['location']['x'] - 32, obj['location']['y'] + 16 + 32, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'RIGHT'
-#adjObj = getObj(obj['location']['x'] + 32, obj['location']['y'] + 16 + 32, exportList)
-#adjObj['resource'] = 'WATER_GRASS'
-#adjObj['direction'] = 'LEFT'
-
-
 for e in exportList:
     if e['resource'] == "GRASS":
         r = random.randrange(0, 100)
-        if r > 85:
-		exportList.append({"location" : {"x" : e['location']['x'], "y" : e['location']['y']}, "resource" : "TREE", "type" : "entity"})
+        if r > 90:
+		exportList.append({"location" : {"x" : e['location']['x'], "y" : e['location']['y'] + 32}, "resource" : "TREE", "type" : "entity"})
         
-#exportList = exportList + generator_base(MAX_ITER, "TREE", "entity", 7)
-
 writeToFile(exportList)
