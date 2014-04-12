@@ -4,10 +4,10 @@ function _settings()
 	window.Settings = this;
 	var self = this;
 
-	//self.BASE_WIDTH = 3200;
-	//self.BASE_HEIGHT = 1350;
-	self.BASE_WIDTH = 800;
-	self.BASE_HEIGHT = 350;
+	self.BASE_WIDTH = 3200;
+	self.BASE_HEIGHT = 1350;
+	//self.BASE_WIDTH = 800;
+	//self.BASE_HEIGHT = 350;
 
 //GRAPHIC
 	self.FPS_RATE = 60;
