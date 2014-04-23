@@ -81,7 +81,7 @@ function _game()
 	// action text
 	self.actionTextTimer = self.utils.now();
 
-	self.findDirection = function(filename, direction) {
+	self.findFileDirection = function(filename, direction) {
 		var sfilename = filename.split(".");
 		var newfilename = '';
 		for(var i in sfilename) {
@@ -102,10 +102,10 @@ function _game()
 			if(!self.isPrefab(self.RESOURCES[key])) {
 				// directional
 				if('directional' in self.RESOURCES[key] && self.RESOURCES[key]['directional']) {
-					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "right"));
-					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "left"));
-					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "up"));
-					self.loadImage(self.findDirection(self.RESOURCES[key]['image'], "down"));
+					self.loadImage(self.findFileDirection(self.RESOURCES[key]['image'], "right"));
+					self.loadImage(self.findFileDirection(self.RESOURCES[key]['image'], "left"));
+					self.loadImage(self.findFileDirection(self.RESOURCES[key]['image'], "up"));
+					self.loadImage(self.findFileDirection(self.RESOURCES[key]['image'], "down"));
 				}
 				else {
 					//standard
@@ -474,7 +474,7 @@ function _game()
 			var y = self.worldToAdd[each]['location']['y'];
 			if('direction' in self.worldToAdd[each]) {
 				var resource = self.worldToAdd[each]['resource']
-				var imageToLoad = self.findDirection(self.RESOURCES[resource]['image'], self.worldToAdd[each]['direction']);
+				var imageToLoad = self.findFileDirection(self.RESOURCES[resource]['image'], self.worldToAdd[each]['direction']);
 				self.addWidgetToWorld(x, y, imageToLoad, resource, self.worldToAdd[each]['type'], _id, false);
 			}
 			else {
