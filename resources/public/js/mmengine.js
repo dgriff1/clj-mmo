@@ -709,9 +709,12 @@ function _game()
 				continue;
 			}
                         if(("clip" in resource) && resource["clip"]) {
-				self.world.children[i]["width"] = self.world.children[i]["image"].width;
-				self.world.children[i]["height"] = self.world.children[i]["image"].height;
-                        	boundsBox = self.createBoundsBox(self.world.children[i], self.world.children[i], x, y);
+				boundsResource = new Array();
+				boundsResource['x'] = 10;
+				boundsResource['y'] = 0;
+				boundsResource['width'] = self.world.children[i]["image"].width/2;
+				boundsResource['height'] = self.world.children[i]["image"].height/2;
+                        	boundsBox = self.createBoundsBox(self.world.children[i], boundsResource, x, y);
 			}
 			else {
                         	boundsBox = self.createBoundsBox(self.world.children[i], resource['bounds'], x, y);
@@ -721,11 +724,12 @@ function _game()
 			//selfBox.graphics.beginStroke("#000000");
 			//selfBox.graphics.setStrokeStyle(1);
 			//selfBox.snapToPixel = true;
-    			//selfBox.graphics.beginFill("white").drawRect(0, 0, resource['bounds']['width'], resource['bounds']['height']);
-			//selfBox.x = self.world.children[i].x + resource['bounds']['x'];
-			//selfBox.y = self.world.children[i].y + resource['bounds']['y'];
+    			//selfBox.graphics.beginFill("white").drawRect(0, 0, boundsBox.width, boundsBox.height);
+			//selfBox.x = boundsBox.x;
+			//selfBox.y = boundsBox.y; 
     			//self.stage.addChild(selfBox);
-		
+			//continue;
+
 			inter = self.utils.rectIntersection(compareHero, boundsBox);
 			if(inter) {
 				return;

@@ -28,7 +28,7 @@ function _utils()
 		//'TREE'      : {image' : [[0, 70, '/assets/tree_base.png'], [0, 0, '/assets/tree.png']] , 'type' : self.ENTITY, 'foreground' : true},
 		'TREE'      : { 'image' : '/assets/tree2.png', 'type' : self.ENTITY, 'bounds' : {'x' : 45, 'y' : 58, 'width' : 10, 'height' : 30}},
 		'GRASS'     : { 'image' : '/assets/smaller_grass.png', 'type' : self.TERRAIN},
-		'WATER'     : { 'image' : '/assets/smaller_water.png', 'type' : self.TERRAIN},//, 'clip' : true},
+		'WATER'     : { 'image' : '/assets/smaller_water.png', 'type' : self.TERRAIN, 'clip' : true},
 		'BEACH'     : { 'image' : '/assets/smaller_beach.png', 'type' : self.TERRAIN},
 		'BEACH_GRASS'     : { 'image' : '/assets/smaller_beach_grass.png',  'directional' : true, 'type' : self.TERRAIN},
 		'WATER_GRASS'     : { 'image' : '/assets/smaller_water_grass.png',  'directional' : true, 'type' : self.TERRAIN, 'clip' : true},

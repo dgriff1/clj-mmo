@@ -59,6 +59,16 @@ def getObj(x, y):
     return None
 
 
+def makeForest(x, y):
+    size = random.randrange(1, 150)
+    forestList = generator_base(size, "TREE", "entity", chance=20)
+    for water in forestList:
+        o = getObj(x + water['location']['x'], y + water['location']['y'])
+        if o:
+            x = o['location']['x']
+            y = o['location']['y']
+	    exportList.append({"location" : {"x" : x, "y" : y}, "resource" : "TREE", "type" : "entity"})
+
 def makePond(x, y):
     size = random.randrange(1, 100)
     waterList = generator_base(size, "WATER", "terrain", chance=100)
@@ -69,6 +79,16 @@ def makePond(x, y):
 
 def makeRiver():
     pass
+
+def makeForests():
+    forestTiles = []
+    for tile in exportList:
+        forestchance = random.randrange(0, 1000)
+        if forestchance > 998:
+            forestTiles.append(tile)
+    
+    for tile in forestTiles:
+        makeForest(tile['location']['x'], tile['location']['y'])
 
 def makePonds():
     waterTiles = []
@@ -112,11 +132,7 @@ def buildEdges(tileType):
     exportList.reverse()
 
 makePonds()
+makeForests()
 writeToFile()
 
-#for e in exportList:
-#    if e['resource'] == "GRASS":
-#        r = random.randrange(0, 100)
-#        if r > 90:
-#		exportList.append({"location" : {"x" : e['location']['x'], "y" : e['location']['y'] + 32}, "resource" : "TREE", "type" : "entity"})
         
