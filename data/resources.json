@@ -1,0 +1,12 @@
+{"HERO":{"image":"/assets/hero3.png","type": "PLAYER","width":64,"height":64},
+"ROCKS":{"image":"/assets/rocks.png","type":"ENTITY"},
+"TREE":{"image":"/assets/tree2.png","type": "ENTITY", "bounds":{"x":45,"y":58,"width":10,"height":30}},
+"GRASS":{"image":"/assets/smaller_grass.png","type":"TERRAIN"},
+"WATER":{"image":"/assets/smaller_water.png","type":"TERRAIN","clip": true},
+"BEACH":{"image":"/assets/smaller_beach.png","type":"TERRAIN"},
+"BEACH_GRASS":{"image":"/assets/smaller_beach_grass.png","directional":true,"type":"TERRAIN"},
+"WATER_GRASS":{"image":"/assets/smaller_water_grass.png","directional":true,"type":"TERRAIN","clip":true},
+"BUSH":{"image":"/assets/bush.png","type":"ENTITY"}
+}
+
+
