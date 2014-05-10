@@ -22,6 +22,9 @@
 
 ;; this will create a user
 (def p-one (mmo/player-rec "456" [:sword], {:strength 1}, {:building  0}))
+(def resources-file (json-str (read-json (slurp "data/resources.json"))))
+
+(prn "resources file " resources-file)
 ;(db/persist-player nil nil nil p-one )
 ;(db/persist-entity { :location { :x 1 :y 10 } :type "terrain" :resource "terrain1.png" } )
 ;(db/persist-entity { :location { :x 4 :y 20 } :type "item" :resource "sword.png" } )
@@ -41,6 +44,8 @@
 (defn object-handler [ch request] 
 	(let [ params (:route-params request) p  (db/get-player all_players (:id params)) ]
 		(do 
+			(prn "sending resourcesfile")
+			(enqueue ch resources-file)
 			(send p assoc :socket ch) 
 			(prn "En1 " (enqueue ch (json-str (util/safe-player @p) )))
 			(prn "Grabbing adjacents " (get @p :adjacency))
