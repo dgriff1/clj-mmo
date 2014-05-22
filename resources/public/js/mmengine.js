@@ -6,7 +6,7 @@ function _game()
 	var self = this,
 		w = window.Settings.BASE_WIDTH,
 		h = window.Settings.BASE_HEIGHT,
-		scale = 1,//snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
+		scale = 1,  // snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
 		ticks = 0,
 		canvas,ctx,
 		stage,
@@ -936,7 +936,7 @@ function _game()
 
 	self.tick = function(e)
 	{
-		//self.calculateFramesPerSecond();
+		// self.calculateFramesPerSecond();
 
 		self.resetPlayerAnimations();
 		self.drawWorldData();
@@ -964,7 +964,7 @@ function _game()
 		if(self.hero.wasMoving && !self.mouseDown && self.keyPressed.length < 1)
 		{	
 			if(self.clickedAt.length == 0) {
-				self.logPlayerClick(direction);
+				self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
 			}
 			self.utils.autoMoveHero(self.hero);
 		}
@@ -974,11 +974,6 @@ function _game()
 		
 	}
 
-
-	self.logPlayerClick = function(direction) {
-		self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
-	}
-	
 	self.doPlayerAction = function(action, target_id) {
 			self.doSend(JSON.stringify({    "action"  : action, 
 							"target"  : target_id}));

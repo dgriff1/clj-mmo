@@ -348,12 +348,14 @@ function _utils()
 		if(!window.Game.autoMove) {
 			window.Game.autoMove = true;
 			destination = window.Game.pixelToGame(window.Game.clickedAt[0], window.Game.clickedAt[1]);
-			destinationX = destination[0] + window.Game.worldOffsetX;
-			destinationY = destination[1] + window.Game.worldOffsetY;
-			window.Game.autoMoveX = destinationX;
-			window.Game.autoMoveY = destinationX;
+			window.Game.autoMoveX = destination[0] + window.Game.worldOffsetX;
+			window.Game.autoMoveY = destination[1] + window.Game.worldOffsetY;
 		}
 	
+		for(each in window.Game.entities) {
+			logger(window.Game.entities[each]);
+		}
+
 		directionX = window.Game.clickedAt[2];
 		directionY = window.Game.clickedAt[3];
 		moved = false;
@@ -365,39 +367,47 @@ function _utils()
 		//circle.graphics.beginFill("red").drawCircle(0, 0, 4);
 		//circle.x = window.Game.autoMoveX;
 		//circle.y = window.Game.autoMoveY;
-		//world.addChild(circle);
-		//stage.update();
+		//window.Game.world.addChild(circle);
+		//window.Game.stage.update();
 	
 		//circle = new createjs.Shape();
 		//circle.graphics.beginFill("blue").drawCircle(0, 0, 1);
 		//circle.x = playerX;
 		//circle.y = playerY;
-		//world.addChild(circle);
-		//stage.update();
+		//window.Game.world.addChild(circle);
+		//window.Game.stage.update();
 		
-		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > destinationY){
+		circle = new createjs.Shape();
+		circle.graphics.setStrokeStyle(3);
+		circle.graphics.beginStroke("green");
+		circle.graphics.moveTo(playerX, playerY)
+		circle.graphics.lineTo(window.Game.autoMoveX, window.Game.autoMoveY)
+		window.Game.world.addChild(circle);
+		window.Game.stage.update();
+
+		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > window.Game.autoMoveY){
 			moved = true;
 		}
-		else if(parseInt(directionX) == 0 && directionY < 0.00 && playerY < destinationY){
+		else if(parseInt(directionX) == 0 && directionY < 0.00 && playerY < window.Game.autoMoveY){
 			moved = true;
 		}
-		else if(parseInt(directionY) == 0 && directionX < 0.00 && playerX < destinationX){
+		else if(parseInt(directionY) == 0 && directionX < 0.00 && playerX < window.Game.autoMoveX){
 			moved = true;
 		}
-		else if(parseInt(directionY) == 0 && directionX > 0.00 && playerX > destinationX){
+		else if(parseInt(directionY) == 0 && directionX > 0.00 && playerX > window.Game.autoMoveX){
 			moved = true;
 		}
 		else if(parseInt(directionY) != 0 && parseInt(directionX) != 0) {
-			if(directionY > 0.00 && directionX > 0.00 && (playerX > destinationX || playerY > destinationY)) {
+			if(directionY > 0.00 && directionX > 0.00 && (playerX > window.Game.autoMoveX || playerY > window.Game.autoMoveY)) {
 				moved = true;
 			}
-			else if(directionY > 0.00 && directionX < 0.00 && (playerX < destinationX || playerY > destinationY)) {
+			else if(directionY > 0.00 && directionX < 0.00 && (playerX < window.Game.autoMoveX || playerY > window.Game.autoMoveY)) {
 				moved = true;
 			}
-			else if(directionY < 0.00 && directionX < 0.00 && (playerX < destinationX || playerY < destinationY)) {
+			else if(directionY < 0.00 && directionX < 0.00 && (playerX < window.Game.autoMoveX || playerY < window.Game.autoMoveY)) {
 				moved = true;
 			}
-			else if(directionY < 0.00 && directionX > 0.00 && (playerX > destinationX || playerY < destinationY)) {
+			else if(directionY < 0.00 && directionX > 0.00 && (playerX > window.Game.auoMoveX || playerY < window.Game.autoMoveY)) {
 				moved = true;
 			}
 		}
