@@ -454,8 +454,8 @@ function _game()
 		self.world.x = self.world.y = 0;
 		//  Reset autoMove
 		if(self.clickedAt.length > 0 ) {
-			window.Game.autoMoveX = window.Game.autoMoveX - self.worldOffsetX;
-			window.Game.autoMoveY = window.Game.autoMoveY - self.worldOffsetY;
+			self.autoMoveX = self.autoMoveX - self.worldOffsetX;
+			self.autoMoveY = self.autoMoveY - self.worldOffsetY;
 		}
 		self.worldOffsetX = 0;
 		self.worldOffsetY = 0;

@@ -143,7 +143,7 @@ test( "addWidgetToWorld test", function() {
   ourGame.entities = [];
   ourGame.world = new world();
   ourGame.addWidgetToWorld(1, 1, '/assets/clock.png', ourGame.utils.ENTITY, -1, false);
-  ok(ourGame.world.container[0]['_id'] == -1, "Passed!");
+  ok(ourGame.world.container[0]['_id'] == false, "Passed!");
   ok(ourGame.world.container[0]['x'] == 467, "Passed!");
   ok(ourGame.world.container[0]['y'] == 192, "Passed!");
 });
@@ -183,9 +183,15 @@ test( "draw test", function() {
   ourGame.world = new world();
   ourGame.stage = new world();
   ourGame.draw();
-  logger(ourGame.entities);
   ok(ourGame.entities[0]['x'] == 467, "Passed!");
   ok(ourGame.entities[0]['y'] == 192, "Passed!");
 });
 
+test("automove on redraw proximity", function() {
+  ourGame.worldOffsetX = 20;
+  ourGame.autoMoveX = 9;
+  ourGame.clickedAt = [1, 2, 3, 4];
+  ourGame.resetWorld();
+  ok(ourGame.autoMoveX == -11, "Passed!");
 
+});
