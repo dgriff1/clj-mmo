@@ -347,13 +347,13 @@ function _utils()
 	
 		if(!window.Game.autoMove) {
 			window.Game.autoMove = true;
-			destination = window.Game.pixelToGame(window.Game.clickedAt[0], window.Game.clickedAt[1]);
+			destination = window.Game.clickedAt;
 			window.Game.autoMoveX = destination[0] + window.Game.worldOffsetX;
 			window.Game.autoMoveY = destination[1] + window.Game.worldOffsetY;
 		}
 	
 		for(each in window.Game.entities) {
-			logger(window.Game.entities[each]);
+			//logger(window.Game.entities[each]);
 		}
 
 		directionX = window.Game.clickedAt[2];

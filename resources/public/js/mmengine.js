@@ -261,9 +261,6 @@ function _game()
                                                           "y" : self.playerGameCoords['y']}
                                            }));
 
-		self.getMapOffsetX = self.playerGameCoords['x'] - self.playerAtProximity['location']['x'];
-		self.getMapOffsetY = self.playerGameCoords['y'] - self.playerAtProximity['location']['y'];
-
 		self.playerAtProximity['location']['x'] = self.playerGameCoords['x'];
 		self.playerAtProximity['location']['y'] = self.playerGameCoords['y'];
 	}
@@ -455,13 +452,19 @@ function _game()
 	self.resetWorld = function() {
 		self.world.removeAllChildren();
 		self.world.x = self.world.y = 0;
+		//  Reset autoMove
+		if(self.clickedAt.length > 0 ) {
+			window.Game.autoMoveX = window.Game.autoMoveX - self.worldOffsetX;
+			window.Game.autoMoveY = window.Game.autoMoveY - self.worldOffsetY;
+		}
 		self.worldOffsetX = 0;
 		self.worldOffsetY = 0;
 	}
 
 	self.draw = function() {
-		self.hideLoader();	
+		self.hideLoader();
 		self.resetWorld();
+
 
 		self.entities = new Array();
 
@@ -621,6 +624,9 @@ function _game()
 		self.drawHud();
 
 		self.initPlayerPosition(self.playerAtProximity['location']['x'], self.playerAtProximity['location']['y']);
+
+		self.worldOffsetX = 0;
+		self.worldOffsetY = 0;
 
 	}
 
@@ -904,10 +910,6 @@ function _game()
 			self.sorted = true;
 			self.worldToAdd = [];
 			self.sortPlayerInWorld(self.hero);
-			if(self.clickedAt.length > 0) {
-				self.clickedAt[0] = self.clickedAt[0] - self.getMapOffsetX;
-				self.clickedAt[1] = self.clickedAt[1] - self.getMapOffsetY;
-			}
 		}
 	}
 
@@ -964,7 +966,8 @@ function _game()
 		if(self.hero.wasMoving && !self.mouseDown && self.keyPressed.length < 1)
 		{	
 			if(self.clickedAt.length == 0) {
-				self.clickedAt = [self.clientMouseX, self.clientMouseY, direction[0], direction[1]];
+				var pixelToGame = self.pixelToGame(self.clientMouseX, self.clientMouseY);
+				self.clickedAt = [pixelToGame[0], pixelToGame[1], direction[0], direction[1]];
 			}
 			self.utils.autoMoveHero(self.hero);
 		}
