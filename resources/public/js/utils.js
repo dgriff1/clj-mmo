@@ -353,7 +353,34 @@ function _utils()
 		}
 	
 		for(each in window.Game.entities) {
-			//logger(window.Game.entities[each]);
+			x1s = hero.centerPlayerX;
+			y1s = hero.centerPlayerY;
+			x1e = window.Game.autoMoveX;
+			y1e = window.Game.autoMoveY
+			var p1 = new Object();
+			var p2 = new Object();
+			p1.x = x1s
+			p1.y = y1s
+			p2.x = x1e
+			p2.y = y1e
+			
+			var entit = window.Game.entities[each];			
+			ex = entit['x'];
+			ey = entit['y'];
+			ew = entit['width'];
+			wh = entit['height'];
+
+			// Refactor for rect to be bounds area
+			var rect = new Object();
+			rect.x = ex;
+			rect.y = ey;
+			rect.width = ew;
+			rect.height = wh;
+
+			if(self.checkifLineInRect(p1,p2,rect)) {
+				// Need to path around
+				logger(entit['id']);
+			}
 		}
 
 		directionX = window.Game.clickedAt[2];
@@ -377,13 +404,13 @@ function _utils()
 		//window.Game.world.addChild(circle);
 		//window.Game.stage.update();
 		
-		circle = new createjs.Shape();
-		circle.graphics.setStrokeStyle(3);
-		circle.graphics.beginStroke("green");
-		circle.graphics.moveTo(playerX, playerY)
-		circle.graphics.lineTo(window.Game.autoMoveX, window.Game.autoMoveY)
-		window.Game.world.addChild(circle);
-		window.Game.stage.update();
+		//circle = new createjs.Shape();
+		//circle.graphics.setStrokeStyle(3);
+		//circle.graphics.beginStroke("green");
+		//circle.graphics.moveTo(playerX, playerY)
+		//circle.graphics.lineTo(window.Game.autoMoveX, window.Game.autoMoveY)
+		//window.Game.world.addChild(circle);
+		//window.Game.stage.update();
 
 		if(parseInt(directionX) == 0 && directionY > 0.00 && playerY > window.Game.autoMoveY){
 			moved = true;
@@ -650,6 +677,108 @@ function _utils()
 	  return parseInt($(canvas).css('height').replace("px", ""));
 	}
 
+	self.checkLineIntersection = function(line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
+ 		// if the lines intersect, the result contains the x and y of the intersection (treating the lines as infinite) and booleans for whether line segment 1 or line segment 2 contain the point
+		var denominator, a, b, numerator1, numerator2, result = {
+			x: null,
+			y: null,
+			onLine1: false,
+			onLine2: false
+    		};
+  	  denominator = ((line2EndY - line2StartY) * (line1EndX - line1StartX)) - ((line2EndX - line2StartX) * (line1EndY - line1StartY));
+   	 if (denominator == 0) {
+    	   	 return result;
+    	}
+    	a = line1StartY - line2StartY;
+    	b = line1StartX - line2StartX;
+   	numerator1 = ((line2EndX - line2StartX) * a) - ((line2EndY - line2StartY) * b);
+   	numerator2 = ((line1EndX - line1StartX) * a) - ((line1EndY - line1StartY) * b);
+	a = numerator1 / denominator;
+    	b = numerator2 / denominator;
+
+	// if we cast these lines infinitely in both directions, they intersect here:
+	result.x = line1StartX + (a * (line1EndX - line1StartX));
+	result.y = line1StartY + (a * (line1EndY - line1StartY));
+	/*
+        // it is worth noting that this should be the same as:
+        x = line2StartX + (b * (line2EndX - line2StartX));
+        y = line2StartX + (b * (line2EndY - line2StartY));
+        */
+	// if line1 is a segment and line2 is infinite, they intersect if:
+	if (a > 0 && a < 1) {
+    		result.onLine1 = true;
+	}
+	// if line2 is a segment and line1 is infinite, they intersect if:
+	if (b > 0 && b < 1) {
+    		result.onLine2 = true;
+	}
+	// if line1 and line2 are segments, they intersect if both of the above are true
+	return result;
+	};
+
+	self.checkifLineInRect = function(p1, p2, rect) {
+		var p1x = p1.x;
+		var p2x = p2.x;
+		var rectX = rect.x;
+		var rectWidth = rect.width;
+
+  		// check if the projections onto the x axis overlap
+  		if (p1x < p2x && (rectX > p2x || rectX + rectWidth < p1x) || (rectX > p1x || rectX + rectWidth < p2x)) {
+  		  return false;
+  		}
+
+  		var p1y = p1.y;
+  		var p2y = p2.y;
+  		var rectY = rect.y;
+  		var rectHeight = rect.height;
+
+  		// check if the projections onto the y axis overlap
+  		if (p1y < p2y && (rectY > p2y || rectY + rectHeight < p1y) || (rectY > p1y || rectY + rectHeight < p2y)) {
+  		  return false;
+  		}
+
+  		// Check whether all 4 corners are on the same side of the segment. If they are,
+  		// we know there is no intersection.
+  		//
+  		// F(x, y) = (y2-y1)x + (x1-x2)y + (x2*y1-x1*y2)
+  		//
+  		// Do this by checking the sign of F(x, y) for all 4 corners of the rectangle.
+  		// If all the signs match, then they are all on the same side of the segment.
+  		// If they differ, it means that the the segment overlaps (because we already checked that)
+  		// its shadow on the x and y axes overlaps the rectangles shadows.
+  		var a = p2y - p1y;
+  		var b = p1x - p2x;
+  		var c = p2x * p1y - p1x * p2y;
+
+  		var aWidth = a * rectWidth;
+  		var bHeight = b * rectHeight;
+
+  		var bottomLeft = rectX * a + rectY * b + c;
+
+  		var isNegative = bottomLeft < 0;
+
+  		var x = bottomLeft + aWidth;
+  		if (isNegative !== x < 0) {
+  		  return true;
+  		}
+
+  		var y = bottomLeft + bHeight;
+  		if (isNegative !== y < 0) {
+  		  return true;
+  		}
+
+  		var z = y + aWidth;
+  		if (isNegative !== z < 0) {
+  		  return true;
+  		}
+
+  		if (!(bottomLeft && x && y && z)) {
+  		  return true;
+  		}
+
+  		// all 4 of the rectangles corners are on the same side of the line
+  		return false;
+		}
 }
 
 new _utils();
