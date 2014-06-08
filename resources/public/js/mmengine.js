@@ -50,6 +50,7 @@ function _game()
 	// Used for tracking keys
 	self.keyDown = 0; 
 	self.keyPressed = [];
+	self.objectsInPath = [];
 
 	// Used for automove
 	self.clickedAt = [];
@@ -726,6 +727,7 @@ function _game()
                         	boundsBox = self.createBoundsBox(self.world.children[i], resource['bounds'], x, y);
 			}
 
+
     			//selfBox = new createjs.Shape();
 			//selfBox.graphics.beginStroke("#000000");
 			//selfBox.graphics.setStrokeStyle(1);
@@ -738,6 +740,7 @@ function _game()
 
 			inter = self.utils.rectIntersection(compareHero, boundsBox);
 			if(inter) {
+				logger(self.objectsInPath);
 				return;
 			}
 		}

@@ -352,6 +352,7 @@ function _utils()
 			window.Game.autoMoveY = destination[1] + window.Game.worldOffsetY;
 		}
 	
+		window.Game.objectsInPath = [];
 		for(each in window.Game.entities) {
 			x1s = hero.centerPlayerX;
 			y1s = hero.centerPlayerY;
@@ -378,8 +379,7 @@ function _utils()
 			rect.height = wh;
 
 			if(self.checkifLineInRect(p1,p2,rect)) {
-				// Need to path around
-				logger(entit['id']);
+				window.Game.objectsInPath.push(entit);
 			}
 		}
 
